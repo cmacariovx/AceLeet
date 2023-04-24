@@ -1,1 +1,19 @@
+:root {
+  --black: #222222;
+  --gray: rgba(249, 251, 253, 1);
+  --blue: #2c7be5;
+  --green: #00d97e;
+  --yellow: #f6c343;
+  --red: #e63757;
+  --lightGray: #95aac9;
+}
 
+.app {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background-color: rgba(249, 251, 253, 1);
+}
