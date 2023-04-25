@@ -124,6 +124,156 @@
         align-items: center;
     }
 
+    .homeBodyDailyRecommendedUpper {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+    .homeBodyDailyRecommendedUpper1 {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        border-radius: 10px;
+        border: 1px solid rgba(220, 220, 220, 0.4);
+        box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+    }
+
+        .homeBodyDailyRecommendedUpperText1 {
+            padding: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: white;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            border: 1px solid rgba(220, 220, 220, 0.4);
+            box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .homeBodyDailyRecommendedUpperText2Container {
+            padding: 16px 24px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            border-radius: 10px;
+        }
+
+            .homeBodyDailyRecommendedUpperText2 {
+                font-size: 10px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                width: 150px;
+                color: var(--lightGray);
+            }
+
+            .homeBodyDailyRecommendedUpperText22 {
+                font-size: 10px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                width: 200px;
+                margin-right: 60px;
+                color: var(--lightGray);
+            }
+
+            .homeBodyDailyRecommendedUpperText23 {
+                font-size: 10px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                width: 500px;
+                color: var(--lightGray);
+            }
+
+            .homeBodyDailyRecommendedUpperText24 {
+                font-size: 10px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                color: var(--lightGray);
+                position: absolute;
+                right: 0;
+                margin-right: 84px;
+            }
+
+        .homeBodyDailyRecommendedUpperOption {
+            padding: 18px 24px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            border-bottom: 1px solid rgba(220, 220, 220, 0.4);
+            cursor: pointer;
+            border-radius: 10px;
+        }
+
+        .homeBodyDailyRecommendedUpperOption:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+            .homeBodyDailyRecommendedUpperOptionText1 {
+                font-size: 14px;
+                min-width: 150px;
+                width: 150px;
+                max-width: 150px;
+                user-select: none;
+            }
+
+            .homeBodyDailyRecommendedUpperOptionText2 {
+                font-size: 14px;
+                min-width: 200px;
+                width: 200px;
+                max-width: 200px;
+                margin-right: 60px;
+                word-break: normal;
+                word-wrap: normal;
+            }
+
+            .homeBodyDailyRecommendedUpperOptionText3 {
+                font-size: 14px;
+                min-width: 200px;
+                width: 200px;
+                max-width: 200px;
+                user-select: none;
+            }
+
+            .homeBodyDailyRecommendedUpperTopics {
+                font-size: 14px;
+                margin-right: 80px;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                flex-wrap: wrap;
+                max-width: 500px;
+            }
+
+                .homeBodyDailyRecommendedUpperTopic {
+                    padding: 4px 10px;
+                    border-radius: 30px;
+                    background-color: var(--darkGray);
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 12px;
+                    margin-right: 10px;
+                    margin-top: 10px;
+                    margin-bottom: 10px;
+                    user-select: none;
+                }
+
         .homeBodyDailyRecommendedLower {
             width: 100%;
             display: flex;
@@ -157,6 +307,7 @@
                 box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
                 font-size: 14px;
                 font-weight: bold;
+                cursor: pointer;
             }
 
             .homeBodyDailyRecommendedLowerText2Container {
@@ -205,7 +356,7 @@
                 }
 
             .homeBodyDailyRecommendedLowerOption {
-                padding: 24px;
+                padding: 12px 24px;
                 width: 100%;
                 display: flex;
                 flex-direction: row;
@@ -213,6 +364,11 @@
                 align-items: center;
                 border-bottom: 1px solid rgba(220, 220, 220, 0.4);
                 cursor: pointer;
+                border-radius: 10px;
+            }
+
+            .homeBodyDailyRecommendedLowerOption:hover {
+                background-color: rgba(255, 255, 255, 1);
             }
 
                 .homeBodyDailyRecommendedLowerOptionText1 {

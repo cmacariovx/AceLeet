@@ -44,6 +44,31 @@ function HomeBody() {
                 </div>
             </div>
             <div className="homeBodyDailyRecommendedContainer">
+            <div className="homeBodyDailyRecommendedUpper">
+                    <div className="homeBodyDailyRecommendedUpper1">
+                        <p className="homeBodyDailyRecommendedUpperText1">Recommended Topics to Revisit</p>
+                        <div className="homeBodyDailyRecommendedUpperText2Container">
+                            <p className="homeBodyDailyRecommendedUpperText2">PRIORITY</p>
+                            <p className="homeBodyDailyRecommendedUpperText22">TOPIC</p>
+                            <p className="homeBodyDailyRecommendedUpperText23">LAST PRACTICED</p>
+                        </div>
+                    </div>
+                    <div className="homeBodyDailyRecommendedUpperOption">
+                        <p className="homeBodyDailyRecommendedUpperOptionText1 blueText1">High</p>
+                        <p className="homeBodyDailyRecommendedUpperOptionText2 blueText">Union Find</p>
+                        <p className="homeBodyDailyRecommendedUpperOptionText3">3 days ago</p>
+                    </div>
+                    <div className="homeBodyDailyRecommendedUpperOption">
+                        <p className="homeBodyDailyRecommendedUpperOptionText1 blueText2">Medium</p>
+                        <p className="homeBodyDailyRecommendedUpperOptionText2 blueText">Topological Sort</p>
+                        <p className="homeBodyDailyRecommendedUpperOptionText3">3 days ago</p>
+                    </div>
+                    <div className="homeBodyDailyRecommendedUpperOption">
+                        <p className="homeBodyDailyRecommendedUpperOptionText1 blueText3">Low</p>
+                        <p className="homeBodyDailyRecommendedUpperOptionText2 blueText">Dynamic Programming</p>
+                        <p className="homeBodyDailyRecommendedUpperOptionText3">3 days ago</p>
+                    </div>
+                </div>
                 <div className="homeBodyDailyRecommendedLower">
                     <div className="homeBodyDailyRecommendedLower1">
                         <p className="homeBodyDailyRecommendedLowerText1">Recommended Problems</p>
