@@ -1,0 +1,217 @@
+.problemsBody {
+    min-height: 100vh;
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 60px;
+}
+
+    .problemsBodyContainerOverview {
+        height: 100px;
+        width: 100%;
+        padding: 20px 0;
+        /* border-bottom: 1px solid rgba(220, 220, 220, 0.6); */
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .problemsBodyContainerOverviewLeft {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+            .problemsBodySmallText {
+                font-size: 10px;
+                color: var(--lightGray);
+                letter-spacing: 1px;
+                margin-bottom: 8px;
+            }
+
+            .problemsBodyHeaderText {
+                font-size: 24px;
+                color: var(--black);
+                font-weight: 600;
+            }
+
+        .problemsBodyContainerOverviewRight {
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+            .problemsBodyContainerOverviewRightButton {
+                height: 40px;
+                padding: 12px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                border-radius: 5px;
+                background-color: var(--blue);
+                color: white;
+                font-size: 14px;
+                cursor: pointer;
+            }
+
+    .problemsBodyOptionsContainer {
+        height: 100px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        background-color: white;
+        border-radius: 10px;
+        border: 1px solid rgba(220, 220, 220, 0.4);
+        box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+        position: relative;
+    }
+
+        .problemsBodyOptionContainer {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            height: 300px;
+            top: 30%;
+            left: 30px;
+        }
+
+        .problemsBodyOptionContainer2 {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            height: 300px;
+            top: 30%;
+            left: 220px;
+        }
+
+        .problemsBodyOptionContainer3 {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            height: 300px;
+            top: 30%;
+            left: 410px;
+        }
+
+        .problemsBodyOptionContainer4 {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            top: 30%;
+            left: 600px;
+            margin-top: 0.2px;
+        }
+
+        .problemsBodyOptionContainer5 {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            top: 30%;
+            right: 30px;
+            margin-top: 0.2px;
+        }
+
+            .problemsBodyOptionMain {
+                width: 150px;
+                padding: 12px 18px;
+                background-color: var(--darkGray);
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                border-radius: 5px;
+                cursor: pointer;
+                position: relative;
+                box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+            }
+
+            .problemsBodyOptionMain2 {
+                width: 200px;
+                padding: 12px 18px;
+                background-color: var(--darkGray);
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                border-radius: 5px;
+                cursor: pointer;
+                position: relative;
+                box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+            }
+
+            .problemsBodyOptionMainButton {
+                padding: 12px 18px;
+                background-color: var(--blue);
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                border-radius: 5px;
+                cursor: pointer;
+                position: relative;
+                box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+                font-size: 14px;
+                color: white;
+            }
+
+                .problemsBodyOptionMainText {
+                    font-size: 14px;
+                }
+
+                .problemsBodyOptionChevron {
+                    font-size: 14px;
+                    margin-bottom: 0px;
+                }
+
+            .problemsBodyOptionDropdown {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                /* border-bottom-left-radius: 5px;
+                border-bottom-right-radius: 5px; */
+                border-radius: 5px;
+                overflow: hidden;
+                margin-top: 10px;
+                box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+            }
+
+                .problemsBodyOption {
+                    transition: 0.1s linear;
+                    width: 150px;
+                    padding: 14px 18px;
+                    background-color: var(--darkGray);
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    cursor: pointer;
+                    font-size: 14px;
+                    text-align: left;
+                }
+
+                .problemsBodyOption:hover {
+                    transition: 0.1s linear;
+                    background-color: var(--gray);
+                }

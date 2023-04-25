@@ -23,7 +23,7 @@
 
     .homeHeaderLeft {
         height: 100%;
-        width: 200px;
+        width: 350px;
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
@@ -32,7 +32,7 @@
 
         .homeHeaderLeftOption {
             height: 100%;
-            width: 80px;
+            margin: 0 12px;
             display: flex;
             flex-direction: row;
             justify-content: center;
@@ -42,7 +42,7 @@
 
         .homeHeaderLeftOption2 {
             height: 100%;
-            width: 80px;
+            margin: 0 12px;
             display: flex;
             flex-direction: row;
             justify-content: center;
@@ -65,7 +65,7 @@
 
     .homeHeaderRight {
         height: 100%;
-        width: 200px;
+        width: 350px;
         display: flex;
         flex-direction: row;
         justify-content: flex-end;

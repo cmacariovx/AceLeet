@@ -11,6 +11,9 @@ function HomeHeader() {
                         <p className="homeHeaderLeftOptionText">Dashboard</p>
                     </div>
                     <div className="homeHeaderLeftOption">
+                        <p className="homeHeaderLeftOptionText">Recommended</p>
+                    </div>
+                    <div className="homeHeaderLeftOption">
                         <p className="homeHeaderLeftOptionText">Problems</p>
                     </div>
                 </div>
