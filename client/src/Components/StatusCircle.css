@@ -1,0 +1,9 @@
+.statusCircle {
+    height: 14px;
+    width: 14px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+}

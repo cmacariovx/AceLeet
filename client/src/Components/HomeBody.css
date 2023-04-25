@@ -131,6 +131,8 @@
         justify-content: flex-start;
         align-items: center;
         margin-bottom: 20px;
+        border-radius: 10px;
+        overflow: hidden;
     }
 
     .homeBodyDailyRecommendedUpper1 {
@@ -139,7 +141,8 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-        border-radius: 10px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
         border: 1px solid rgba(220, 220, 220, 0.4);
         box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
     }
@@ -168,7 +171,8 @@
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
-            border-radius: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
         }
 
             .homeBodyDailyRecommendedUpperText2 {
@@ -207,7 +211,7 @@
             }
 
         .homeBodyDailyRecommendedUpperOption {
-            padding: 18px 24px;
+            padding: 16px 24px;
             width: 100%;
             display: flex;
             flex-direction: row;
@@ -215,15 +219,17 @@
             align-items: center;
             border-bottom: 1px solid rgba(220, 220, 220, 0.4);
             cursor: pointer;
-            border-radius: 10px;
+            background-color: white;
+            transition: 0.1s linear;
         }
 
         .homeBodyDailyRecommendedUpperOption:hover {
-            background-color: rgba(255, 255, 255, 1);
+            transition: 0.1s linear;
+            background-color: var(--darkGray);
         }
 
             .homeBodyDailyRecommendedUpperOptionText1 {
-                font-size: 14px;
+                font-size: 13px;
                 min-width: 150px;
                 width: 150px;
                 max-width: 150px;
@@ -231,7 +237,7 @@
             }
 
             .homeBodyDailyRecommendedUpperOptionText2 {
-                font-size: 14px;
+                font-size: 13px;
                 min-width: 200px;
                 width: 200px;
                 max-width: 200px;
@@ -241,7 +247,7 @@
             }
 
             .homeBodyDailyRecommendedUpperOptionText3 {
-                font-size: 14px;
+                font-size: 13px;
                 min-width: 200px;
                 width: 200px;
                 max-width: 200px;
@@ -249,38 +255,14 @@
                 color: var(--lightGray);
             }
 
-            .homeBodyDailyRecommendedUpperTopics {
-                font-size: 14px;
-                margin-right: 80px;
-                display: flex;
-                flex-direction: row;
-                justify-content: flex-start;
-                align-items: center;
-                flex-wrap: wrap;
-                max-width: 500px;
-            }
-
-                .homeBodyDailyRecommendedUpperTopic {
-                    padding: 4px 10px;
-                    border-radius: 30px;
-                    background-color: var(--darkGray);
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: center;
-                    align-items: center;
-                    font-size: 12px;
-                    margin-right: 10px;
-                    margin-top: 10px;
-                    margin-bottom: 10px;
-                    user-select: none;
-                }
-
         .homeBodyDailyRecommendedLower {
             width: 100%;
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .homeBodyDailyRecommendedLower1 {
@@ -289,7 +271,8 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            border-radius: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
             border: 1px solid rgba(220, 220, 220, 0.4);
             box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
         }
@@ -325,7 +308,7 @@
                     font-size: 10px;
                     font-weight: bold;
                     letter-spacing: 1px;
-                    width: 150px;
+                    width: 100px;
                     color: var(--lightGray);
                 }
 
@@ -333,7 +316,7 @@
                     font-size: 10px;
                     font-weight: bold;
                     letter-spacing: 1px;
-                    width: 200px;
+                    width: 250px;
                     margin-right: 60px;
                     color: var(--lightGray);
                 }
@@ -357,7 +340,7 @@
                 }
 
             .homeBodyDailyRecommendedLowerOption {
-                padding: 12px 24px;
+                padding: 10px 24px;
                 width: 100%;
                 display: flex;
                 flex-direction: row;
@@ -365,33 +348,35 @@
                 align-items: center;
                 border-bottom: 1px solid rgba(220, 220, 220, 0.4);
                 cursor: pointer;
-                border-radius: 10px;
+                transition: 0.1s linear;
+                background-color: white;
             }
 
             .homeBodyDailyRecommendedLowerOption:hover {
-                background-color: rgba(255, 255, 255, 1);
+                transition: 0.1s linear;
+                background-color: var(--darkGray);
             }
 
                 .homeBodyDailyRecommendedLowerOptionText1 {
-                    font-size: 14px;
-                    min-width: 150px;
-                    width: 150px;
-                    max-width: 150px;
+                    font-size: 13px;
+                    min-width: 100px;
+                    width: 100px;
+                    max-width: 100px;
                     user-select: none;
                 }
 
                 .homeBodyDailyRecommendedLowerOptionText2 {
-                    font-size: 14px;
-                    min-width: 200px;
-                    width: 200px;
-                    max-width: 200px;
+                    font-size: 13px;
+                    min-width: 250px;
+                    width: 250px;
+                    max-width: 250px;
                     margin-right: 60px;
                     word-break: normal;
                     word-wrap: normal;
                 }
 
                 .homeBodyDailyRecommendedLowerOptionText3 {
-                    font-size: 14px;
+                    font-size: 13px;
                     min-width: 60px;
                     width: 60px;
                     max-width: 60px;
@@ -433,7 +418,7 @@
                 }
 
                 .homeBodyDailyRecommendedLowerTopics {
-                    font-size: 14px;
+                    font-size: 13px;
                     margin-right: 80px;
                     display: flex;
                     flex-direction: row;
