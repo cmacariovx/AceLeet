@@ -4,7 +4,7 @@ import Chart from 'chart.js/auto';
 
 const BarChart = (props) => {
     const data = {
-        labels: ['Arrays/Strings', 'Binary Trees', 'Graphs', 'Linked Lists', 'Dynamic Programming'],
+        labels: ['Arrays', 'Binary Trees', 'Graphs', 'Linked Lists', 'Dynamic Programming'],
         datasets: [{
             label: 'Average Difficulty',
             data: [3.4, 2.2, 3.7, 3.1, 4.4],

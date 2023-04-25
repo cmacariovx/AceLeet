@@ -3,11 +3,12 @@ import BarChart from "./BarChart";
 import StatusCircle from "./StatusCircle";
 
 import './HomeBody.css'
-import DoughnutChart from "./DoughnutChart";
+import DoughnutChart1 from "./DoughnutChart1";
+import DoughnutChart2 from "./DoughnutChart2";
 
 function HomeBody() {
     const [isOpen1, setIsOpen1] = useState(true);
-    const [isOpen2, setIsOpen2] = useState(false);
+    const [isOpen2, setIsOpen2] = useState(true);
 
     return (
         <div className="homeBodyContainer">
@@ -147,7 +148,7 @@ function HomeBody() {
                             <p className="homeBodyChartsContainerUpperRightUpperText">Difficulty</p>
                         </div>
                         <div className="homeBodyChartsContainerUpperRightLower">
-                            <DoughnutChart />
+                            <DoughnutChart1 />
                         </div>
                     </div>
                 </div>
@@ -157,7 +158,7 @@ function HomeBody() {
                             <p className="homeBodyChartsContainerLowerLeftUpperText">Topics</p>
                         </div>
                         <div className="homeBodyChartsContainerLowerLeftLower">
-
+                            <DoughnutChart2 />
                         </div>
                     </div>
                     <div className="homeBodyChartsContainerLowerRight">

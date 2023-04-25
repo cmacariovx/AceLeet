@@ -2,23 +2,56 @@ import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 
-const DoughnutChart = (props) => {
+const DoughnutChart2 = (props) => {
+    const topics = [
+        { name: 'Arrays', count: 25 },
+        { name: 'Binary Trees', count: 50 },
+        { name: 'Graphs', count: 15 },
+        { name: 'Linked Lists', count: 10 },
+        { name: 'DP', count: 15 },
+        { name: 'Others', count: 20 },
+    ];
+
+    const countTopicProblems = (topics) => {
+        const mainTopics = ['Arrays', 'Binary Trees', 'Graphs', 'Linked Lists', 'DP'];
+        const counts = { Others: 0 };
+
+        topics.forEach((topic) => {
+            if (mainTopics.includes(topic.name)) {
+                counts[topic.name] = topic.count;
+            } else {
+                counts.Others += topic.count;
+            }
+        });
+
+        return counts;
+    }
+
+    const topicCounts = countTopicProblems(topics);
+
     const data = {
-        labels: ['Easy', 'Medium', 'Hard'],
+        labels: Object.keys(topicCounts),
         datasets: [
             {
-                data: [25, 50, 25],
+                data: Object.values(topicCounts),
                 backgroundColor: [
-                    'rgba(148, 250, 89, 0.7)', // Green
-                    'rgba(255, 215, 115, 0.7)', // Yellow
-                    'rgba(255, 83, 83, 0.7)', // Red
+                    'rgba(42, 209, 95, 0.7)', // Green
+                    'rgba(54, 162, 235, 0.7)', // Blue
+                    'rgba(255, 159, 64, 0.7)', // Orange
+                    'rgba(255, 51, 51, 0.7)', // Red
+                    'rgba(255, 205, 86, 0.7)', // Yellow
+                    'rgba(90, 98, 239, 0.7)', // Indigo
                 ],
                 hoverBackgroundColor: [
-                    'rgba(148, 250, 89, 1)', // Green
-                    'rgba(255, 215, 115, 1)', // Yellow
-                    'rgba(255, 83, 83, 1)', // Red
+                    'rgba(42, 209, 95, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 159, 64, 1)',
+                    'rgba(255, 51, 51, 1)',
+                    'rgba(255, 205, 86, 1)',
+                    'rgba(90, 98, 239, 1)',
                 ],
-                borderWidth: 0,
+                borderWidth: 4,
+                borderColor: 'rgba(255, 255, 255, 1)',
             },
         ],
     };
@@ -37,7 +70,7 @@ const DoughnutChart = (props) => {
                         size: 12,
                     },
                     color: '#95aac9',
-                    padding: 24,
+                    padding: 18,
                 },
             },
             tooltip: {
@@ -70,4 +103,4 @@ const DoughnutChart = (props) => {
     )
 }
 
-export default DoughnutChart;
+export default DoughnutChart2;
