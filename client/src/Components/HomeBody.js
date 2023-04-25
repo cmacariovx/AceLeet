@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import BarChart from "./BarChart";
 import StatusCircle from "./StatusCircle";
+import LineChart from "./LineChart";
 
 import './HomeBody.css'
 import DoughnutChart1 from "./DoughnutChart1";
@@ -162,10 +163,10 @@ function HomeBody() {
                     </div>
                     <div className="homeBodyChartsContainerLowerRight">
                         <div className="homeBodyChartsContainerLowerRightUpper">
-                            <p className="homeBodyChartsContainerLowerRightUpperText">Solved w/o Solution %</p>
+                            <p className="homeBodyChartsContainerLowerRightUpperText">Average Difficulty</p>
                         </div>
                         <div className="homeBodyChartsContainerLowerRightLower">
-
+                            <LineChart />
                         </div>
                     </div>
                 </div>
