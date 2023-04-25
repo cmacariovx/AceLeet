@@ -14,7 +14,14 @@ const DoughnutChart2 = (props) => {
 
     const countTopicProblems = (topics) => {
         const mainTopics = ['Arrays', 'Binary Trees', 'Graphs', 'Linked Lists', 'DP'];
-        const counts = { Others: 0 };
+        const counts = {
+            'Arrays': 0,
+            'Binary Trees': 0,
+            'Graphs': 0,
+            'Linked Lists': 0,
+            'DP': 0,
+            'Others': 0
+        };
 
         topics.forEach((topic) => {
             if (mainTopics.includes(topic.name)) {

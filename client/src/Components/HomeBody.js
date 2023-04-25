@@ -24,7 +24,7 @@ function HomeBody() {
             <div className="homeBodyContainerKPIs">
                 <div className="homeBodyContainerKPI">
                     <div className="homeBodyContainerKPILeft">
-                        <p className="homeBodyContainerKPILeftUpper">TOTAL PROBLEMS</p>
+                        <p className="homeBodyContainerKPILeftUpper">TOTAL PROBLEMS SOLVED</p>
                         <p className="homeBodyContainerKPILeftLower">82</p>
                     </div>
                     <div className="homeBodyContainerKPIRight">
@@ -123,10 +123,9 @@ function HomeBody() {
                         <div className="homeBodyDailyRecommendedLowerOptionText1 blueText3"><StatusCircle color={'green'}/></div>
                         <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">543. Diameter of Binary Tree</p>
                         <div className="homeBodyDailyRecommendedLowerTopics">
+                            <p className="homeBodyDailyRecommendedLowerTopic">Tree</p>
                             <p className="homeBodyDailyRecommendedLowerTopic">Depth-First Search</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Breadth-First Search</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Union Find</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Graph</p>
+                            <p className="homeBodyDailyRecommendedLowerTopic">Binary Tree</p>
                         </div>
                         <p className="homeBodyDailyRecommendedLowerOptionText3 greenText">Easy</p>
                     </div>
