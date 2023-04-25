@@ -69,7 +69,7 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 20px 0;
+        padding: 40px 0;
     }
 
         .homeBodyContainerKPI {
@@ -130,7 +130,7 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
-        margin-bottom: 20px;
+        margin-bottom: 28px;
         border-radius: 10px;
     }
 
@@ -142,8 +142,6 @@
         align-items: center;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
-        border: 1px solid rgba(220, 220, 220, 0.4);
-        box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
     }
 
         .homeBodyDailyRecommendedUpperText1 {
@@ -173,8 +171,9 @@
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
+            border-radius: 1px;
+            border-left: 1px solid rgba(220, 220, 220, 0.4);
+            border-right: 1px solid rgba(220, 220, 220, 0.4);
         }
 
             .homeBodyDailyRecommendedUpperText2 {
@@ -274,8 +273,6 @@
             align-items: center;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
-            border: 1px solid rgba(220, 220, 220, 0.4);
-            box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
         }
 
             .homeBodyDailyRecommendedLowerText1 {
@@ -305,7 +302,9 @@
                 flex-direction: row;
                 justify-content: flex-start;
                 align-items: center;
-                border-radius: 10px;
+                border-radius: 1px;
+                border-left: 1px solid rgba(220, 220, 220, 0.4);
+                border-right: 1px solid rgba(220, 220, 220, 0.4);
             }
 
                 .homeBodyDailyRecommendedLowerText2 {
@@ -446,3 +445,180 @@
                         margin-bottom: 10px;
                         user-select: none;
                     }
+
+    .homeBodyChartsContainer {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+    }
+
+        .homeBodyChartsContainerUpper {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+            .homeBodyChartsContainerUpperLeft {
+                height: 400px;
+                width: 60%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+            }
+
+                .homeBodyChartsContainerUpperLeftUpper {
+                    padding: 20px;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    border-bottom: 1px solid rgba(220, 220, 220, 0.4);
+                }
+
+                    .homeBodyChartsContainerUpperLeftUpperText {
+                        font-size: 13px;
+                        font-weight: bold;
+                        color: var(--black);
+                    }
+
+                .homeBodyChartsContainerUpperLeftLower {
+                    height: 100%;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                    padding: 0 24px;
+                }
+
+            .homeBodyChartsContainerUpperRight {
+                height: 400px;
+                width: 35%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+            }
+
+                .homeBodyChartsContainerUpperRightUpper {
+                    padding: 24px;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    border-bottom: 1px solid rgba(220, 220, 220, 0.4);
+                }
+
+                    .homeBodyChartsContainerUpperRightUpperText {
+                        font-size: 13px;
+                        font-weight: bold;
+                        color: var(--black);
+                    }
+
+                .homeBodyChartsContainerUpperRightLower {
+                    height: 100%;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+        .homeBodyChartsContainerLower {
+            height: 50%;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .homeBodyChartsContainerLowerLeft {
+                height: 400px;
+                width: 35%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+            }
+
+                .homeBodyChartsContainerLowerLeftUpper {
+                    padding: 24px;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    border-bottom: 1px solid rgba(220, 220, 220, 0.4);
+                }
+
+                    .homeBodyChartsContainerLowerLeftUpperText {
+                        font-size: 13px;
+                        font-weight: bold;
+                        color: var(--black);
+                    }
+
+                .homeBodyChartsContainerLowerLeftLower {
+                    height: 100%;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+            .homeBodyChartsContainerLowerRight {
+                height: 400px;
+                width: 60%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+            }
+
+                .homeBodyChartsContainerLowerRightUpper {
+                    padding: 24px;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    border-bottom: 1px solid rgba(220, 220, 220, 0.4);
+                }
+
+                    .homeBodyChartsContainerLowerRightUpperText {
+                        font-size: 13px;
+                        font-weight: bold;
+                        color: var(--black);
+                    }
+
+                .homeBodyChartsContainerLowerRightLower {
+                    height: 100%;
+                    width: 100%;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: center;
+                    align-items: center;
+                }
