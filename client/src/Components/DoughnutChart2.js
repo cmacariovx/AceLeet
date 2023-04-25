@@ -43,7 +43,7 @@ const DoughnutChart2 = (props) => {
                 data: Object.values(topicCounts),
                 backgroundColor: [
                     'rgba(42, 209, 95, 0.7)', // Green
-                    'rgba(54, 162, 235, 0.7)', // Blue
+                    'rgba(44, 123, 229, 0.7)', // Blue
                     'rgba(255, 159, 64, 0.7)', // Orange
                     'rgba(255, 51, 51, 0.7)', // Red
                     'rgba(255, 205, 86, 0.7)', // Yellow
@@ -51,7 +51,7 @@ const DoughnutChart2 = (props) => {
                 ],
                 hoverBackgroundColor: [
                     'rgba(42, 209, 95, 1)',
-                    'rgba(54, 162, 235, 1)',
+                    'rgba(44, 123, 229, 1)',
                     'rgba(255, 159, 64, 1)',
                     'rgba(255, 51, 51, 1)',
                     'rgba(255, 205, 86, 1)',

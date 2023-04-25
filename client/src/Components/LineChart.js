@@ -8,13 +8,13 @@ const LineChart = (props) => {
             {
                 label: 'Average Difficulty',
                 data: [4.7, 4.2, 2.9, 2.8, 2.4, 1.9],
-                borderColor: 'rgba(54, 162, 235, 0.7)',
+                borderColor: 'rgba(44, 123, 229, 0.7)',
                 backgroundColor: 'rgba(0, 0, 0, 0)',
                 tension: 0.4,
                 borderWidth: 2,
                 pointRadius: 4,
-                pointBackgroundColor: 'rgba(54, 162, 235, 0.7)',
-                pointHoverBackgroundColor: 'rgba(54, 162, 235, 1)',
+                pointBackgroundColor: 'rgba(44, 123, 229, 0.7)',
+                pointHoverBackgroundColor: 'rgba(44, 123, 229, 1)',
             },
         ]
     };

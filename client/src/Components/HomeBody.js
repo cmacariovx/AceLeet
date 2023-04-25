@@ -163,7 +163,8 @@ function HomeBody() {
                     </div>
                     <div className="homeBodyChartsContainerLowerRight">
                         <div className="homeBodyChartsContainerLowerRightUpper">
-                            <p className="homeBodyChartsContainerLowerRightUpperText">Average Difficulty</p>
+                            <p className="homeBodyChartsContainerLowerRightUpperText">Average Difficulty - Past 6 Weeks</p>
+                            <p className="homeBodyChartsContainerLowerRightUpperText2">36% Improvement</p>
                         </div>
                         <div className="homeBodyChartsContainerLowerRightLower">
                             <LineChart />
