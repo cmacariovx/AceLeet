@@ -43,6 +43,52 @@ function HomeBody() {
                     </div>
                 </div>
             </div>
+            <div className="homeBodyDailyRecommendedContainer">
+                <div className="homeBodyDailyRecommendedLower">
+                    <div className="homeBodyDailyRecommendedLower1">
+                        <p className="homeBodyDailyRecommendedLowerText1">Recommended Problems</p>
+                        <div className="homeBodyDailyRecommendedLowerText2Container">
+                            <p className="homeBodyDailyRecommendedLowerText2">PRIORITY</p>
+                            <p className="homeBodyDailyRecommendedLowerText22">PROBLEM</p>
+                            <p className="homeBodyDailyRecommendedLowerText23">TOPICS</p>
+                            <p className="homeBodyDailyRecommendedLowerText24">DIFFICULTY</p>
+                        </div>
+                    </div>
+                    <div className="homeBodyDailyRecommendedLowerOption">
+                        <p className="homeBodyDailyRecommendedLowerOptionText1 blueText1">High</p>
+                        <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">684. Redundant Connection</p>
+                        <div className="homeBodyDailyRecommendedLowerTopics">
+                            <p className="homeBodyDailyRecommendedLowerTopic">Depth-First Search</p>
+                            <p className="homeBodyDailyRecommendedLowerTopic">Breadth-First Search</p>
+                            <p className="homeBodyDailyRecommendedLowerTopic">Union Find</p>
+                            <p className="homeBodyDailyRecommendedLowerTopic">Graph</p>
+                        </div>
+                        <p className="homeBodyDailyRecommendedLowerOptionText3 yellowText">Medium</p>
+                    </div>
+                    <div className="homeBodyDailyRecommendedLowerOption">
+                        <p className="homeBodyDailyRecommendedLowerOptionText1 blueText2">Medium</p>
+                        <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">1444. Number of Ways of Cutting a Pizza</p>
+                        <div className="homeBodyDailyRecommendedLowerTopics">
+                            <p className="homeBodyDailyRecommendedLowerTopic">Array</p>
+                            <p className="homeBodyDailyRecommendedLowerTopic">Dynamic Programming</p>
+                            <p className="homeBodyDailyRecommendedLowerTopic">Memoization</p>
+                            <p className="homeBodyDailyRecommendedLowerTopic">Matrix</p>
+                        </div>
+                        <p className="homeBodyDailyRecommendedLowerOptionText3 redText">Hard</p>
+                    </div>
+                    <div className="homeBodyDailyRecommendedLowerOption">
+                        <p className="homeBodyDailyRecommendedLowerOptionText1 blueText3">Low</p>
+                        <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">543. Diameter of Binary Tree</p>
+                        <div className="homeBodyDailyRecommendedLowerTopics">
+                            <p className="homeBodyDailyRecommendedLowerTopic">Depth-First Search</p>
+                            <p className="homeBodyDailyRecommendedLowerTopic">Breadth-First Search</p>
+                            <p className="homeBodyDailyRecommendedLowerTopic">Union Find</p>
+                            <p className="homeBodyDailyRecommendedLowerTopic">Graph</p>
+                        </div>
+                        <p className="homeBodyDailyRecommendedLowerOptionText3 greenText">Easy</p>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

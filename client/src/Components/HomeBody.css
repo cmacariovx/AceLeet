@@ -115,3 +115,188 @@
                 justify-content: center;
                 align-items: flex-end;
             }
+
+    .homeBodyDailyRecommendedContainer {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .homeBodyDailyRecommendedLower {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .homeBodyDailyRecommendedLower1 {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            border-radius: 10px;
+            border: 1px solid rgba(220, 220, 220, 0.4);
+            box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+        }
+
+            .homeBodyDailyRecommendedLowerText1 {
+                padding: 20px;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                background-color: white;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                border: 1px solid rgba(220, 220, 220, 0.4);
+                box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .homeBodyDailyRecommendedLowerText2Container {
+                padding: 16px 24px;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                border-radius: 10px;
+            }
+
+                .homeBodyDailyRecommendedLowerText2 {
+                    font-size: 10px;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    width: 150px;
+                    color: var(--lightGray);
+                }
+
+                .homeBodyDailyRecommendedLowerText22 {
+                    font-size: 10px;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    width: 200px;
+                    margin-right: 60px;
+                    color: var(--lightGray);
+                }
+
+                .homeBodyDailyRecommendedLowerText23 {
+                    font-size: 10px;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    width: 500px;
+                    color: var(--lightGray);
+                }
+
+                .homeBodyDailyRecommendedLowerText24 {
+                    font-size: 10px;
+                    font-weight: bold;
+                    letter-spacing: 1px;
+                    color: var(--lightGray);
+                    position: absolute;
+                    right: 0;
+                    margin-right: 84px;
+                }
+
+            .homeBodyDailyRecommendedLowerOption {
+                padding: 24px;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                border-bottom: 1px solid rgba(220, 220, 220, 0.4);
+                cursor: pointer;
+            }
+
+                .homeBodyDailyRecommendedLowerOptionText1 {
+                    font-size: 14px;
+                    min-width: 150px;
+                    width: 150px;
+                    max-width: 150px;
+                    user-select: none;
+                }
+
+                .homeBodyDailyRecommendedLowerOptionText2 {
+                    font-size: 14px;
+                    min-width: 200px;
+                    width: 200px;
+                    max-width: 200px;
+                    margin-right: 60px;
+                    word-break: normal;
+                    word-wrap: normal;
+                }
+
+                .homeBodyDailyRecommendedLowerOptionText3 {
+                    font-size: 14px;
+                    min-width: 60px;
+                    width: 60px;
+                    max-width: 60px;
+                    position: absolute;
+                    right: 0;
+                    text-align: end;
+                    margin-right: 84px;
+                    user-select: none;
+                }
+
+                .blueText {
+                    color: var(--lightGray) !important;
+                    opacity: 1;
+                    cursor: pointer;
+                }
+
+                .blueText1 {
+                    color: #368dff !important;
+                }
+
+                .blueText2 {
+                    color: #245fac !important;
+                }
+
+                .blueText3 {
+                    color: #133360 !important;
+                }
+
+                .greenText {
+                    color: var(--green) !important;
+                }
+
+                .yellowText {
+                    color: var(--yellow) !important;
+                }
+
+                .redText {
+                    color: var(--red) !important;
+                }
+
+                .homeBodyDailyRecommendedLowerTopics {
+                    font-size: 14px;
+                    margin-right: 80px;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    max-width: 500px;
+                }
+
+                    .homeBodyDailyRecommendedLowerTopic {
+                        padding: 4px 10px;
+                        border-radius: 30px;
+                        background-color: var(--darkGray);
+                        display: flex;
+                        flex-direction: row;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 12px;
+                        margin-right: 10px;
+                        margin-top: 10px;
+                        margin-bottom: 10px;
+                        user-select: none;
+                    }
