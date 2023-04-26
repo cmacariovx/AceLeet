@@ -1,7 +1,7 @@
-const readJsonFile = require('./readJsonFile');
+import readJsonFile from "./readJsonFile";
 
-const processJsonData = async () => {
-    let data = await readJsonFile('leetcodeAllQuestions.txt');
+async function processJsonData() {
+    let data = await readJsonFile('leetcodeAllQuestions.json');
     data = data['data'];
 
     if (data) {
@@ -30,21 +30,113 @@ const processJsonData = async () => {
                         topicCounts[topic.name] = 1;
                     }
                 });
-
-                // Log question ID and title
-                // console.log(`ID: ${question.frontendQuestionId}, Title: ${question.title}`);
             })
 
             return { difficultyCounts, topicCounts, names };
         }
 
-        // const { difficultyCounts, topicCounts, names } = countDifficultiesAndTopics(data.problemsetQuestionList.questions);
-
         return countDifficultiesAndTopics(data.problemsetQuestionList.questions);
 
-        // console.log('Difficulty counts:', difficultyCounts);
         // console.log('Topic counts:', Object.fromEntries(Object.entries(topicCounts).sort((a, b) => b[1] - a[1])));
     }
 };
 
-module.exports = processJsonData;
+class TrieNode {
+    constructor() {
+        this.children = {};
+        this.isEndOfWord = false;
+        this.word = null;
+    }
+}
+
+class Trie {
+    constructor() {
+        this.root = new TrieNode();
+    }
+
+    insert(word) {
+        let currentNode = this.root;
+        const originalWord = word;
+        word = word.toLowerCase();
+        for (const char of word) {
+            if (!currentNode.children[char]) {
+                currentNode.children[char] = new TrieNode();
+            }
+            currentNode = currentNode.children[char];
+        }
+        currentNode.isEndOfWord = true;
+        currentNode.word = originalWord;
+    }
+
+    search(word) {
+        let currentNode = this.root;
+        word = word.toLowerCase();
+        for (const char of word) {
+            if (!currentNode.children[char]) {
+                return false;
+            }
+            currentNode = currentNode.children[char];
+        }
+        return currentNode.isEndOfWord;
+    }
+
+    startsWith(prefix) {
+        let currentNode = this.root;
+        prefix = prefix.toLowerCase();
+        for (const char of prefix) {
+            if (!currentNode.children[char]) {
+                return false;
+            }
+            currentNode = currentNode.children[char];
+        }
+        return true;
+    }
+
+    autoComplete(prefix) {
+        const result = [];
+        let currentNode = this.root;
+        prefix = prefix.toLowerCase();
+        for (const char of prefix) {
+            if (!currentNode.children[char]) {
+                return result;
+            }
+            currentNode = currentNode.children[char];
+        }
+        this.dfs(currentNode, prefix, result);
+        return result;
+    }
+
+    dfs(node, prefix, result) {
+        if (node.isEndOfWord) {
+            result.push(node.word);
+        }
+        for (const char in node.children) {
+            this.dfs(node.children[char], prefix + char, result);
+        }
+    }
+}
+
+async function problemTitles() {
+    let data = await readJsonFile('leetcodeAllQuestions.json');
+    data = data['data'];
+
+    if (data) {
+        let questions = data.problemsetQuestionList.questions;
+        const trie = new Trie();
+
+        for (let i = 0; i < questions.length; i++) {
+            let question = questions[i];
+
+            trie.insert(question.title);
+        }
+
+        return trie;
+    }
+
+    return null;
+}
+
+export default {
+    processJsonData,
+    problemTitles
+};
