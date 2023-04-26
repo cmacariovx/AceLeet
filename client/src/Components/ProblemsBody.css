@@ -195,6 +195,7 @@
                 overflow: hidden;
                 margin-top: 10px;
                 box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+                z-index: 2;
             }
 
                 .problemsBodyOption {
@@ -215,3 +216,104 @@
                     transition: 0.1s linear;
                     background-color: var(--gray);
                 }
+
+    .problemsBodyCategoryContainer {
+        padding: 16px 24px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        border-radius: 1px;
+        /* border-left: 1px solid rgba(220, 220, 220, 0.4);
+        border-right: 1px solid rgba(220, 220, 220, 0.4); */
+    }
+
+        .problemsBodyCategory1 {
+            padding: 12px 18px;
+            width: 150px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .problemsBodyCategory2 {
+            padding: 12px 18px;
+            width: 250px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .problemsBodyCategory3 {
+            padding: 12px 18px;
+            width: 200px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .problemsBodyCategory4 {
+            padding: 12px 18px;
+            width: 200px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .problemsBodyCategory5 {
+            padding: 12px 18px;
+            width: 200px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            cursor: pointer;
+            position: relative;
+            z-index: 1;
+        }
+
+        .problemsBodyCategoryText {
+            font-size: 13px;
+            color: var(--lightGray);
+            user-select: none;
+        }
+
+        .problemsBodyCategoryArrows {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .problemsBodyCategoryArrowUp {
+            font-size: 16px;
+            position: absolute;
+            bottom: -5px;
+            color: var(--lightGray);
+            margin-left: 40px;
+        }
+
+        .problemsBodyCategoryArrowDown {
+            font-size: 16px;
+            position: absolute;
+            top: -5px;
+            color: var(--lightGray);
+            margin-left: 40px;
+        }

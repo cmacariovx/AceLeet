@@ -7,6 +7,26 @@ function ProblemsBody() {
     const [difficultyOpen, setDifficultyOpen] = useState(false);
     const [showOpen, setShowOpen] = useState(false);
 
+    const [statusSort, setStatusSort] = useState(0);
+    const [problemSort, setProblemSort] = useState(0);
+    const [difficultySort, setDifficultySort] = useState(0);
+    const [lastPracticedSort, setLastPracticedSort] = useState(0);
+    let arr1 = [() => setStatusOpen(false), () => setDifficultyOpen(false), () => setShowOpen(false)];
+
+    function clearDropdowns(current) {
+        for (let i = 0; i < arr1.length; i++) {
+            if (i != current) arr1[i]();
+        }
+    }
+
+    let arr2 = [() => setStatusSort(0), () => setProblemSort(0), () => setDifficultySort(0), () => setLastPracticedSort(0)];
+
+    function clearSorts(current) {
+        for (let i = 0; i < arr2.length; i++) {
+            if (i != current) arr2[i]();
+        }
+    }
+
     return (
         <div className="problemsBody">
             <div className="problemsBodyContainerOverview">
@@ -20,7 +40,7 @@ function ProblemsBody() {
             </div>
             <div className="problemsBodyOptionsContainer">
                 <div className="problemsBodyOptionContainer">
-                    <div className="problemsBodyOptionMain" onClick={() => setStatusOpen(!statusOpen)}>
+                    <div className="problemsBodyOptionMain" onClick={() => {setStatusOpen(!statusOpen); clearDropdowns(0);}}>
                         <p className="problemsBodyOptionMainText">Status</p>
                         {statusOpen ? <i className="fa-solid fa-chevron-up problemsBodyOptionChevron"></i> :
                             <i className="fa-solid fa-chevron-down problemsBodyOptionChevron"></i>}
@@ -37,7 +57,7 @@ function ProblemsBody() {
                     }
                 </div>
                 <div className="problemsBodyOptionContainer2">
-                    <div className="problemsBodyOptionMain" onClick={() => setDifficultyOpen(!difficultyOpen)}>
+                    <div className="problemsBodyOptionMain" onClick={() => {setDifficultyOpen(!difficultyOpen); clearDropdowns(1);}}>
                         <p className="problemsBodyOptionMainText">Difficulty</p>
                         {difficultyOpen ? <i className="fa-solid fa-chevron-up problemsBodyOptionChevron"></i> :
                             <i className="fa-solid fa-chevron-down problemsBodyOptionChevron"></i>}
@@ -57,7 +77,7 @@ function ProblemsBody() {
                     }
                 </div>
                 <div className="problemsBodyOptionContainer3">
-                    <div className="problemsBodyOptionMain" onClick={() => setShowOpen(!showOpen)}>
+                    <div className="problemsBodyOptionMain" onClick={() => {setShowOpen(!showOpen); clearDropdowns(2);}}>
                         <p className="problemsBodyOptionMainText">Show 25</p>
                         {showOpen ? <i className="fa-solid fa-chevron-up problemsBodyOptionChevron"></i> :
                             <i className="fa-solid fa-chevron-down problemsBodyOptionChevron"></i>}
@@ -81,6 +101,79 @@ function ProblemsBody() {
                 </div>
                 <div className="problemsBodyOptionContainer5">
                     <button className="problemsBodyOptionMainButton">Clear Filters</button>
+                </div>
+            </div>
+            <div className="problemsBodyCategoryContainer">
+                <div className="problemsBodyCategory1" onClick={() => {setStatusSort(() => (statusSort + 1) % 3); clearSorts(0);}}>
+                    <p className="problemsBodyCategoryText">STATUS</p>
+                    <div className="problemsBodyCategoryArrows">
+                        {statusSort == 0 &&
+                            <>
+                            <i className="fa-solid fa-caret-up problemsBodyCategoryArrowUp"></i>
+                            <i className="fa-solid fa-caret-down problemsBodyCategoryArrowDown"></i>
+                            </>
+                        }
+                        {statusSort == 1 &&
+                            <i className="fa-solid fa-caret-up problemsBodyCategoryArrowUp"></i>
+                        }
+                        {statusSort == 2 &&
+                            <i className="fa-solid fa-caret-down problemsBodyCategoryArrowDown"></i>
+                        }
+                    </div>
+                </div>
+                <div className="problemsBodyCategory2" onClick={() => {setProblemSort(() => (problemSort + 1) % 3); clearSorts(1);}}>
+                    <p className="problemsBodyCategoryText">PROBLEM</p>
+                    <div className="problemsBodyCategoryArrows">
+                        {problemSort == 0 &&
+                            <>
+                            <i className="fa-solid fa-caret-up problemsBodyCategoryArrowUp"></i>
+                            <i className="fa-solid fa-caret-down problemsBodyCategoryArrowDown"></i>
+                            </>
+                        }
+                        {problemSort == 1 &&
+                            <i className="fa-solid fa-caret-up problemsBodyCategoryArrowUp"></i>
+                        }
+                        {problemSort == 2 &&
+                            <i className="fa-solid fa-caret-down problemsBodyCategoryArrowDown"></i>
+                        }
+                    </div>
+                </div>
+                <div className="problemsBodyCategory3">
+                    <p className="problemsBodyCategoryText">TOPICS</p>
+                </div>
+                <div className="problemsBodyCategory4" onClick={() => {setDifficultySort(() => (difficultySort + 1) % 3); clearSorts(2);}}>
+                    <p className="problemsBodyCategoryText">DIFFICULTY</p>
+                    <div className="problemsBodyCategoryArrows">
+                        {difficultySort == 0 &&
+                            <>
+                            <i className="fa-solid fa-caret-up problemsBodyCategoryArrowUp"></i>
+                            <i className="fa-solid fa-caret-down problemsBodyCategoryArrowDown"></i>
+                            </>
+                        }
+                        {difficultySort == 1 &&
+                            <i className="fa-solid fa-caret-up problemsBodyCategoryArrowUp"></i>
+                        }
+                        {difficultySort == 2 &&
+                            <i className="fa-solid fa-caret-down problemsBodyCategoryArrowDown"></i>
+                        }
+                    </div>
+                </div>
+                <div className="problemsBodyCategory5" onClick={() => {setLastPracticedSort(() => (lastPracticedSort + 1) % 3); clearSorts(3);}}>
+                    <p className="problemsBodyCategoryText">LAST PRACTICED</p>
+                    <div className="problemsBodyCategoryArrows">
+                        {lastPracticedSort == 0 &&
+                            <>
+                            <i className="fa-solid fa-caret-up problemsBodyCategoryArrowUp"></i>
+                            <i className="fa-solid fa-caret-down problemsBodyCategoryArrowDown"></i>
+                            </>
+                        }
+                        {lastPracticedSort == 1 &&
+                            <i className="fa-solid fa-caret-up problemsBodyCategoryArrowUp"></i>
+                        }
+                        {lastPracticedSort == 2 &&
+                            <i className="fa-solid fa-caret-down problemsBodyCategoryArrowDown"></i>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
