@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import StatusCircle from "./StatusCircle";
 
 import './ProblemsBody.css';
 
@@ -174,6 +175,31 @@ function ProblemsBody() {
                             <i className="fa-solid fa-caret-down problemsBodyCategoryArrowDown"></i>
                         }
                     </div>
+                </div>
+            </div>
+            <div className="problemsBodyProblemsContainer">
+                <div className="problemsBodyProblemsOption">
+                    <div className="problemsBodyProblemsOptionText1 blueText2"><StatusCircle color={'yellow'}/></div>
+                    <p className="problemsBodyProblemsOptionText2 blueText">1444. Number of Ways of Cutting a Pizza</p>
+                    <div className="problemsBodyProblemsTopics">
+                        <p className="problemsBodyProblemsTopic">Array</p>
+                        <p className="problemsBodyProblemsTopic">Dynamic Programming</p>
+                        <p className="problemsBodyProblemsTopic">Memoization</p>
+                        <p className="problemsBodyProblemsTopic">Matrix</p>
+                    </div>
+                    <p className="problemsBodyProblemsOptionText3 redText">Hard</p>
+                    <p className="problemsBodyProblemsOptionText4">3 days ago</p>
+                </div>
+                <div className="problemsBodyProblemsOption">
+                        <div className="problemsBodyProblemsOptionText1 blueText3"><StatusCircle color={'green'}/></div>
+                        <p className="problemsBodyProblemsOptionText2 blueText">543. Diameter of Binary Tree</p>
+                        <div className="problemsBodyProblemsTopics">
+                            <p className="problemsBodyProblemsTopic">Tree</p>
+                            <p className="problemsBodyProblemsTopic">Depth-First Search</p>
+                            <p className="problemsBodyProblemsTopic">Binary Tree</p>
+                        </div>
+                        <p className="problemsBodyProblemsOptionText3 greenText">Easy</p>
+                        <p className="problemsBodyProblemsOptionText4">3 days ago</p>
                 </div>
             </div>
         </div>
