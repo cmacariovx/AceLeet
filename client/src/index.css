@@ -8,8 +8,8 @@
   line-height: 1.25;
   font-weight: 400;
   text-decoration: none;
-  text-rendering: optimizeLegibility;
-  shape-rendering: crispEdges;
+  text-rendering: geometricPrecision;
+  shape-rendering: geometricPrecision;
   image-rendering: optimizeQuality;
   border: none;
   background: none;
