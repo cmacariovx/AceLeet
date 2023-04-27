@@ -126,9 +126,10 @@ async function problemTitles() {
     try {
         const response = await fetch('trie.json');
         const trieData = await response.json();
+
         const trie = new Trie();
         trie.deserialize(JSON.stringify(trieData));
-        console.log(trie);
+
         return trie;
     }
     catch (error) {
