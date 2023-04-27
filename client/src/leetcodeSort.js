@@ -36,8 +36,6 @@ async function processJsonData() {
         }
 
         return countDifficultiesAndTopics(data.problemsetQuestionList.questions);
-
-        // console.log('Topic counts:', Object.fromEntries(Object.entries(topicCounts).sort((a, b) => b[1] - a[1])));
     }
 };
 
@@ -54,7 +52,7 @@ class Trie {
         this.root = new TrieNode();
     }
 
-    insert(word) {
+    insert(id, word) {
         let currentNode = this.root;
         const originalWord = word;
         word = word.toLowerCase();
@@ -65,7 +63,7 @@ class Trie {
             currentNode = currentNode.children[char];
         }
         currentNode.isEndOfWord = true;
-        currentNode.word = originalWord;
+        currentNode.word = `${id}. ${originalWord}`;
     }
 
     search(word) {
@@ -114,26 +112,29 @@ class Trie {
             this.dfs(node.children[char], prefix + char, result);
         }
     }
+
+    serialize() {
+        return JSON.stringify(this.root);
+    }
+
+    deserialize(data) {
+        this.root = JSON.parse(data);
+    }
 }
 
 async function problemTitles() {
-    let data = await readJsonFile('leetcodeAllQuestions.json');
-    data = data['data'];
-
-    if (data) {
-        let questions = data.problemsetQuestionList.questions;
+    try {
+        const response = await fetch('trie.json');
+        const trieData = await response.json();
         const trie = new Trie();
-
-        for (let i = 0; i < questions.length; i++) {
-            let question = questions[i];
-
-            trie.insert(question.title);
-        }
-
+        trie.deserialize(JSON.stringify(trieData));
+        console.log(trie);
         return trie;
     }
-
-    return null;
+    catch (error) {
+        console.error('Error reading trie.json:', error);
+        return null;
+    }
 }
 
 export default {

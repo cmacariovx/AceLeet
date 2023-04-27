@@ -3,6 +3,8 @@ import BarChart from "./BarChart";
 import StatusCircle from "./StatusCircle";
 import LineChart from "./LineChart";
 
+import { useNavigate } from "react-router-dom";
+
 import './HomeBody.css'
 import DoughnutChart1 from "./DoughnutChart1";
 import DoughnutChart2 from "./DoughnutChart2";
@@ -10,6 +12,8 @@ import DoughnutChart2 from "./DoughnutChart2";
 function HomeBody() {
     const [isOpen1, setIsOpen1] = useState(true);
     const [isOpen2, setIsOpen2] = useState(true);
+
+    const navigate = useNavigate();
 
     return (
         <div className="homeBodyContainer">
@@ -19,7 +23,7 @@ function HomeBody() {
                     <p className="homeBodyHeaderText">Dashboard</p>
                 </div>
                 <div className="homeBodyContainerOverviewRight">
-                    <button className="homeBodyContainerOverviewRightButton">New Problem</button>
+                    <button className="homeBodyContainerOverviewRightButton" onClick={() => navigate('/new-problem')}>New Problem</button>
                 </div>
             </div>
             <div className="homeBodyContainerKPIs">

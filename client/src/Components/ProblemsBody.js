@@ -33,11 +33,11 @@ function ProblemsBody() {
             <div className="problemsBodyContainerOverview">
                 <div className="problemsBodyContainerOverviewLeft">
                     <p className="problemsBodySmallText">OVERVIEW</p>
-                    <p className="problemsBodyHeaderText">Problems</p>
+                    <p className="problemsBodyHeaderText">History</p>
                 </div>
-                <div className="problemsBodyContainerOverviewRight">
-                    <button className="problemsBodyContainerOverviewRightButton">New Problem</button>
-                </div>
+                    {/* <div className="problemsBodyContainerOverviewRight">
+                        <button className="problemsBodyContainerOverviewRightButton">New Problem</button>
+                    </div> */}
             </div>
             <div className="problemsBodyOptionsContainer">
                 <div className="problemsBodyOptionContainer">

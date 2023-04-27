@@ -1,4 +1,4 @@
-.problemsBody {
+.recommendedBody {
     min-height: 100vh;
     height: auto;
     width: 100%;
@@ -9,18 +9,20 @@
     padding: 0 60px;
 }
 
-    .problemsBodyContainerOverview {
+    .recommendedBodyContainerOverview {
         height: 100px;
         width: 100%;
         padding: 20px 0;
-        /* border-bottom: 1px solid rgba(220, 220, 220, 0.6); */
+        border-bottom: 1px solid rgba(220, 220, 220, 0.5);
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 40px;
+        margin-top: 20px;
     }
 
-        .problemsBodyContainerOverviewLeft {
+        .recommendedBodyContainerOverviewLeft {
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -28,20 +30,20 @@
             align-items: flex-start;
         }
 
-            .problemsBodySmallText {
+            .recommendedBodySmallText {
                 font-size: 10px;
                 color: var(--lightGray);
                 letter-spacing: 1px;
                 margin-bottom: 8px;
             }
 
-            .problemsBodyHeaderText {
+            .recommendedBodyHeaderText {
                 font-size: 24px;
                 color: var(--black);
                 font-weight: 600;
             }
 
-        .problemsBodyContainerOverviewRight {
+        .recommendedBodyContainerOverviewRight {
             height: 100%;
             display: flex;
             flex-direction: row;
@@ -49,7 +51,7 @@
             align-items: center;
         }
 
-            .problemsBodyContainerOverviewRightButton {
+            .recommendedBodyContainerOverviewRightButton {
                 height: 40px;
                 padding: 12px;
                 display: flex;
@@ -63,7 +65,7 @@
                 cursor: pointer;
             }
 
-    .problemsBodyOptionsContainer {
+    .recommendedBodyOptionsContainer {
         height: 100px;
         width: 100%;
         display: flex;
@@ -77,7 +79,7 @@
         position: relative;
     }
 
-        .problemsBodyOptionContainer {
+        .recommendedBodyOptionContainer {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -88,7 +90,7 @@
             left: 30px;
         }
 
-        .problemsBodyOptionContainer2 {
+        .recommendedBodyOptionContainer2 {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -99,7 +101,7 @@
             left: 220px;
         }
 
-        .problemsBodyOptionContainer3 {
+        .recommendedBodyOptionContainer3 {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -110,7 +112,7 @@
             left: 410px;
         }
 
-        .problemsBodyOptionContainer4 {
+        .recommendedBodyOptionContainer4 {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -121,7 +123,7 @@
             margin-top: 0.2px;
         }
 
-        .problemsBodyOptionContainer5 {
+        .recommendedBodyOptionContainer5 {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -132,7 +134,7 @@
             margin-top: 0.2px;
         }
 
-            .problemsBodyOptionMain {
+            .recommendedBodyOptionMain {
                 width: 150px;
                 padding: 12px 18px;
                 background-color: var(--darkGray);
@@ -146,7 +148,7 @@
                 box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
             }
 
-            .problemsBodyOptionMain2 {
+            .recommendedBodyOptionMain2 {
                 width: 200px;
                 padding: 12px 18px;
                 background-color: var(--darkGray);
@@ -160,7 +162,7 @@
                 box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
             }
 
-            .problemsBodyOptionMainButton {
+            .recommendedBodyOptionMainButton {
                 padding: 12px 18px;
                 background-color: var(--blue);
                 display: flex;
@@ -175,16 +177,16 @@
                 color: white;
             }
 
-                .problemsBodyOptionMainText {
+                .recommendedBodyOptionMainText {
                     font-size: 14px;
                 }
 
-                .problemsBodyOptionChevron {
+                .recommendedBodyOptionChevron {
                     font-size: 14px;
                     margin-bottom: 0px;
                 }
 
-            .problemsBodyOptionDropdown {
+            .recommendedBodyOptionDropdown {
                 display: flex;
                 flex-direction: column;
                 justify-content: flex-start;
@@ -198,7 +200,7 @@
                 z-index: 2;
             }
 
-                .problemsBodyOption {
+                .recommendedBodyOption {
                     transition: 0.1s linear;
                     width: 150px;
                     padding: 14px 18px;
@@ -212,13 +214,13 @@
                     text-align: left;
                 }
 
-                .problemsBodyOption:hover {
+                .recommendedBodyOption:hover {
                     transition: 0.1s linear;
                     background-color: var(--gray);
                 }
 
-    .problemsBodyCategoryContainer {
-        padding: 16px 0px;
+    .recommendedBodyCategoryContainer {
+        padding: 6px 0px;
         width: 100%;
         display: flex;
         flex-direction: row;
@@ -231,31 +233,29 @@
         border-right: 1px solid rgba(220, 220, 220, 0.4); */
     }
 
-        .problemsBodyCategory1 {
+        .recommendedBodyCategory1 {
             padding: 12px 0px;
             width: 125px;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
-            cursor: pointer;
             position: relative;
             z-index: 1;
         }
 
-        .problemsBodyCategory2 {
+        .recommendedBodyCategory2 {
             padding: 12px 0px;
             width: 250px;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
-            cursor: pointer;
             position: relative;
             z-index: 1;
         }
 
-        .problemsBodyCategory3 {
+        .recommendedBodyCategory3 {
             padding: 12px 0px;
             width: 300px;
             display: flex;
@@ -266,37 +266,68 @@
             z-index: 1;
         }
 
-        .problemsBodyCategory4 {
+        .recommendedBodyCategory4 {
             padding: 12px 0px;
             width: 200px;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
-            cursor: pointer;
             position: relative;
             z-index: 1;
         }
 
-        .problemsBodyCategory5 {
+        .recommendedBodyCategory5 {
             padding: 12px 0px;
             width: 200px;
             display: flex;
             flex-direction: row;
             justify-content: flex-start;
             align-items: center;
-            cursor: pointer;
             position: relative;
             z-index: 1;
         }
 
-        .problemsBodyCategoryText {
-            font-size: 13px;
+        .recommendedBodyCategory11 {
+            padding: 12px 0px;
+            width: 220px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .recommendedBodyCategory22 {
+            padding: 12px 0px;
+            width: 220px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .recommendedBodyCategory55 {
+            padding: 12px 0px;
+            width: 220px;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .recommendedBodyCategoryText {
+            font-size: 12px;
             color: var(--lightGray);
             user-select: none;
         }
 
-        .problemsBodyCategoryArrows {
+        .recommendedBodyCategoryArrows {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -304,7 +335,7 @@
             position: relative;
         }
 
-        .problemsBodyCategoryArrowUp {
+        .recommendedBodyCategoryArrowUp {
             font-size: 16px;
             position: absolute;
             bottom: -5px;
@@ -312,7 +343,7 @@
             margin-left: 40px;
         }
 
-        .problemsBodyCategoryArrowDown {
+        .recommendedBodyCategoryArrowDown {
             font-size: 16px;
             position: absolute;
             top: -5px;
@@ -320,7 +351,7 @@
             margin-left: 40px;
         }
 
-    .problemsBodyProblemsContainer {
+    .recommendedBodyProblemsContainer {
         width: 100%;
         display: flex;
         flex-direction: column;
@@ -328,7 +359,7 @@
         align-items: center;
     }
 
-        .problemsBodyProblemsOption {
+        .recommendedBodyProblemsOption {
             padding: 12px 0px;
             padding-left: 20px;
             width: 100%;
@@ -344,21 +375,42 @@
             z-index: 1;
         }
 
-        .problemsBodyProblemsOption:hover {
+        .recommendedBodyProblemsOption2 {
+            padding: 18px 0px;
+            padding-left: 20px;
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            border-bottom: 1px solid rgba(220, 220, 220, 0.4);
+            cursor: pointer;
+            transition: 0.1s linear;
+            background-color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .recommendedBodyProblemsOption:hover {
             transition: 0.1s linear;
             background-color: var(--darkGray);
         }
 
-            .problemsBodyProblemsOptionText1 {
-                font-size: 14px;
+        .recommendedBodyProblemsOption2:hover {
+            transition: 0.1s linear;
+            background-color: var(--darkGray);
+        }
+
+            .recommendedBodyProblemsOptionText1 {
+                font-size: 13px;
                 min-width: 125px;
                 width: 125px;
                 max-width: 125px;
                 user-select: none;
             }
 
-            .problemsBodyProblemsOptionText2 {
-                font-size: 14px;
+            .recommendedBodyProblemsOptionText2 {
+                font-size: 13px;
                 min-width: 250px;
                 width: 250px;
                 max-width: 250px;
@@ -367,18 +419,44 @@
                 padding-right: 40px;
             }
 
-            .problemsBodyProblemsOptionText3 {
-                font-size: 14px;
+            .recommendedBodyProblemsOptionText3 {
+                font-size: 13px;
                 min-width: 200px;
                 width: 200px;
                 max-width: 200px;
             }
 
-            .problemsBodyProblemsOptionText4 {
-                font-size: 14px;
+            .recommendedBodyProblemsOptionText4 {
+                font-size: 13px;
                 min-width: 200px;
                 width: 200px;
                 max-width: 200px;
+                color: var(--lightGray);
+            }
+
+            .recommendedBodyProblemsOptionText11 {
+                font-size: 13px;
+                min-width: 220px;
+                width: 220px;
+                max-width: 220px;
+                user-select: none;
+            }
+
+            .recommendedBodyProblemsOptionText22 {
+                font-size: 13px;
+                min-width: 220px;
+                width: 220px;
+                max-width: 220px;
+                word-break: normal;
+                word-wrap: normal;
+                padding-right: 40px;
+            }
+
+            .recommendedBodyProblemsOptionText44 {
+                font-size: 13px;
+                min-width: 220px;
+                width: 220px;
+                max-width: 220px;
                 color: var(--lightGray);
             }
 
@@ -412,7 +490,7 @@
                 color: var(--red) !important;
             }
 
-            .problemsBodyProblemsTopics {
+            .recommendedBodyProblemsTopics {
                 font-size: 13px;
                 display: flex;
                 flex-direction: row;
@@ -423,7 +501,7 @@
                 padding-right: 40px;
             }
 
-                .problemsBodyProblemsTopic {
+                .recommendedBodyProblemsTopic {
                     padding: 4px 10px;
                     border-radius: 30px;
                     background-color: var(--darkGray);
@@ -438,3 +516,54 @@
                     user-select: none;
                     color: var(--lightGray);
                 }
+
+    .recommendedBodyTitleContainer {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        background-color: white;
+        border-radius: 10px;
+        border: 1px solid rgba(220, 220, 220, 0.4);
+        padding: 24px;
+        box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+        cursor: pointer;
+        margin-top: 60px;
+    }
+
+    .recommendedBodyTitleContainer2 {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        background-color: white;
+        border-radius: 10px;
+        border: 1px solid rgba(220, 220, 220, 0.4);
+        padding: 24px;
+        box-shadow: 0 0 10px rgba(206, 206, 206, 0.1);
+        cursor: pointer;
+    }
+
+    .recommendedBodyTitle {
+        font-size: 16px;
+        font-weight: bold;
+        user-select: none;
+    }
+
+    .recommendedBodyTitleIcon {
+        font-size: 18px;
+    }
+
+    .blueText1 {
+        color: #368dff !important;
+    }
+
+    .blueText2 {
+        color: #245fac !important;
+    }
+
+    .blueText3 {
+        color: #133360 !important;
+    }

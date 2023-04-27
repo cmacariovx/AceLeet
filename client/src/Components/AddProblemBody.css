@@ -155,3 +155,28 @@
         transition: 0.1s linear;
         background-color: white;
     }
+
+    .addProblemBodyCustomContainer {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .addProblemBodyCustomOverview {
+        height: 100px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: 20px;
+        margin-top: 20px;
+        border-top: 1px solid rgba(220, 220, 220, 0.6);
+    }
+
+        .addProblemBodyCustomOverviewText {
+            font-size: 23px;
+            font-weight: bold;
+        }

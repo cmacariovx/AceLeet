@@ -48,12 +48,15 @@
             flex-direction: row;
             justify-content: center;
             align-items: center;
-            border-bottom: 1px solid var(--blue);
             cursor: pointer;
         }
             .homeHeaderLeftOptionText {
                 font-size: 14px;
             }
+
+        .homeHeaderBorderBottom {
+            border-bottom: 1px solid var(--blue) !important;
+        }
 
     .homeHeaderMiddle {
         height: 100%;

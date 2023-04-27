@@ -15,8 +15,19 @@ function AddProblemBody() {
     const dropdownRef = useRef(null);
 
     const handleInputChange = (event) => {
-        setSearchTerm(event.target.value);
+        const inputValue = event.target.value;
+
+        if (inputValue.length === 1 && inputValue === " ") return;
+
+        setSearchTerm(inputValue);
         setSelectedQuestion("");
+
+        if (inputValue === "") setIsDropdownVisible(false);
+        else setIsDropdownVisible(true);
+    }
+
+    const handleInputBlur = () => {
+        setTimeout(() => setIsDropdownVisible(false), 100);
     }
 
     async function getQuestions() {
@@ -60,7 +71,6 @@ function AddProblemBody() {
 
     useEffect(() => {
         let questions = searchQuestions(questionsTrie, searchTerm)
-        console.log(questions)
         setFilteredQuestions(questions);
     }, [searchTerm, questionsTrie]);
 
@@ -77,10 +87,11 @@ function AddProblemBody() {
                     maxLength={50}
                     value={searchTerm}
                     onFocus={() => setIsDropdownVisible(true)}
+                    onBlur={handleInputBlur}
                     onChange={handleInputChange}
                 ></input>
                 <div className="addProblemBodyAddButtonContainer">
-                    <button className="addProblemBodyAddButton">Create</button>
+                    <button className="addProblemBodyAddButton">Confirm</button>
                 </div>
                 {isDropdownVisible && (
                     <div ref={dropdownRef} className="addProblemBodyDropdown">
@@ -99,10 +110,10 @@ function AddProblemBody() {
                     </div>
                 )}
             </div>
-            <div className="addProblemBodyCustom">
+            {/* <div className="addProblemBodyCustom">
                 <p className="addProblemBodyCustom1">Can't find you're looking for?</p>
                 <p className="addProblemBodyCustom2">Create Custom Problem</p>
-            </div>
+            </div> */}
         </div>
     )
 }
