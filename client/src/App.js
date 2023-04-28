@@ -7,31 +7,39 @@ import Home from './Pages/Home'
 import Problems from './Pages/Problems'
 import AddProblem from './Pages/AddProblem'
 import Recommended from './Pages/Recommended'
+import Auth from './Components/Auth'
 
 import { login } from './redux/slices/authSlice'
 
 function App() {
-  const token = useSelector(state => state.auth.token)
-  const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+  const [isLoading, setIsLoading] = useState(true);
+  const token = useSelector(state => state.auth.token);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('userData'))
+    const storedData = JSON.parse(localStorage.getItem('userData'));
 
     if (storedData && storedData.token) {
-      dispatch(login(storedData))
+      dispatch(login(storedData));
     }
-  }, [dispatch])
+    
+    setIsLoading(false)
+  }, [dispatch]);
 
   return (
     <div className="app">
-      <Routes>
+      {!isLoading && token && <Routes>
         <Route path='/' exact element={<Home />} />
         <Route path='/history' exact element={<Problems />} />
         <Route path='/new-problem' exact element={<AddProblem />} />
         <Route path='/recommended' exact element={<Recommended />} />
-      </Routes>
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>}
+      {!isLoading && !token && <Routes>
+        <Route path='/' exact element={<Home />} />
+        <Route path="*" element={<Navigate to="/" />} />
+      </Routes>}
     </div>
   )
 }

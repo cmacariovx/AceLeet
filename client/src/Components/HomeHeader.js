@@ -13,6 +13,7 @@ function HomeHeader() {
     const dispatch = useDispatch();
 
     const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
+    const username = useSelector(state => state.auth.username)
 
     const [selected, setSelected] = useState(null);
     const [dropdownActive, setDropdownActive] = useState(false);
@@ -58,11 +59,11 @@ function HomeHeader() {
                     <img src="#" className="homeHeaderBrand"/>
                 </div>
                 <div className="homeHeaderRight">
-                    <p className="homeHeaderRightUsername" onClick={() => setDropdownActive(!dropdownActive)}>cmacariovx</p>
+                    <p className="homeHeaderRightUsername" onClick={() => setDropdownActive(!dropdownActive)}>{isLoggedIn ? username : 'Log in'}</p>
                     {dropdownActive && <div className="homeHeaderRightDropdown" ref={dropdownRef}>
                         <div className="homeHeaderRightDropdownOption" onClick={() => {isLoggedIn ? dispatch(logout()): setShowAuth(true)}}>
                             <p className="homeHeaderRightDropdownOptionText">{isLoggedIn ? 'Log out' : 'Log in'}</p>
-                            <i className="fa-solid fa-arrow-up-right-from-square homeHeaderRightUsernameIcon"></i>
+                            <i className={isLoggedIn ? "fa-solid fa-arrow-up-right-from-square homeHeaderRightUsernameIcon" : "fa-solid fa-arrow-right-to-bracket homeHeaderRightUsernameIcon"}></i>
                         </div>
                     </div>}
                 </div>

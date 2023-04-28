@@ -3,6 +3,9 @@ import './Auth.css';
 
 import { login } from '../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
+import { GoogleLogin } from 'react-google-login';
+
+import { PuffLoader } from 'react-spinners'
 
 function Auth({ onClose }) {
     const isExistingUser = localStorage.getItem('existingUser')
@@ -13,6 +16,13 @@ function Auth({ onClose }) {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [text, setText] = useState('')
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [usernameError, setUsernameError] = useState('');
+    const [emailError, setEmailError] = useState('');
+    const [passwordError, setPasswordError] = useState('');
+    const [passwordMatchError, setPasswordMatchError] = useState('');
+    const [textError, setTextError] = useState('');
 
     const [usernameValid, setUsernameValid] = useState(null);
     const [emailValid, setEmailValid] = useState(null);
@@ -49,38 +59,44 @@ function Auth({ onClose }) {
 
         // Reset the error
         setError('');
+        setUsernameError('');
+        setEmailError('');
+        setPasswordError('');
+        setPasswordMatchError('');
+        setTextError('')
 
         // Signup
         if (signup) {
-            // Check username
+            let isValid = true;
+
             const usernameRegex = /^[a-zA-Z0-9]{3,}$/;
             if (!usernameRegex.test(username)) {
-                setError('Username must be at least 3 characters and contain only letters and numbers.');
-                return;
+                setUsernameError('Username must be at least 3 characters and contain only letters and numbers.');
+                isValid = false;
             }
 
-            // Check email
             const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
             if (!emailRegex.test(email)) {
-                setError('Please enter a valid email address.');
-                return;
+                setEmailError('Please enter a valid email address.');
+                isValid = false;
             }
 
-            // Check password
             const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
             if (!passwordRegex.test(password)) {
-                setError('Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, and one number.');
-                return;
+                setPasswordError('Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, and one number.');
+                isValid = false;
             }
 
-            // Check confirm password
             if (password !== confirmPassword) {
-                setError("Passwords must match.");
-                return;
+                setPasswordMatchError("Passwords must match.");
+                isValid = false;
             }
+
+            if (isValid == false) return;
 
             async function submitSignup(event) {
                 event.preventDefault()
+                setIsLoading(true);
                 const response = await fetch('http://localhost:5000' + '/auth/signup', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -94,9 +110,19 @@ function Auth({ onClose }) {
                 })
 
                 const data = await response.json();
+                setIsLoading(false);
                 if (data.error) setError(data.error);
                 else {
-
+                    dispatch(
+                        login({
+                            userId: data.userId,
+                            token: data.token,
+                            email: data.email,
+                            username: data.username,
+                            joinedDate: data.joinedDate,
+                        })
+                    );
+                    onClose();
                 }
                 return data;
             }
@@ -104,21 +130,23 @@ function Auth({ onClose }) {
             submitSignup(e);
         }
         else {
-            // Login
-            // Check username/email
+            let isValid = true;
+
             if (!text) {
-                setError('Please enter either a username or an email address.');
-                return;
+                setTextError('Please enter either a username or an email address.');
+                isValid = false;
             }
 
-            // Check password
             if (!password) {
-                setError('Please enter a password.');
-                return;
+                setPasswordError('Please enter a password.');
+                isValid = false;
             }
+
+            if (isValid == false) return;
 
             async function submitLogin(event) {
                 event.preventDefault()
+                setIsLoading(true);
                 const response = await fetch('http://localhost:5000' + '/auth/login', {
                     method: 'POST',
                     body: JSON.stringify({
@@ -131,6 +159,7 @@ function Auth({ onClose }) {
                 })
 
                 const data = await response.json();
+                setIsLoading(false);
                 if (data.error) setError(data.error);
                 else {
                     dispatch(
@@ -158,6 +187,11 @@ function Auth({ onClose }) {
     return (
         <div className='authBackdrop' onClick={() => onClose()}>
         <div className="authContainer" style={!signup ? {height: '440px'} : {height: '600px'}} onClick={(e) => e.stopPropagation()}>
+            {isLoading &&
+                <div className='authSpinner'>
+                    <PuffLoader color="#2c7be5"/>
+                </div>
+            }
             <h1 className='authHeaderText'>{signup ? 'Create an account' : 'Welcome back!'}</h1>
             <form className="authForm" onSubmit={handleSubmit}>
             {signup && (
@@ -171,6 +205,7 @@ function Auth({ onClose }) {
                             onChange={handleUsernameChange}
                             style={usernameValid === false ? { borderColor: 'red' } : {}}
                         />
+                        {usernameError && <p className='authError'>{usernameError}</p>}
 
                     <label className="authLabel" htmlFor="email">Email</label>
                     <input
@@ -181,6 +216,7 @@ function Auth({ onClose }) {
                         onChange={handleEmailChange}
                         style={emailValid === false ? { borderColor: 'red' } : {}}
                     />
+                        {emailError && <p className='authError'>{emailError}</p>}
                     </>
                 )}
                 {!signup &&
@@ -193,6 +229,7 @@ function Auth({ onClose }) {
                             value={text}
                             onChange={(e) => setText(e.target.value)}
                         />
+                        {textError && <p className='authError'>{textError}</p>}
                     </>
                 }
                 <label className="authLabel" htmlFor="password">Password</label>
@@ -202,8 +239,9 @@ function Auth({ onClose }) {
                     id="password"
                     value={password}
                     onChange={handlePasswordChange}
-                    style={passwordValid === false ? { borderColor: 'red' } : {}}
+                    style={(signup && passwordValid === false) ? { borderColor: 'red' } : {}}
                 />
+                {passwordError && <p className='authError'>{passwordError}</p>}
                 {signup && (
                     <>
                         <label className="authLabel" htmlFor="confirmPassword">Confirm Password</label>
@@ -215,6 +253,7 @@ function Auth({ onClose }) {
                             onChange={handleConfirmPasswordChange}
                             style={confirmPasswordValid === false ? { borderColor: 'red' } : {}}
                         />
+                        {passwordMatchError && <p className='authError'>{passwordMatchError}</p>}
                     </>
                 )}
                 <button className='authButton' type="submit">{signup ? 'Create Account' : 'Login'}</button>

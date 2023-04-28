@@ -44,6 +44,7 @@ class TrieNode {
         this.children = {};
         this.isEndOfWord = false;
         this.word = null;
+        this.topics = [];
     }
 }
 
@@ -52,7 +53,7 @@ class Trie {
         this.root = new TrieNode();
     }
 
-    insert(id, word) {
+    insert(id, word, topicsArr) {
         let currentNode = this.root;
         const originalWord = word;
         word = word.toLowerCase();
@@ -64,6 +65,7 @@ class Trie {
         }
         currentNode.isEndOfWord = true;
         currentNode.word = `${id}. ${originalWord}`;
+        currentNode.topics = topicsArr;
     }
 
     search(word) {
@@ -106,7 +108,7 @@ class Trie {
 
     dfs(node, prefix, result) {
         if (node.isEndOfWord) {
-            result.push(node.word);
+            result.push([node.word, node.topics, node.difficulty]);
         }
         for (const char in node.children) {
             this.dfs(node.children[char], prefix + char, result);
