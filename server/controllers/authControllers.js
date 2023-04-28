@@ -77,7 +77,7 @@ async function userSignup (req, res, next) {
 
     let signupResult = await mongo.userSignup(req, res, next, createdUser);
 
-    if (signupResult.status === 200 && !signupResult.error) {
+    if (signupResult.status == 200 && !signupResult.error) {
         const loginUser = {
             email: email,
             password: plainPassword,

@@ -14,11 +14,11 @@ module.exports = (req, res, next) => {
         }
 
         const decodedToken = jwt.verify(token, jwtSecret)
-        req.userData = { userId: decodedToken.userId }
+        req.userData = { username: decodedToken.username }
         next()
     }
     catch (error) {
         console.log("Auth failed")
-        return
+        return;
     }
 }

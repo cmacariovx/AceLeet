@@ -2,6 +2,7 @@ const express = require("express")
 const bodyParser = require("body-parser")
 
 const authRouter = require("./routes/authRoutes")
+const userRouter = require("./routes/userRoutes")
 
 const app = express()
 
@@ -20,6 +21,7 @@ app.use((req, res, next) => {
 })
 
 app.use("/auth", authRouter)
+app.use("/user", userRouter)
 
 app.use((req, res, next) => {
     const error = new Error("Could not find this route.")

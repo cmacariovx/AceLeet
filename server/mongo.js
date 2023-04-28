@@ -23,27 +23,27 @@ async function userSignup(req, res, next, newUser) {
 
         if (existingUserByEmail && existingUserByUsername) {
             client.close();
-            return { status: 409, error: "Email and username already exist." };
+            return { status: 409, message: null, error: "Email and username already exist.", result: null };
         }
 
         if (existingUserByEmail) {
             client.close();
-            return { status: 409, error: "Email already exists." };
+            return { status: 409, message: null, error: "Email already exists.", result: null };
         }
 
         if (existingUserByUsername) {
             client.close();
-            return { status: 409, error: "Username already exists." };
+            return { status: 409, message: null, error: "Username already exists.", result: null };
         }
 
         result = await db.collection("users").insertOne(newUser);
 
         client.close();
 
-        return { status: 200, message: "User created successfully." };
+        return { status: 200, message: "User created successfully.", error: null, result: null };
     }
     catch (error) {
-        return { status: 500, error: "Sorry! Could not add user, please try again." };
+        return { status: 500, message: null, error: "Sorry! Could not add user, please try again.", result: null };
     }
 }
 
@@ -83,7 +83,7 @@ async function userLogin(req, res, next, user) {
         }
 
         const token = jwt.sign(
-            { userId: result._id.toString(), email: result.email, username: result.username },
+            { username: result.username },
             jwtSecret,
         )
 
@@ -102,5 +102,32 @@ async function userLogin(req, res, next, user) {
     }
 }
 
-exports.userSignup = userSignup
-exports.userLogin = userLogin
+async function fetchUser(req, res, next) {
+    const { userId, email } = req.body;
+
+    const client = new MongoClient(mongoUrl);
+
+    try {
+        await client.connect();
+        const db = client.db('sr');
+
+        const userIdObjectId = new ObjectId(userId);
+
+        const user = await db.collection('users').findOne({
+            _id: userIdObjectId,
+            email: email,
+        });
+
+        client.close();
+
+        return { status: 200, message: 'User found!', error: null, result: user };
+    }
+    catch (error) {
+        client.close();
+        return { status: 500, message: null, error: "Could not find user.", result: null };
+    }
+}
+
+exports.userSignup = userSignup;
+exports.userLogin = userLogin;
+exports.fetchUser = fetchUser;

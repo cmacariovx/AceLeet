@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import './Auth.css';
 
 import { login } from '../redux/slices/authSlice';
 import { useDispatch } from 'react-redux';
-import { GoogleLogin } from 'react-google-login';
+import ErrorModal from './ErrorModal';
 
 import { PuffLoader } from 'react-spinners'
 
@@ -28,6 +28,18 @@ function Auth({ onClose }) {
     const [emailValid, setEmailValid] = useState(null);
     const [passwordValid, setPasswordValid] = useState(null);
     const [confirmPasswordValid, setConfirmPasswordValid] = useState(null);
+
+    const [mouseDownOnInput, setMouseDownOnInput] = useState(false);
+    const backdropRef = useRef(null);
+
+    const handleMouseDownOnInput = () => {
+        setMouseDownOnInput(true);
+    }
+
+    const handleMouseUpOnBackdrop = (e) => {
+        if (e.target === backdropRef.current && !mouseDownOnInput) onClose();
+        setMouseDownOnInput(false);
+    }
 
     const dispatch = useDispatch()
 
@@ -180,12 +192,12 @@ function Auth({ onClose }) {
         }
     };
 
-    const closeModal = () => {
-        setError('');
-    };
-
     return (
-        <div className='authBackdrop' onClick={() => onClose()}>
+        <div
+            className="authBackdrop"
+            onMouseUp={handleMouseUpOnBackdrop}
+            ref={backdropRef}
+        >
         <div className="authContainer" style={!signup ? {height: '440px'} : {height: '600px'}} onClick={(e) => e.stopPropagation()}>
             {isLoading &&
                 <div className='authSpinner'>
@@ -204,6 +216,7 @@ function Auth({ onClose }) {
                             value={username}
                             onChange={handleUsernameChange}
                             style={usernameValid === false ? { borderColor: 'red' } : {}}
+                            onMouseDown={handleMouseDownOnInput}
                         />
                         {usernameError && <p className='authError'>{usernameError}</p>}
 
@@ -215,6 +228,7 @@ function Auth({ onClose }) {
                         value={email}
                         onChange={handleEmailChange}
                         style={emailValid === false ? { borderColor: 'red' } : {}}
+                        onMouseDown={handleMouseDownOnInput}
                     />
                         {emailError && <p className='authError'>{emailError}</p>}
                     </>
@@ -228,6 +242,7 @@ function Auth({ onClose }) {
                             id="text"
                             value={text}
                             onChange={(e) => setText(e.target.value)}
+                            onMouseDown={handleMouseDownOnInput}
                         />
                         {textError && <p className='authError'>{textError}</p>}
                     </>
@@ -240,6 +255,7 @@ function Auth({ onClose }) {
                     value={password}
                     onChange={handlePasswordChange}
                     style={(signup && passwordValid === false) ? { borderColor: 'red' } : {}}
+                    onMouseDown={handleMouseDownOnInput}
                 />
                 {passwordError && <p className='authError'>{passwordError}</p>}
                 {signup && (
@@ -252,6 +268,7 @@ function Auth({ onClose }) {
                             value={confirmPassword}
                             onChange={handleConfirmPasswordChange}
                             style={confirmPasswordValid === false ? { borderColor: 'red' } : {}}
+                            onMouseDown={handleMouseDownOnInput}
                         />
                         {passwordMatchError && <p className='authError'>{passwordMatchError}</p>}
                     </>
@@ -263,13 +280,7 @@ function Auth({ onClose }) {
                 ? "Already have an account? Log in"
                 : "Don't have an account? Sign up"}
             </button>
-            {error && (
-                <div className='errorModalBackdrop' onClick={closeModal}>
-                    <div className="errorModal">
-                        <p className='errorModalText'>{error}</p>
-                    </div>
-                </div>
-            )}
+            {error != '' && <ErrorModal onClose={() => setError('')} error={error} />}
         </div>
         </div>
     );
