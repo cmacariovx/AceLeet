@@ -79,4 +79,49 @@
         .homeHeaderRightUsername {
             font-size: 14px;
             color: var(--blue);
+            padding: 10px 14px;
+            background-color: var(--darkGray);
+            border-radius: 5px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .homeHeaderRightDropdown {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            position: absolute;
+            top: 54px;
+            right: 60px;
+        }
+
+        .homeHeaderRightDropdownOption {
+            width: 200px;
+            height: 60px;
+            padding: 12px 24px;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: var(--darkGray);
+            border: 1px solid rgba(220, 220, 220, 0.4);
+            box-shadow: 0 0 10px rgba(220, 220, 220, 0.2);
+        }
+
+        .homeHeaderRightDropdownOptionText {
+            font-size: 15px;
+            color: var(--lightGray);
+        }
+
+        .homeHeaderRightDropdownOption:hover {
+            background-color: var(--gray);
+        }
+
+        .homeHeaderRightUsernameIcon {
+            font-size: 16px;
+            color: var(--lightGray);
+            position: relative;
         }

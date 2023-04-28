@@ -1,0 +1,126 @@
+.authBackdrop {
+    position: fixed;
+    min-height: 100vh;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+}
+
+.authContainer {
+    height: 600px;
+    width: 440px;
+    padding: 30px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: var(--gray);
+    border-radius: 10px;
+}
+
+    .authHeaderText {
+        font-size: 18px;
+        font-weight: bold;
+        padding: 8px 0;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .authForm {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: flex-start;
+    }
+
+    .authLabel {
+        font-size: 14px;
+        color: var(--lightGray);
+    }
+
+    .authInput {
+        height: 46px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        background-color: var(--darkGray);
+        border: 1px solid rgba(220, 220, 220, 0.4);
+        border-radius: 5px;
+        padding: 0 12px;
+        font-size: 14px;
+    }
+
+    .authFooter {
+        padding: 8px 0;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        color: var(--lightGray);
+        cursor: pointer;
+        transition: 0.1s linear;
+    }
+
+    .authFooter:hover {
+        transition: 0.1s linear;
+        color: var(--blue);
+    }
+
+    .authButton {
+        height: 44px;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        border-radius: 5px;
+        background-color: var(--blue);
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+.errorModalBackdrop {
+    position: fixed;
+    min-height: 100vh;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+}
+
+.errorModal {
+    max-width: 400px;
+    padding: 30px 40px;
+    background-color: var(--gray);
+    border-radius: 5px;
+}
+
+.errorModalText {
+    font-size: 16px;
+    color: var(--lightGray);
+    font-weight: bold;
+    user-select: none;
+}

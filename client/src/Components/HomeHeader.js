@@ -1,12 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router"
+import { useSelector, useDispatch } from "react-redux";
+
+import Auth from "./Auth";
+
+import { logout } from "../redux/slices/authSlice";
 
 import './HomeHeader.css'
 
 function HomeHeader() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
 
     const [selected, setSelected] = useState(null);
+    const [dropdownActive, setDropdownActive] = useState(false);
+    const [showAuth, setShowAuth] = useState(false);
+
+    const dropdownRef = useRef(null);
 
     useEffect(() => {
         if (selected == null) {
@@ -14,8 +26,22 @@ function HomeHeader() {
         }
     }, [window.location.pathname, selected])
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setDropdownActive(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [dropdownRef]);
+
     return (
         <div className="homeHeaderContainer">
+            {showAuth && <Auth onClose={() => setShowAuth(false)}/>}
             <div className="homeHeaderContainerMain">
                 <div className="homeHeaderLeft">
                     <div className={selected == '/' ? "homeHeaderLeftOption2 homeHeaderBorderBottom " : "homeHeaderLeftOption2"} onClick={() => navigate('/')}>
@@ -32,7 +58,13 @@ function HomeHeader() {
                     <img src="#" className="homeHeaderBrand"/>
                 </div>
                 <div className="homeHeaderRight">
-                    <p className="homeHeaderRightUsername">cmacariovx</p>
+                    <p className="homeHeaderRightUsername" onClick={() => setDropdownActive(!dropdownActive)}>cmacariovx</p>
+                    {dropdownActive && <div className="homeHeaderRightDropdown" ref={dropdownRef}>
+                        <div className="homeHeaderRightDropdownOption" onClick={() => {isLoggedIn ? dispatch(logout()): setShowAuth(true)}}>
+                            <p className="homeHeaderRightDropdownOptionText">{isLoggedIn ? 'Log out' : 'Log in'}</p>
+                            <i className="fa-solid fa-arrow-up-right-from-square homeHeaderRightUsernameIcon"></i>
+                        </div>
+                    </div>}
                 </div>
             </div>
         </div>
