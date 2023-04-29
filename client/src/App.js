@@ -19,7 +19,6 @@ function App() {
   const token = useSelector(state => state.auth.token);
   const userId = useSelector(state => state.auth.userId);
   const email = useSelector(state => state.auth.email);
-  const user = useSelector(state => state.user);
 
   const dispatch = useDispatch();
 

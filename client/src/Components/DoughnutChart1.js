@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
+import { useSelector } from 'react-redux';
 
 const DoughnutChart1 = (props) => {
+    const user = useSelector(state => state.user)
+
+    const [totalEasy, setTotalEasy] = useState(null);
+    const [totalMedium, setTotalMedium ] = useState(null);
+    const [totalHard, setTotalHard] = useState(null);
+
+    useEffect(() => {
+        if (user) {
+            setTotalEasy(user.technicalData.problems.totalEasySolved);
+            setTotalMedium(user.technicalData.problems.totalMediumSolved);
+            setTotalHard(user.technicalData.problems.totalHardSolved);
+        }
+    }, [user])
+
     const data = {
         labels: ['Easy', 'Medium', 'Hard'],
         datasets: [
             {
-                data: [25, 50, 25],
+                data: [(totalEasy || 0.1), (totalMedium || 0.1), (totalHard || 0.1)],
                 backgroundColor: [
                     'rgba(148, 250, 89, 0.7)', // Green
                     'rgba(255, 215, 115, 0.7)', // Yellow
@@ -49,7 +64,7 @@ const DoughnutChart1 = (props) => {
                         return data.labels[index];
                     },
                     label: function (context) {
-                        return context.parsed + '%';
+                        return context.parsed == 0.1 ? '0 Questions' : context.parsed + ' Questions' ;
                     },
                 },
                 backgroundColor: 'rgba(0, 0, 0, 0.7)',

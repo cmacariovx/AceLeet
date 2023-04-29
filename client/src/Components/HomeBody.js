@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BarChart from "./BarChart";
 import StatusCircle from "./StatusCircle";
 import LineChart from "./LineChart";
+import { useSelector } from "react-redux";
 
 import { useNavigate } from "react-router-dom";
 
@@ -12,6 +13,27 @@ import DoughnutChart2 from "./DoughnutChart2";
 function HomeBody() {
     const [isOpen1, setIsOpen1] = useState(true);
     const [isOpen2, setIsOpen2] = useState(true);
+
+    const user = useSelector(state => state.user);
+
+    const [totalProblems, setTotalProblems] = useState(null);
+    const [solvedRatio, setSolvedRatio] = useState(null);
+    const [totalHours, setTotalHours] = useState(null);
+
+    useEffect(() => {
+        if (user) {
+            setTotalProblems(user.technicalData.problems.totalProblemsSolved.totalProblemsSolvedNum);
+            setSolvedRatio((user.technicalData.problems.totalProblemsSolvedWithSolution /
+            user.technicalData.problems.totalProblemsSolvedWithoutSolution) * 100);
+            setTotalHours(user.technicalData.totalPracticeHours);
+        }
+    }, [user])
+
+    // calc topics to do
+    // calc problems to do
+    // find and calc avg diff topic, then set it in db
+    // find topics and calc percent
+    // calc avg difficulty
 
     const navigate = useNavigate();
 
@@ -30,7 +52,7 @@ function HomeBody() {
                 <div className="homeBodyContainerKPI">
                     <div className="homeBodyContainerKPILeft">
                         <p className="homeBodyContainerKPILeftUpper">TOTAL PROBLEMS SOLVED</p>
-                        <p className="homeBodyContainerKPILeftLower">82</p>
+                        <p className="homeBodyContainerKPILeftLower">{totalProblems ? totalProblems : 0}</p>
                     </div>
                     <div className="homeBodyContainerKPIRight">
                         <i className="fa-solid fa-code"></i>
@@ -39,7 +61,7 @@ function HomeBody() {
                 <div className="homeBodyContainerKPI">
                     <div className="homeBodyContainerKPILeft">
                         <p className="homeBodyContainerKPILeftUpper">TOTAL PRACTICE HOURS</p>
-                        <p className="homeBodyContainerKPILeftLower">18.21</p>
+                        <p className="homeBodyContainerKPILeftLower">{totalHours ? totalHours : 0}</p>
                     </div>
                     <div className="homeBodyContainerKPIRight">
                         <i className="fa-regular fa-clock"></i>
@@ -48,7 +70,7 @@ function HomeBody() {
                 <div className="homeBodyContainerKPI">
                     <div className="homeBodyContainerKPILeft">
                         <p className="homeBodyContainerKPILeftUpper">SOLVED W/O SOLUTION</p>
-                        <p className="homeBodyContainerKPILeftLower">56.00%</p>
+                        <p className="homeBodyContainerKPILeftLower">{solvedRatio ? solvedRatio + '%' : 0 + '%'}</p>
                     </div>
                     <div className="homeBodyContainerKPIRight">
                         <i className="fa-regular fa-object-ungroup"></i>

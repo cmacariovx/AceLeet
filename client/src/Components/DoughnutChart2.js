@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
+import { useSelector } from 'react-redux';
 
 const DoughnutChart2 = (props) => {
-    const topics = [
-        { name: 'Arrays', count: 25 },
-        { name: 'Binary Trees', count: 50 },
-        { name: 'Graphs', count: 15 },
-        { name: 'Linked Lists', count: 10 },
-        { name: 'DP', count: 15 },
-        { name: 'Others', count: 20 },
-    ];
+    const user = useSelector(state => state.user);
+    const [topics, setTopics] = useState([]);
+    const [topicCounts, setTopicCounts] = useState({});
+
+    useEffect(() => {
+        if (user) setTopicCounts(countTopicProblems(user.technicalData.topics))
+    }, [user])
 
     const countTopicProblems = (topics) => {
         const mainTopics = ['Arrays', 'Binary Trees', 'Graphs', 'Linked Lists', 'DP'];
@@ -23,24 +23,37 @@ const DoughnutChart2 = (props) => {
             'Others': 0
         };
 
-        topics.forEach((topic) => {
-            if (mainTopics.includes(topic.name)) {
-                counts[topic.name] = topic.count;
+        for (const topic in topics) {
+            if (mainTopics.includes(topic)) {
+                counts[topic] = topics[topic].totalTopicProblemsSolved;
             } else {
-                counts.Others += topic.count;
+                counts.Others += topics[topic].totalTopicProblemsSolved;
             }
-        });
+        }
 
         return counts;
     }
 
-    const topicCounts = countTopicProblems(topics);
+    const getFilteredData = () => {
+        const filteredLabels = Object.keys(topicCounts).filter((key) => topicCounts[key] > 0);
+        const filteredValues = filteredLabels.map((label) => topicCounts[label]);
+
+        // If all values are zero, set "Others" to 0.1
+        if (filteredValues.every((value) => value === 0)) {
+            filteredLabels.push('Others');
+            filteredValues.push(0.1);
+        }
+
+        return { filteredLabels, filteredValues };
+    };
+
+    const { filteredLabels, filteredValues } = getFilteredData();
 
     const data = {
-        labels: Object.keys(topicCounts),
+        labels: filteredLabels,
         datasets: [
             {
-                data: Object.values(topicCounts),
+                data: filteredValues,
                 backgroundColor: [
                     'rgba(41, 128, 64, 0.5)', // Green
                     'rgba(41, 93, 148, 0.5)', // Blue
@@ -88,7 +101,7 @@ const DoughnutChart2 = (props) => {
                         return data.labels[index];
                     },
                     label: function (context) {
-                        return context.parsed + '%';
+                        return context.parsed == 0.1 ? '0 Questions' : context.parsed + ' Questions';
                     },
                 },
                 backgroundColor: 'rgba(0, 0, 0, 0.7)',
