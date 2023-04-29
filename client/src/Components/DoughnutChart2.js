@@ -38,7 +38,6 @@ const DoughnutChart2 = (props) => {
         const filteredLabels = Object.keys(topicCounts).filter((key) => topicCounts[key] > 0);
         const filteredValues = filteredLabels.map((label) => topicCounts[label]);
 
-        // If all values are zero, set "Others" to 0.1
         if (filteredValues.every((value) => value === 0)) {
             filteredLabels.push('Others');
             filteredValues.push(0.1);
