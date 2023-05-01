@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
 
 import questionFunctions from "../leetcodeSort";
 import CountdownTimer from './CountdownTimer'
@@ -17,6 +18,10 @@ function AddProblemBody() {
     const [selectedTopics, setSelectedTopics] = useState([]);
     const [selectedDifficulty, setSelectedDifficulty] = useState('');
     const [textError, setTextError] = useState('');
+    const [completed, setCompleted] = useState(true);
+    const [completedWo, setCompletedWo] = useState(true);
+    const [showQuestions, setShowQuestions] = useState(false);
+    const [difficulty, setDifficulty] = useState(null);
 
     const inputRef = useRef(null);
     const dropdownRef = useRef(null);
@@ -29,9 +34,19 @@ function AddProblemBody() {
     const [duration, setDuration] = useState(45 * 60);
     const [sliderValue, setSliderValue] = useState(45);
 
+    const user = useSelector(state => state.user);
+    const token = useSelector(state => state.auth.token);
+
     const handleComplete = () => {
         setIsPlaying(false);
         setIsPaused(false);
+
+        // also subtract time remaining from start time to get time
+        // submit button
+
+        // show questions, did you solve x, did you solve it without looking at the solution?, difficulty, begin calcAvg, show message congratualting them then redirect back to home
+
+        // calculateOverallAverageDifficulty(user, solvedProblem);
         setKey((prevKey) => prevKey + 1)
     }
 
@@ -47,16 +62,17 @@ function AddProblemBody() {
 
     const handleReset = () => {
         setIsPlaying(false);
+        setIsPaused(false);
         handleComplete();
     };
 
     function handleStart() {
-        // completed logic
-        if (isPlaying) console.log('');
+        if (isPlaying) handleComplete();
         else setIsPlaying(true);
     }
 
     const handleSliderChange = (event) => {
+        if (isPlaying || isPaused) return;
         setSliderValue(event.target.value);
         setDuration(event.target.value * 60);
     };
@@ -117,6 +133,57 @@ function AddProblemBody() {
         setIsDropdownVisible(false);
         setTextError('');
     };
+
+    async function calculateOverallAverageDifficulty(user, solvedProblem) {
+        let totalDifficulty = 0;
+        let topicCount = 0;
+        const updatedTopics = user.technicalData.topics.map(topic => {
+            if (solvedProblem.topics.includes(topic.topicName)) {
+                const newDifficultySum = topic.topicDifficultySum + solvedProblem.difficulty;
+                const newProblemCount = topic.topicTotalSolvedProblems + 1;
+                const newAvgDifficulty = newDifficultySum / newProblemCount;
+                totalDifficulty += newAvgDifficulty;
+                topicCount += 1;
+                return {
+                    ...topic,
+                    topicDifficultySum: newDifficultySum,
+                    totalTopicProblemsSolved: newProblemCount,
+                    averageTopicDifficulty: newAvgDifficulty,
+                };
+            }
+            else {
+                totalDifficulty += topic.averageTopicDifficulty;
+                topicCount += 1;
+                return topic;
+            }
+        });
+
+        const overallAverageDifficulty = totalDifficulty / topicCount;
+        user.technicalData.topics = updatedTopics;
+        user.averageDifficultyIntervals.push({
+            overallAverageDifficulty: overallAverageDifficulty,
+            timestamp: Date.now(),
+        });
+
+        async function userTechnicalDataUpdate() {
+            const response = await fetch('http://localhost:5000' + '/user/updateUserTech', {
+                method: 'POST',
+                body: JSON.stringify({
+                    userId: user._id,
+                    userTechnicalData: user.technicalData,
+                }),
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token,
+                }
+            })
+
+            const data = await response.json();
+            return data;
+        }
+
+        await userTechnicalDataUpdate();
+    }
 
     useEffect(() => {
         getQuestions();
@@ -190,7 +257,7 @@ function AddProblemBody() {
                 </div>
                 <p className={selectedDifficulty == 'Hard' ? "addProblemBodyProblemDifficulty redText" : selectedDifficulty == 'Easy' ? "addProblemBodyProblemDifficulty greenText" : selectedDifficulty == 'Medium' ? "addProblemBodyProblemDifficulty yellowText" : null}>{selectedDifficulty}</p>
             </div>
-            <div className="addProblemBodyTimer">
+            {showQuestions && <div className="addProblemBodyTimer">
                 <i className="fa-solid fa-circle-chevron-left timerLeftArrowIcon" onClick={() => setShowTimer(false)}></i>
                 <CountdownTimer key={key} duration={duration} onComplete={handleComplete} isPlaying={isPlaying}/>
                 <div className="addProblemBodyTimerUpper">
@@ -199,8 +266,34 @@ function AddProblemBody() {
                 </div>
                 <button className="addProblemBodyTimerLowerButton" onClick={handleStart}>{(isPlaying || isPaused) ? 'Completed?' : 'Start'}</button>
                 <div className="addProblemBodyTimerSlider">
-                    <CustomSlider value={sliderValue} onChange={handleSliderChange} />
+                    <CustomSlider value={sliderValue} onChange={handleSliderChange} isInvalid={isPlaying || isPaused}/>
                 </div>
+            </div>}
+            <div className="addProblemQuestionContainer">
+                <p className="addProblemQuestionText">{`Did you solve ${selectedQuestion.split(' ').slice(1).join(' ')}?`}</p>
+                <div className="addProblemQuestionOptions">
+                    <div className={!completed ? "addProblemQuestionOption selectedButton" : "addProblemQuestionOption"} onClick={() => setCompleted(true)}>Yes</div>
+                    <div className={!completed ? "addProblemQuestionOption" : "addProblemQuestionOption selectedButton"} onClick={() => setCompleted(false)}>No</div>
+                </div>
+            </div>
+            <div className="addProblemQuestionContainer">
+                <p className="addProblemQuestionText">{`Did you solve it without looking at the solution?`}</p>
+                <div className="addProblemQuestionOptions">
+                    <div className={!completedWo ? "addProblemQuestionOption selectedButton" : "addProblemQuestionOption"} onClick={() => completed ? setCompletedWo(true) : null}>Yes</div>
+                    <div className={!completedWo ? "addProblemQuestionOption" : "addProblemQuestionOption selectedButton"} onClick={() => completed ? setCompletedWo(false) : null}>No</div>
+                </div>
+                {!completed && <div className="addProblemQuestionOverlay"/>}
+            </div>
+            <div className="addProblemQuestionContainer2">
+                <p className="addProblemQuestionText">{`What difficulty was this problem for you?`}</p>
+                <div className="addProblemQuestionOptions2">
+                    <div className={difficulty == 1 ? "addProblemQuestionOption2 selectedButton" : "addProblemQuestionOption2"} onClick={() => completed ? setDifficulty(1) : null}>1</div>
+                    <div className={difficulty == 2 ? "addProblemQuestionOption2 selectedButton" : "addProblemQuestionOption2"} onClick={() => completed ? setDifficulty(2) : null}>2</div>
+                    <div className={difficulty == 3 ? "addProblemQuestionOption2 selectedButton" : "addProblemQuestionOption2"} onClick={() => completed ? setDifficulty(3) : null}>3</div>
+                    <div className={difficulty == 4 ? "addProblemQuestionOption2 selectedButton" : "addProblemQuestionOption2"} onClick={() => completed ? setDifficulty(4) : null}>4</div>
+                    <div className={difficulty == 5 ? "addProblemQuestionOption2 selectedButton" : "addProblemQuestionOption2"} onClick={() => completed ? setDifficulty(5) : null}>5</div>
+                </div>
+                {!completed && <div className="addProblemQuestionOverlay"/>}
             </div>
             </>}
         </div>

@@ -8,4 +8,6 @@ router.use(checkAuth)
 
 router.post('/all', userControllers.fetchUser);
 
+router.post('/updateUserTech', userControllers.updateUserTech);
+
 module.exports = router

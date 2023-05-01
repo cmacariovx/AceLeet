@@ -12,13 +12,16 @@ function initializeTopics() {
         topicsObj[topic] = {
             lastPracticed: null,
             totalTopicProblemsSolved: 0,
+            topicTimeSum: 0,
+            topicDifficultySum: 0,
+            averageTopicTime: null,
+            averageTopicDifficulty: null,
+            topicProblems: [],
             totalTopicProblemsSolvedWithSolution: 0,
             totalTopicProblemsSolvedWithoutSolution: 0,
             totalTopicEasySolved: 0,
             totalTopicMediumSolved: 0,
             totalTopicHardSolved: 0,
-            averageTopicTime: 0,
-            topicProblems: [],
         };
     });
 

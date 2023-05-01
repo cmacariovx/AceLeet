@@ -8,6 +8,17 @@
     outline: none;
 }
 
+.custom-slider-invalid {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 300px;
+    height: 10px;
+    border-radius: 5px;
+    background: var(--darkGray);
+    outline: none;
+    cursor: not-allowed;
+}
+
 .custom-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;

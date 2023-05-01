@@ -315,3 +315,107 @@
             .redText {
                 color: var(--red) !important;
             }
+
+            .addProblemQuestionContainer {
+                height: 86px;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                background-color: white;
+                border: 1px solid rgba(220, 220, 220, 0.6);
+                box-shadow: 0 0 10px rgba(220, 220, 220, 0.1);
+                border-radius: 10px;
+                margin-top: 20px;
+                position: relative;
+                padding: 12px 24px;
+            }
+
+            .addProblemQuestionContainer2 {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: flex-start;
+                background-color: white;
+                border: 1px solid rgba(220, 220, 220, 0.6);
+                box-shadow: 0 0 10px rgba(220, 220, 220, 0.1);
+                border-radius: 10px;
+                margin-top: 20px;
+                position: relative;
+                padding: 32px 24px;
+            }
+
+
+            .addProblemQuestionText {
+                font-size: 16px;
+                color: var(--lightGray);
+            }
+
+            .addProblemQuestionOverlay {
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                top: 0;
+                left: 0;
+                background-color: rgba(255, 255, 255, 0.9);
+                z-index: 2;
+                border-radius: 10px;
+            }
+
+            .addProblemQuestionOptions {
+                height: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                align-items: center;
+            }
+
+            .addProblemQuestionOptions2 {
+                height: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+                margin-top: 20px;
+            }
+
+
+            .addProblemQuestionOption {
+                height: 40px;
+                width: 80px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--lightGray);
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-left: 20px;
+                user-select: none;
+            }
+
+            .addProblemQuestionOption2 {
+                height: 40px;
+                width: 60px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--lightGray);
+                color: white;
+                border-radius: 5px;
+                cursor: pointer;
+                margin-right: 20px;
+                user-select: none;
+            }
+
+            .selectedButton {
+                background-color: var(--darkGray);
+            }

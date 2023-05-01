@@ -3,11 +3,11 @@ import { Line } from 'react-chartjs-2';
 
 const LineChart = (props) => {
     const data = {
-        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5', 'Week 6'],
+        labels: ['5 wks ago', '4 wks ago', '3 wks ago', '2 wks ago', 'Last week', 'Current'],
         datasets: [
             {
                 label: 'Average Difficulty',
-                data: [4.7, 4.2, 2.9, 2.8, 2.4, 1.9],
+                data: props.dataSet,
                 borderColor: 'rgba(44, 123, 229, 0.7)',
                 backgroundColor: 'rgba(0, 0, 0, 0)',
                 tension: 0.4,

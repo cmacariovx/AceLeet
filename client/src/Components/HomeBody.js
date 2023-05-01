@@ -14,11 +14,76 @@ function HomeBody() {
     const [isOpen1, setIsOpen1] = useState(true);
     const [isOpen2, setIsOpen2] = useState(true);
 
+    const navigate = useNavigate();
+
     const user = useSelector(state => state.user);
+    const token = useSelector(state => state.auth.token);
 
     const [totalProblems, setTotalProblems] = useState(null);
     const [solvedRatio, setSolvedRatio] = useState(null);
     const [totalHours, setTotalHours] = useState(null);
+    const [sixWeekAvgDiff, setSixWeekAvgDiff] = useState(null);
+
+    console.log(sixWeekAvgDiff)
+
+    // calc topics to do
+    // calc problems to do
+    // find and calc avg diff topic, then set it in db
+    // find topics and calc percent
+
+    function avgDifficultyHistory() {
+        const sixWeeksAgo = Date.now() - 6 * 7 * 24 * 60 * 60 * 1000;
+        const pastSixWeeksData = user.technicalData.averageDifficultyIntervals.filter(
+            interval => interval.timestamp >= sixWeeksAgo
+        );
+
+        // Calculate the weekly average difficulty for the past 6 weeks
+        const weeklyAverageDifficulty = calculateWeeklyAverageDifficulty(pastSixWeeksData, user.joinedDate);
+        return weeklyAverageDifficulty;
+    }
+
+    function calculateWeeklyAverageDifficulty(data, userJoinDate) {
+        const weeks = groupDataByWeek(data, userJoinDate);
+        const lastSixWeeks = weeks.slice(-6); // Get the last 6 weeks
+        return lastSixWeeks.map(weekData => {
+            if (weekData.length === 0) {
+                return null;
+            }
+            const total = weekData.reduce((sum, item) => sum + item.overallAverageDifficulty, 0);
+            return total / weekData.length;
+        });
+    }
+
+    function groupDataByWeek(data, userJoinDate) {
+        const weeks = [];
+        const weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+
+        data.sort((a, b) => a.timestamp - b.timestamp);
+        let weekStart = new Date(userJoinDate).getTime();
+        let weekData = [];
+
+        data.forEach(item => {
+            if (item.timestamp >= weekStart && item.timestamp < weekStart + weekInMilliseconds) {
+                weekData.push(item);
+            }
+            else {
+                weeks.push(weekData);
+                weekData = [item];
+                weekStart += weekInMilliseconds;
+            }
+        });
+
+        if (weekData.length > 0) {
+            weeks.push(weekData);
+        }
+
+        // Fill the remaining weeks with empty arrays
+        while (weeks.length < 6) {
+            weeks.unshift([]);
+        }
+
+        return weeks;
+    }
 
     useEffect(() => {
         if (user) {
@@ -26,16 +91,9 @@ function HomeBody() {
             setSolvedRatio((user.technicalData.problems.totalProblemsSolvedWithSolution /
             user.technicalData.problems.totalProblemsSolvedWithoutSolution) * 100);
             setTotalHours(user.technicalData.totalPracticeHours);
+            setSixWeekAvgDiff(avgDifficultyHistory);
         }
     }, [user])
-
-    // calc topics to do
-    // calc problems to do
-    // find and calc avg diff topic, then set it in db
-    // find topics and calc percent
-    // calc avg difficulty
-
-    const navigate = useNavigate();
 
     return (
         <div className="homeBodyContainer">
@@ -190,10 +248,10 @@ function HomeBody() {
                     <div className="homeBodyChartsContainerLowerRight">
                         <div className="homeBodyChartsContainerLowerRightUpper">
                             <p className="homeBodyChartsContainerLowerRightUpperText">Average Difficulty - Past 6 Weeks</p>
-                            <p className="homeBodyChartsContainerLowerRightUpperText2">36% Improvement</p>
+                            {/* <p className="homeBodyChartsContainerLowerRightUpperText2">36% Improvement</p> */}
                         </div>
                         <div className="homeBodyChartsContainerLowerRightLower">
-                            <LineChart />
+                            <LineChart dataSet={sixWeekAvgDiff}/>
                         </div>
                     </div>
                 </div>

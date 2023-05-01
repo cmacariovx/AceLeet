@@ -120,7 +120,7 @@ async function fetchUser(req, res, next) {
 
         client.close();
 
-        return { status: 200, message: 'User found!', error: null, result: user };
+        return { status: 200, message: 'User found.', error: null, result: user };
     }
     catch (error) {
         client.close();
@@ -128,6 +128,37 @@ async function fetchUser(req, res, next) {
     }
 }
 
+async function updateUserTech(req, res, next) {
+    const { userId, userTechnicalData } = req.body;
+
+    const client = new MongoClient(mongoUrl);
+
+    try {
+        await client.connect();
+        const db = client.db('sr');
+
+        const userIdObjectId = new ObjectId(userId);
+
+        const result = await db.collection('users').updateOne(
+            { _id: userIdObjectId },
+            { $set: { "technicalData": userTechnicalData } }
+        );
+
+        client.close();
+
+        if (result.modifiedCount === 1) {
+            return { status: 200, message: 'User technical data updated.', error: null, result: result };
+        } else {
+            return { status: 400, message: 'User not found.', error: null, result: null };
+        }
+    }
+    catch (error) {
+        client.close();
+        return { status: 500, message: null, error: "Could not update user's technical data.", result: null };
+    }
+}
+
 exports.userSignup = userSignup;
 exports.userLogin = userLogin;
 exports.fetchUser = fetchUser;
+exports.updateUserTech = updateUserTech;
