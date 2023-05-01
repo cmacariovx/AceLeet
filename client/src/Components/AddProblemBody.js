@@ -3,9 +3,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import questionFunctions from "../leetcodeSort";
-import CountdownTimer from './CountdownTimer'
+import CountdownTimer from './CountdownTimer';
 import CustomSlider from "./CustomSlider";
-import { PuffLoader } from 'react-spinners'
+import { PuffLoader } from 'react-spinners';
 
 import './AddProblemBody.css';
 
