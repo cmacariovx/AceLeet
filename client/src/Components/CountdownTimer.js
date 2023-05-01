@@ -3,10 +3,12 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 import chime from '../assets/chime.mp3'
 
-const CountdownTimer = ({ duration, onComplete, isPlaying }) => {
+const CountdownTimer = ({ duration, onComplete, isPlaying, onRemainingTimeUpdate }) => {
   const alarmAudio = new Audio(chime);
 
   const renderTime = ({ remainingTime }) => {
+    onRemainingTimeUpdate(remainingTime);
+
     const minutes = Math.floor(remainingTime / 60);
     const seconds = remainingTime % 60;
 

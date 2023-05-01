@@ -419,3 +419,51 @@
             .selectedButton {
                 background-color: var(--darkGray);
             }
+
+            .addProblemQuestionsButtonContainer {
+                width: 100%;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                align-items: center;
+                padding: 24px 0;
+            }
+
+            .addProblemQuestionsButton {
+                height: 44px;
+                padding: 8px 14px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                background-color: var(--blue);
+                border-radius: 5px;
+                color: white;
+                cursor: pointer;
+            }
+
+            .questionSpinnerBackdrop {
+                min-height: 100vh;
+                height: 100%;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background-color: rgba(220, 220, 220, 0.4);
+                position: fixed;
+                top: 0;
+                left: 0;
+            }
+
+            .questionSpinner {
+                height: 100px;
+                width: 100px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                position: absolute;
+                background-color: var(--gray);
+                border-radius: 10px;
+            }

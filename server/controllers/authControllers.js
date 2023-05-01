@@ -11,12 +11,14 @@ function initializeTopics() {
     topics.forEach((topic) => {
         topicsObj[topic] = {
             lastPracticed: null,
+            totalTopicProblemsAttempted: 0,
             totalTopicProblemsSolved: 0,
             topicTimeSum: 0,
             topicDifficultySum: 0,
             averageTopicTime: null,
             averageTopicDifficulty: null,
-            topicProblems: [],
+            topicProblemsSolved: [],
+            topicProblemsAttempted: [],
             totalTopicProblemsSolvedWithSolution: 0,
             totalTopicProblemsSolvedWithoutSolution: 0,
             totalTopicEasySolved: 0,
@@ -57,21 +59,15 @@ async function userSignup (req, res, next) {
         isPremiumUser: false,
         technicalData: {
             problems: {
-                totalProblemAttempted: {
-                    totalProblemsAttemptedNum: 0,
-                    totalProblemsAttemptedArr: [],
-                },
-                totalProblemsSolved: {
-                    totalProblemsSolvedNum: 0,
-                    totalProblemsSolvedArr: [],
-                },
+                totalProblemsAttempted: 0,
+                totalProblemsSolved: 0,
                 totalProblemsSolvedWithSolution: 0,
                 totalProblemsSolvedWithoutSolution: 0,
                 totalEasySolved: 0,
                 totalMediumSolved: 0,
                 totalHardSolved: 0,
             },
-            totalPracticeHours: 0,
+            totalPracticeTime: 0,
             averageProblemTime: 0,
             averageDifficultyIntervals: [],
             topics: initializeTopics(),
