@@ -24,8 +24,6 @@ function HomeBody() {
     const [totalHours, setTotalHours] = useState(null);
     const [sixWeekAvgDiff, setSixWeekAvgDiff] = useState(null);
 
-    console.log(sixWeekAvgDiff)
-
     // calc topics to do
     // calc problems to do
     // find and calc avg diff topic, then set it in db
@@ -87,10 +85,10 @@ function HomeBody() {
 
     useEffect(() => {
         if (user) {
-            setTotalProblems(user.technicalData.problems.totalProblemsSolved.totalProblemsSolvedNum);
-            setSolvedRatio((user.technicalData.problems.totalProblemsSolvedWithSolution /
-            user.technicalData.problems.totalProblemsSolvedWithoutSolution) * 100);
-            setTotalHours(user.technicalData.totalPracticeHours);
+            setTotalProblems(user.technicalData.problems.totalProblemsSolved);
+            setSolvedRatio(((user.technicalData.problems.totalProblemsSolvedWithoutSolution /
+            user.technicalData.problems.totalProblemsSolved) * 100).toFixed(2));
+            setTotalHours((user.technicalData.totalPracticeTime) / 60 / 60);
             setSixWeekAvgDiff(avgDifficultyHistory);
         }
     }, [user])

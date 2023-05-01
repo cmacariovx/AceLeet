@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 
 const DoughnutChart2 = (props) => {
     const user = useSelector(state => state.user);
-    const [topics, setTopics] = useState([]);
     const [topicCounts, setTopicCounts] = useState({});
 
     useEffect(() => {
@@ -13,23 +12,26 @@ const DoughnutChart2 = (props) => {
     }, [user])
 
     const countTopicProblems = (topics) => {
-        const mainTopics = ['Arrays', 'Binary Trees', 'Graphs', 'Linked Lists', 'DP'];
+        const mainTopics = ['Array', 'Binary Tree', 'Graph', 'Linked List', 'Dynamic Programming'];
         const counts = {
-            'Arrays': 0,
-            'Binary Trees': 0,
-            'Graphs': 0,
-            'Linked Lists': 0,
-            'DP': 0,
+            'Array': 0,
+            'Binary Tree': 0,
+            'Graph': 0,
+            'Linked List': 0,
+            'Dynamic Programming': 0,
             'Others': 0
         };
+
+        let initial = user.technicalData.problems.totalProblemsSolved
 
         for (const topic in topics) {
             if (mainTopics.includes(topic)) {
                 counts[topic] = topics[topic].totalTopicProblemsSolved;
-            } else {
-                counts.Others += topics[topic].totalTopicProblemsSolved;
+                initial--
             }
         }
+
+        counts['Others'] = initial;
 
         return counts;
     }
@@ -54,8 +56,8 @@ const DoughnutChart2 = (props) => {
             {
                 data: filteredValues,
                 backgroundColor: [
-                    'rgba(41, 128, 64, 0.5)', // Green
-                    'rgba(41, 93, 148, 0.5)', // Blue
+                    'rgba(72, 212, 109, 0.5)', // Green
+                    'rgba(60, 131, 207, 0.5)', // Blue
                     'rgba(255, 159, 64, 0.5)', // Orange
                     'rgba(255, 51, 51, 0.5)', // Red
                     'rgba(255, 205, 86, 0.5)', // Yellow

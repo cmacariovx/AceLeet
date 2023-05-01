@@ -1,14 +1,40 @@
 import React from 'react';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
+import { useSelector } from 'react-redux';
 
 const BarChart = (props) => {
+    const user = useSelector(state => state.user);
+
+    const mainTopics = ['Array', 'Binary Tree', 'Graph', 'Linked List', 'Dynamic Programming'];
+
+    const getFilteredData = () => {
+        if (!user) return { filteredLabels: [], filteredValues: [] };
+
+        const topics = user.technicalData.topics;
+        const filteredLabels = [];
+        const filteredValues = [];
+
+        mainTopics.forEach((topic) => {
+            if (topics[topic] && topics[topic].averageTopicDifficulty !== null) {
+                filteredLabels.push(topic);
+                filteredValues.push(topics[topic].averageTopicDifficulty);
+            }
+        });
+
+        return { filteredLabels, filteredValues };
+    };
+
+    const { filteredLabels, filteredValues } = getFilteredData();
+
     const data = {
-        labels: ['Arrays', 'Binary Trees', 'Graphs', 'Linked Lists', 'Dynamic Programming'],
-        datasets: [{
-            label: 'Average Difficulty',
-            data: [3.4, 2.2, 3.7, 3.1, 4.4],
-        }]
+        labels: filteredLabels,
+        datasets: [
+            {
+                label: 'Average Difficulty',
+                data: filteredValues,
+            }
+        ]
     }
 
     const options = {
@@ -63,7 +89,7 @@ const BarChart = (props) => {
                 display: false,
             },
             tooltip: {
-                enabled: false,
+                enabled: true,
             }
         },
     }

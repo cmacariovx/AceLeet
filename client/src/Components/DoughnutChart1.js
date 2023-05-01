@@ -7,7 +7,7 @@ const DoughnutChart1 = (props) => {
     const user = useSelector(state => state.user)
 
     const [totalEasy, setTotalEasy] = useState(null);
-    const [totalMedium, setTotalMedium ] = useState(null);
+    const [totalMedium, setTotalMedium] = useState(null);
     const [totalHard, setTotalHard] = useState(null);
 
     useEffect(() => {
@@ -18,11 +18,28 @@ const DoughnutChart1 = (props) => {
         }
     }, [user])
 
+    const getFilteredData = () => {
+        const labels = ['Easy', 'Medium', 'Hard'];
+        const values = [(totalEasy || 0), (totalMedium || 0), (totalHard || 0)];
+
+        const filteredLabels = labels.filter((_, index) => values[index] > 0);
+        const filteredValues = values.filter((value) => value > 0);
+
+        if (filteredValues.length === 0) {
+            filteredLabels.push('Easy');
+            filteredValues.push(0.1);
+        }
+
+        return { filteredLabels, filteredValues };
+    };
+
+    const { filteredLabels, filteredValues } = getFilteredData();
+
     const data = {
-        labels: ['Easy', 'Medium', 'Hard'],
+        labels: filteredLabels,
         datasets: [
             {
-                data: [(totalEasy || 0.1), (totalMedium || 0.1), (totalHard || 0.1)],
+                data: filteredValues,
                 backgroundColor: [
                     'rgba(148, 250, 89, 0.7)', // Green
                     'rgba(255, 215, 115, 0.7)', // Yellow
