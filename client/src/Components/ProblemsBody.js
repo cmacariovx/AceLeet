@@ -13,13 +13,16 @@ function ProblemsBody() {
     const [statusSort, setStatusSort] = useState(0);
     const [problemSort, setProblemSort] = useState(0);
     const [difficultySort, setDifficultySort] = useState(0);
-    const [lastPracticedSort, setLastPracticedSort] = useState(0);
+    const [lastPracticedSort, setLastPracticedSort] = useState(1);
 
     const [status, setStatus] = useState(null);
     const [difficulty, setDifficulty] = useState(null);
     const [showNum, setShowNum] = useState(null);
 
     const [problems, setProblems] = useState([]);
+
+    const problemsPerPage = showNum || 25;
+    const [currentPage, setCurrentPage] = useState(1);
 
     const statusDropdownRef = useRef(null);
     const difficultyDropdownRef = useRef(null);
@@ -92,7 +95,7 @@ function ProblemsBody() {
         const elapsed = now - solvedAt;
 
         if (elapsed < msPerHour) {
-            return 'current';
+            return '< 1 hour ago';
         }
         else if (elapsed < msPerDay) {
             const hours = Math.round(elapsed / msPerHour);
@@ -107,6 +110,61 @@ function ProblemsBody() {
             return weeks + ' week' + (weeks === 1 ? '' : 's') + ' ago';
         }
     }
+
+    function sortProblems(problems) {
+        return problems.slice().sort((a, b) => {
+            if (statusSort === 1) {
+                return a.solved - b.solved;
+            } else if (statusSort === 2) {
+                return b.solved - a.solved;
+            } else if (problemSort === 1) {
+                const aId = parseInt(a.title.split(" ")[0].replace(".", ""));
+                const bId = parseInt(b.title.split(" ")[0].replace(".", ""));
+                return aId - bId;
+            } else if (problemSort === 2) {
+                const aId = parseInt(a.title.split(" ")[0].replace(".", ""));
+                const bId = parseInt(b.title.split(" ")[0].replace(".", ""));
+                return bId - aId;
+            } else if (difficultySort === 1) {
+                if (a.difficultyLevel === b.difficultyLevel) {
+                    return 0;
+                }
+                const difficultyLevels = ["Easy", "Medium", "Hard"];
+                return difficultyLevels.indexOf(a.difficultyLevel) - difficultyLevels.indexOf(b.difficultyLevel);
+            } else if (difficultySort === 2) {
+                if (a.difficultyLevel === b.difficultyLevel) {
+                    return 0;
+                }
+                const difficultyLevels = ["Easy", "Medium", "Hard"];
+                return difficultyLevels.indexOf(b.difficultyLevel) - difficultyLevels.indexOf(a.difficultyLevel);
+            } else if (lastPracticedSort === 1) {
+                return b.solvedAt - a.solvedAt;
+            } else if (lastPracticedSort === 2) {
+                return a.solvedAt - b.solvedAt;
+            } else {
+                return 0;
+            }
+        });
+    }
+
+    const [sortedProblems, setSortedProblems] = useState([]);
+
+    const filteredProblems = sortedProblems
+    .filter((problem) => {
+        if (status !== null && (status === 'Solved' ? true : false) !== problem.solved) {
+            return false;
+        }
+        if (difficulty && problem.difficultyLevel !== difficulty) {
+            return false;
+        }
+        return true;
+    })
+    .slice((currentPage - 1) * problemsPerPage, currentPage * problemsPerPage);
+
+    useEffect(() => {
+        setSortedProblems(sortProblems(problems));
+    }, [problems, statusSort, problemSort, difficultySort, lastPracticedSort]);
+
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -250,9 +308,7 @@ function ProblemsBody() {
                     </div>
                     }
                 </div>
-                <div className="problemsBodyOptionContainer4">
-                    <input className="problemsBodyOptionMain2" placeholder="Search" maxLength={50}/>
-                </div>
+                <div className="problemsBodyOptionContainer4"></div>
                 <div className="problemsBodyOptionContainer5">
                     <button className="problemsBodyOptionMainButton" onClick={clearFilters}>Clear Filters</button>
                 </div>
@@ -331,7 +387,7 @@ function ProblemsBody() {
                 </div>
             </div>
             <div className="problemsBodyProblemsContainer">
-                {problems.length > 0 && problems.map((problem, index) => (
+                {filteredProblems.length > 0 && filteredProblems.map((problem, index) => (
                     <div key={index} className="problemsBodyProblemsOption" onClick={() =>
                         window.open(
                             "https://leetcode.com/problems/" +
@@ -355,6 +411,20 @@ function ProblemsBody() {
                         <p className="problemsBodyProblemsOptionText4">{timeSince(problem.solvedAt)}</p>
                     </div>
                 ))}
+            </div>
+            <div className="problemsBodyNav">
+                <button
+                    onClick={() => setCurrentPage((prevPage) => prevPage - 1)}
+                    disabled={currentPage === 1}
+                >
+                Prev
+                </button>
+                <button
+                    onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+                    disabled={filteredProblems.length < problemsPerPage}
+                >
+                Next
+                </button>
             </div>
         </div>
     )

@@ -142,5 +142,7 @@ async function problemTitles() {
 
 export default {
     processJsonData,
-    problemTitles
+    problemTitles,
+    Trie,
+    TrieNode,
 };
