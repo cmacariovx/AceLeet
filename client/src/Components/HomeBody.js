@@ -24,11 +24,6 @@ function HomeBody() {
     const [totalHours, setTotalHours] = useState(null);
     const [sixWeekAvgDiff, setSixWeekAvgDiff] = useState(null);
 
-    // calc topics to do
-    // calc problems to do
-    // find and calc avg diff topic, then set it in db
-    // find topics and calc percent
-
     function avgDifficultyHistory() {
         const sixWeeksAgo = Date.now() - 6 * 7 * 24 * 60 * 60 * 1000;
         const pastSixWeeksData = user.technicalData.averageDifficultyIntervals.filter(
@@ -88,7 +83,7 @@ function HomeBody() {
             setTotalProblems(user.technicalData.problems.totalProblemsSolved);
             setSolvedRatio(((user.technicalData.problems.totalProblemsSolvedWithoutSolution /
             user.technicalData.problems.totalProblemsSolved) * 100).toFixed(2));
-            setTotalHours((user.technicalData.totalPracticeTime) / 60 / 60);
+            setTotalHours(((user.technicalData.totalPracticeTime) / 60 / 60).toFixed(2));
             setSixWeekAvgDiff(avgDifficultyHistory);
         }
     }, [user])
