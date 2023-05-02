@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import StatusCircle from "./StatusCircle";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { PuffLoader } from 'react-spinners';
 
 import './ProblemsBody.css';
 
@@ -411,6 +412,11 @@ function ProblemsBody() {
                         <p className="problemsBodyProblemsOptionText4">{timeSince(problem.solvedAt)}</p>
                     </div>
                 ))}
+                {!user &&
+                    <div className='problemsBodySpinner'>
+                        <PuffLoader color="#2c7be5"/>
+                    </div>
+                }
             </div>
             <div className="problemsBodyNav">
                 <button
