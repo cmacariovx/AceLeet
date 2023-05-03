@@ -3,6 +3,7 @@ import BarChart from "./BarChart";
 import StatusCircle from "./StatusCircle";
 import LineChart from "./LineChart";
 import { useSelector } from "react-redux";
+import readJsonFile from "../readJsonFile";
 
 import { useNavigate } from "react-router-dom";
 
@@ -13,6 +14,11 @@ import DoughnutChart2 from "./DoughnutChart2";
 function HomeBody() {
     const [isOpen1, setIsOpen1] = useState(true);
     const [isOpen2, setIsOpen2] = useState(true);
+    const [topicWeights, setTopicWeights] = useState(null);
+    const [topicProblems, setTopicProblems] = useState(null);
+    const [recommendedProblems, setRecommendedProblems] = useState([]);
+    const [recommendedTopics, setRecommendedTopics] = useState([]);
+    const [currentTime, setCurrentTime] = useState(Date.now());
 
     const navigate = useNavigate();
 
@@ -30,7 +36,6 @@ function HomeBody() {
             interval => interval.timestamp >= sixWeeksAgo
         );
 
-        // Calculate the weekly average difficulty for the past 6 weeks
         const weeklyAverageDifficulty = calculateWeeklyAverageDifficulty(pastSixWeeksData, user.joinedDate);
         return weeklyAverageDifficulty;
     }
@@ -70,7 +75,6 @@ function HomeBody() {
             weeks.push(weekData);
         }
 
-        // Fill the remaining weeks with empty arrays
         while (weeks.length < 6) {
             weeks.unshift([]);
         }
@@ -78,15 +82,160 @@ function HomeBody() {
         return weeks;
     }
 
+    async function getTopics() {
+        const topicWeights = await readJsonFile('topicWeights.json');
+        const topicProblems = await readJsonFile('topicProblems.json');
+        setTopicWeights(topicWeights);
+        setTopicProblems(topicProblems);
+    }
+
     useEffect(() => {
-        if (user) {
+        getTopics();
+    }, [])
+
+
+    // ------------------------------------------------------
+
+
+    function recommendTopicsAndProblems(user, topicWeights, topicProblems) {
+        const practicedTopics = getPracticedTopics(user);
+        const scheduledTopics = getScheduledTopics(user, practicedTopics);
+        const additionalTopics = getAdditionalTopics(user, practicedTopics, topicWeights, 5 - scheduledTopics.length, scheduledTopics);
+
+        const recommendedTopics = [...scheduledTopics, ...additionalTopics];
+        const recommendedProblems = recommendProblems(user, recommendedTopics, topicProblems);
+
+        return {
+            recommendedTopics,
+            recommendedProblems: recommendedProblems.slice(0, 10),
+        };
+    }
+
+    function getPracticedTopics(user) {
+        const practicedTopics = new Set();
+
+        for (const topic in user.technicalData.topics) {
+            const topicData = user.technicalData.topics[topic];
+            if (topicData.topicProblemsSolved.length > 0) {
+                practicedTopics.add(topic);
+            }
+        }
+
+        return practicedTopics;
+    }
+
+    function getScheduledTopics(user, practicedTopics) {
+        const scheduledTopics = [];
+
+        for (const topic of practicedTopics) {
+            const topicData = user.technicalData.topics[topic];
+
+            const lastPracticed = topicData.lastPracticed || 0;
+            const schedule = topicData.schedule;
+            const elapsedTime = Math.floor((currentTime - lastPracticed) / (1000 * 60 * 60 * 24));
+
+            const scheduleIdx = topicData.scheduleIdx;
+            topicData.name = topic;
+
+            if (scheduleIdx > -1 && Math.round(elapsedTime) === schedule[scheduleIdx]) {
+                const averageDifficulty = topicData.averageTopicDifficulty;
+                const averageTime = topicData.averageTopicTime;
+                const solvedRatio = (topicData.totalTopicProblemsSolved / topicData.totalTopicProblemsAttempted) || 0.01;
+
+                const priorityScore = calculatePriorityScore(averageDifficulty, averageTime, solvedRatio);
+                topicData.priorityScore = priorityScore;
+
+                scheduledTopics.push(topicData);
+            }
+        }
+
+        // Sort scheduledTopics by priorityScore in descending order and return the top 3 topics
+        return scheduledTopics.sort((a, b) => b.priorityScore - a.priorityScore).slice(0, 3);
+    }
+
+    function getAdditionalTopics(user, practicedTopics, topicWeights, numAdditionalTopics, scheduledTopics) {
+        const additionalTopics = [];
+
+        const sortedTopicWeights = Object.entries(topicWeights)
+            .filter(([topic]) => !practicedTopics.has(topic))
+            .sort((a, b) => b[1] - a[1]);
+
+        for (const [topic] of sortedTopicWeights) {
+            if (additionalTopics.length + scheduledTopics.length < 5) {
+                let newTopic = user.technicalData.topics[topic];
+                newTopic.name = topic;
+                newTopic.priorityScore = 0.40;
+                additionalTopics.push(newTopic);
+            }
+            else break;
+        }
+
+        return additionalTopics;
+    }
+
+    function recommendProblems(user, recommendedTopics, topicProblems) {
+        const recommendedProblems = [];
+
+        recommendedTopics.forEach((topic, index) => {
+            const priorityScore = topic.priorityScore || 0.40;
+            const problems = getFilteredProblems(topic, topicProblems, "Easy", "Medium", priorityScore <= 40 ? 50 : 40);
+
+            const numProblemsToRecommend = index < 2 ? 3 : 2;
+            recommendedProblems.push(problems.slice(0, numProblemsToRecommend));
+        });
+
+        return recommendedProblems;
+    }
+
+    function getFilteredProblems(topic, topicProblems, minDifficulty, maxDifficulty, minAccRate) {
+        const problems = topicProblems[topic.name];
+
+        return problems.filter(
+            (problem) =>
+                !user.technicalData.topics[topic.name].topicProblemsSolved.includes(problem.frontendQuestionId) &&
+                (problem.difficulty === minDifficulty || problem.difficulty === maxDifficulty) &&
+                problem.acRate >= minAccRate
+        );
+    }
+
+    function calculatePriorityScore(averageDifficulty, averageTime, solvedRatio) {
+        // Normalize the inputs based on your desired scaling factors
+        const normalizedAvgDifficulty = averageDifficulty / 5;
+        const normalizedAvgTime = averageTime / 1000;
+        const normalizedSolvedRatio = solvedRatio;
+
+        const priorityScore = normalizedAvgDifficulty * 0.60 + normalizedAvgTime * 0.10 + normalizedSolvedRatio * 0.30;
+
+        return priorityScore;
+    }
+
+    function daysAgo(timestamp) {
+        const now = new Date();
+        const lastPracticedDate = new Date(timestamp);
+        const differenceInTime = now - lastPracticedDate;
+        const differenceInDays = differenceInTime / (1000 * 60 * 60 * 24);
+
+        return Math.floor(differenceInDays) == 0 ? 'Today' : `${Math.floor(differenceInDays)} days ago`;
+    }
+
+    function getPriorityLabel(priorityScore) {
+        if (priorityScore < 0.3) return "Low";
+        else if (priorityScore < 0.45) return "Medium";
+        else return "High";
+    }
+
+    useEffect(() => {
+        if (user && topicWeights && topicProblems) {
             setTotalProblems(user.technicalData.problems.totalProblemsSolved);
             setSolvedRatio(((user.technicalData.problems.totalProblemsSolvedWithoutSolution /
-            user.technicalData.problems.totalProblemsSolved) * 100).toFixed(2));
+            user.technicalData.problems.totalProblemsSolved) * 100).toFixed(0));
             setTotalHours(((user.technicalData.totalPracticeTime) / 60 / 60).toFixed(2));
             setSixWeekAvgDiff(avgDifficultyHistory);
+            const recommended = recommendTopicsAndProblems(user, topicWeights, topicProblems);
+            setRecommendedProblems(recommended.recommendedProblems);
+            setRecommendedTopics(recommended.recommendedTopics);
         }
-    }, [user])
+    }, [user, topicWeights, topicProblems])
 
     return (
         <div className="homeBodyContainer">
@@ -121,7 +270,7 @@ function HomeBody() {
                 <div className="homeBodyContainerKPI">
                     <div className="homeBodyContainerKPILeft">
                         <p className="homeBodyContainerKPILeftUpper">SOLVED W/O SOLUTION</p>
-                        <p className="homeBodyContainerKPILeftLower">{solvedRatio ? solvedRatio + '%' : 0 + '%'}</p>
+                        <p className="homeBodyContainerKPILeftLower">{solvedRatio !== null && solvedRatio !== NaN ? solvedRatio + '%' : 0 + '%'}</p>
                     </div>
                     <div className="homeBodyContainerKPIRight">
                         <i className="fa-regular fa-object-ungroup"></i>
@@ -143,21 +292,19 @@ function HomeBody() {
                         </div>}
                     </div>
                     {isOpen1 && <>
-                        <div className="homeBodyDailyRecommendedUpperOption">
-                            <p className="homeBodyDailyRecommendedUpperOptionText1 blueText1">High</p>
-                            <p className="homeBodyDailyRecommendedUpperOptionText2 blueText">Union Find</p>
-                            <p className="homeBodyDailyRecommendedUpperOptionText3">3 days ago</p>
-                        </div>
-                        <div className="homeBodyDailyRecommendedUpperOption">
-                            <p className="homeBodyDailyRecommendedUpperOptionText1 blueText2">Medium</p>
-                            <p className="homeBodyDailyRecommendedUpperOptionText2 blueText">Topological Sort</p>
-                            <p className="homeBodyDailyRecommendedUpperOptionText3">3 days ago</p>
-                        </div>
-                        <div className="homeBodyDailyRecommendedUpperOption">
-                            <p className="homeBodyDailyRecommendedUpperOptionText1 blueText3">Low</p>
-                            <p className="homeBodyDailyRecommendedUpperOptionText2 blueText">Dynamic Programming</p>
-                            <p className="homeBodyDailyRecommendedUpperOptionText3">3 days ago</p>
-                        </div>
+                        {recommendedTopics.length > 0 &&
+                        recommendedTopics.map((topic, index) => (
+                            <div key={index} className="homeBodyDailyRecommendedUpperOption">
+                                <p className={`homeBodyDailyRecommendedUpperOptionText1 ${
+                                    getPriorityLabel(topic.priorityScore) === 'High' ? 'blueText1' :
+                                    getPriorityLabel(topic.priorityScore) === 'Medium' ? 'blueText2' : 'blueText3'
+                                }`}>
+                                    {getPriorityLabel(topic.priorityScore)}
+                                </p>
+                                <p className="homeBodyDailyRecommendedUpperOptionText2 blueText">{topic.name}</p>
+                                <p className="homeBodyDailyRecommendedUpperOptionText3">{topic.lastPracticed ? daysAgo(topic.lastPracticed) : 'New'}</p>
+                            </div>
+                        ))}
                     </>}
                 </div>
                 <div className="homeBodyDailyRecommendedLower" style={isOpen2 ? {overflow: 'hidden'} : {overflow: 'visible'}}>
@@ -175,38 +322,40 @@ function HomeBody() {
                         </div>}
                     </div>
                     {isOpen2 && <>
-                    <div className="homeBodyDailyRecommendedLowerOption">
-                        <div className="homeBodyDailyRecommendedLowerOptionText1 blueText2"><StatusCircle color={'yellow'}/></div>
-                        <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">1444. Number of Ways of Cutting a Pizza</p>
-                        <div className="homeBodyDailyRecommendedLowerTopics">
-                            <p className="homeBodyDailyRecommendedLowerTopic">Array</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Dynamic Programming</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Memoization</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Matrix</p>
-                        </div>
-                        <p className="homeBodyDailyRecommendedLowerOptionText3 redText">Hard</p>
-                    </div>
-                    <div className="homeBodyDailyRecommendedLowerOption">
-                        <div className="homeBodyDailyRecommendedLowerOptionText1 blueText1"><StatusCircle color={'green'}/></div>
-                        <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">684. Redundant Connection</p>
-                        <div className="homeBodyDailyRecommendedLowerTopics">
-                            <p className="homeBodyDailyRecommendedLowerTopic">Depth-First Search</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Breadth-First Search</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Union Find</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Graph</p>
-                        </div>
-                        <p className="homeBodyDailyRecommendedLowerOptionText3 yellowText">Medium</p>
-                    </div>
-                    <div className="homeBodyDailyRecommendedLowerOption">
-                        <div className="homeBodyDailyRecommendedLowerOptionText1 blueText3"><StatusCircle color={'green'}/></div>
-                        <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">543. Diameter of Binary Tree</p>
-                        <div className="homeBodyDailyRecommendedLowerTopics">
-                            <p className="homeBodyDailyRecommendedLowerTopic">Tree</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Depth-First Search</p>
-                            <p className="homeBodyDailyRecommendedLowerTopic">Binary Tree</p>
-                        </div>
-                        <p className="homeBodyDailyRecommendedLowerOptionText3 greenText">Easy</p>
-                    </div>
+                        {recommendedProblems.length > 0 &&
+                            recommendedProblems.map((problemsForTopic, topicIndex) => (
+                                <>
+                                    {topicIndex < recommendedProblems.length && <p className="homeBodyDailyRecommendedDivider">{recommendedTopics[topicIndex].name}</p>}
+                                    {problemsForTopic.map((problem, index) => (
+                                        <div key={index} className="homeBodyDailyRecommendedLowerOption" onClick={() =>
+                                            window.open(
+                                                "https://leetcode.com/problems/" +
+                                                problem.title
+                                                    .split(" ")
+                                                    .join("-")
+                                                    .toLowerCase() +
+                                                "/",
+                                                "_blank"
+                                            )
+                                        }>
+                                            <div className="homeBodyDailyRecommendedLowerOptionText1 blueText2"><StatusCircle color={'yellow'}/></div>
+                                            <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">{problem.frontendQuestionId + '. ' + problem.title}</p>
+                                            <div className="homeBodyDailyRecommendedLowerTopics">
+                                                {problem.topicTags.map((tag, tagIndex) => (
+                                                    <p key={tagIndex} className="homeBodyDailyRecommendedLowerTopic">{tag}</p>
+                                                ))}
+                                            </div>
+                                            <p className={`homeBodyDailyRecommendedLowerOptionText3 ${
+                                                problem.difficulty === 'Easy' ? 'greenText' :
+                                                problem.difficulty === 'Medium' ? 'yellowText' : 'redText'
+                                            }`}>
+                                                {problem.difficulty}
+                                            </p>
+                                        </div>
+                                    ))}
+                                </>
+                            ))
+                        }
                     </>}
                 </div>
             </div>

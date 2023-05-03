@@ -166,6 +166,14 @@ function AddProblemBody() {
         setTextError('');
     };
 
+
+
+
+    // schedule idx is today, increment idx in db
+
+
+
+
     async function calculateOverallAverageDifficulty(user, solvedProblem) {
         let totalDifficulty = 0;
         let topicCount = 0;
@@ -250,9 +258,11 @@ function AddProblemBody() {
                     topicCount += 1;
 
                     topic.topicProblemsSolved.push(solvedProblem);
+                    topic.scheduleIdx += 1;
 
                     updatedTopics[topicName] = {
                         ...topic,
+                        schedule: [0, 1, 4, 7, 14, 28],
                         topicTimeSum: newTimeSum,
                         averageTopicTime: newAvgTime,
                         lastPracticed: solvedProblem.solvedAt,
