@@ -100,9 +100,14 @@ function HomeBody() {
     function recommendTopicsAndProblems(user, topicWeights, topicProblems) {
         const practicedTopics = getPracticedTopics(user);
         const scheduledTopics = getScheduledTopics(user, practicedTopics);
-        const additionalTopics = getAdditionalTopics(user, practicedTopics, topicWeights, 5 - scheduledTopics.length, scheduledTopics);
 
-        const recommendedTopics = [...scheduledTopics, ...additionalTopics];
+        let recommendedTopics = scheduledTopics.slice(0, 3);
+
+        if (recommendedTopics.length < 3) {
+            const additionalTopics = getAdditionalTopics(user, practicedTopics, topicWeights, 3 - recommendedTopics.length, recommendedTopics);
+            recommendedTopics = [...recommendedTopics, ...additionalTopics];
+        }
+
         const recommendedProblems = recommendProblems(user, recommendedTopics, topicProblems);
 
         return {
@@ -175,13 +180,23 @@ function HomeBody() {
 
     function recommendProblems(user, recommendedTopics, topicProblems) {
         const recommendedProblems = [];
+        const problemIds = new Set();
 
         recommendedTopics.forEach((topic, index) => {
             const priorityScore = topic.priorityScore || 0.40;
-            const problems = getFilteredProblems(topic, topicProblems, "Easy", "Medium", priorityScore <= 40 ? 50 : 40);
+            const problems = getFilteredProblems(topic, topicProblems, "Easy", "Medium", priorityScore <= 40 ? 40 : 50);
 
-            const numProblemsToRecommend = index < 2 ? 3 : 2;
-            recommendedProblems.push(problems.slice(0, numProblemsToRecommend));
+            const numProblemsToRecommend = 3;
+            let addedProblems = 0;
+
+            for (const problem of problems) {
+                if (!problemIds.has(problem.frontendQuestionId) && addedProblems < numProblemsToRecommend) {
+                    problem.topic = topic.name;
+                    recommendedProblems.push(problem);
+                    problemIds.add(problem.frontendQuestionId);
+                    addedProblems++;
+                }
+            }
         });
 
         return recommendedProblems;
@@ -199,12 +214,18 @@ function HomeBody() {
     }
 
     function calculatePriorityScore(averageDifficulty, averageTime, solvedRatio) {
-        // Normalize the inputs based on your desired scaling factors
-        const normalizedAvgDifficulty = averageDifficulty / 5;
-        const normalizedAvgTime = averageTime / 1000;
-        const normalizedSolvedRatio = solvedRatio;
+        // Apply min-max normalization to the inputs
+        const normalizedAvgDifficulty = (averageDifficulty / 5);
+        const normalizedAvgTime = (averageTime - 0) / (3600 - 0);
+        const normalizedSolvedRatio = (solvedRatio - 0) / (1 - 0);
 
-        const priorityScore = normalizedAvgDifficulty * 0.60 + normalizedAvgTime * 0.10 + normalizedSolvedRatio * 0.30;
+        // Scaling factor for average time (you can adjust this value)
+        const timeScalingFactor = 1;
+
+        // Scale the normalized average time
+        const scaledAvgTime = normalizedAvgTime * timeScalingFactor;
+
+        const priorityScore = normalizedAvgDifficulty * 0.60 + scaledAvgTime * 0.10 + normalizedSolvedRatio * 0.30;
 
         return priorityScore;
     }
@@ -219,8 +240,8 @@ function HomeBody() {
     }
 
     function getPriorityLabel(priorityScore) {
-        if (priorityScore < 0.3) return "Low";
-        else if (priorityScore < 0.45) return "Medium";
+        if (priorityScore < 0.4) return "Low";
+        else if (priorityScore < 0.55) return "Medium";
         else return "High";
     }
 
@@ -321,42 +342,54 @@ function HomeBody() {
                             <p className="homeBodyDailyRecommendedLowerText24">DIFFICULTY</p>
                         </div>}
                     </div>
-                    {isOpen2 && <>
-                        {recommendedProblems.length > 0 &&
-                            recommendedProblems.map((problemsForTopic, topicIndex) => (
-                                <>
-                                    {topicIndex < recommendedProblems.length && <p className="homeBodyDailyRecommendedDivider">{recommendedTopics[topicIndex].name}</p>}
-                                    {problemsForTopic.map((problem, index) => (
-                                        <div key={index} className="homeBodyDailyRecommendedLowerOption" onClick={() =>
-                                            window.open(
-                                                "https://leetcode.com/problems/" +
-                                                problem.title
-                                                    .split(" ")
-                                                    .join("-")
-                                                    .toLowerCase() +
-                                                "/",
-                                                "_blank"
-                                            )
-                                        }>
-                                            <div className="homeBodyDailyRecommendedLowerOptionText1 blueText2"><StatusCircle color={'yellow'}/></div>
-                                            <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">{problem.frontendQuestionId + '. ' + problem.title}</p>
-                                            <div className="homeBodyDailyRecommendedLowerTopics">
-                                                {problem.topicTags.map((tag, tagIndex) => (
-                                                    <p key={tagIndex} className="homeBodyDailyRecommendedLowerTopic">{tag}</p>
-                                                ))}
-                                            </div>
-                                            <p className={`homeBodyDailyRecommendedLowerOptionText3 ${
-                                                problem.difficulty === 'Easy' ? 'greenText' :
-                                                problem.difficulty === 'Medium' ? 'yellowText' : 'redText'
-                                            }`}>
-                                                {problem.difficulty}
-                                            </p>
-                                        </div>
+                    {isOpen2 && (
+                        <>
+                            {recommendedProblems.length > 0 &&
+                            recommendedProblems.map((problem, index) => (
+                                <div className='homeBodyDailyRecommendedLowerOptionContainer1' key={index}>
+                                {index === 0 || problem.topic !== recommendedProblems[index - 1].topic ? (
+                                    <p className="homeBodyDailyRecommendedDivider">{problem.topic}</p>
+                                ) : null}
+                                <div
+                                    className="homeBodyDailyRecommendedLowerOption"
+                                    onClick={() =>
+                                    window.open(
+                                        "https://leetcode.com/problems/" +
+                                        problem.title.split(" ").join("-").toLowerCase() +
+                                        "/",
+                                        "_blank"
+                                    )
+                                    }
+                                >
+                                    <div className="homeBodyDailyRecommendedLowerOptionText1 blueText2">
+                                    <StatusCircle color={"yellow"} />
+                                    </div>
+                                    <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">
+                                    {problem.frontendQuestionId + ". " + problem.title}
+                                    </p>
+                                    <div className="homeBodyDailyRecommendedLowerTopics">
+                                    {problem.topicTags.map((tag, tagIndex) => (
+                                        <p key={tagIndex} className="homeBodyDailyRecommendedLowerTopic">
+                                        {tag}
+                                        </p>
                                     ))}
-                                </>
-                            ))
-                        }
-                    </>}
+                                    </div>
+                                    <p
+                                    className={`homeBodyDailyRecommendedLowerOptionText3 ${
+                                        problem.difficulty === "Easy"
+                                        ? "greenText"
+                                        : problem.difficulty === "Medium"
+                                        ? "yellowText"
+                                        : "redText"
+                                    }`}
+                                    >
+                                    {problem.difficulty}
+                                    </p>
+                                </div>
+                                </div>
+                            ))}
+                        </>
+                    )}
                 </div>
             </div>
             <div className="homeBodyChartsContainer">
