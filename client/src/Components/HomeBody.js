@@ -206,7 +206,7 @@ function HomeBody() {
             if (additionalTopics.length + scheduledTopics.length < 3) {
                 let newTopic = { ...user.technicalData.topics[topic] };
                 newTopic.name = topic;
-                newTopic.priorityScore = 0.41;
+                newTopic.priorityScore = 0.60;
                 additionalTopics.push(newTopic);
             }
             else break;
@@ -215,6 +215,7 @@ function HomeBody() {
         return additionalTopics;
     }
 
+
     function recommendProblems(user, recommendedTopics, topicProblems) {
         const recommendedProblems = [];
         const problemIds = new Set([...user.technicalData.problemIds]);
@@ -222,7 +223,7 @@ function HomeBody() {
         recommendedTopics.forEach((topic, index) => {
             if (topicProblems[topic.name]) {
                 const priorityScore = topic.priorityScore || 0.60;
-                const problems = getFilteredProblems(topic, topicProblems, "Easy", "Medium", priorityScore <= 40 ? 40 : 50);
+                const problems = getFilteredProblems(topic, topicProblems, priorityScore);
 
                 const numProblemsToRecommend = 3;
                 let addedProblems = 0;
@@ -241,22 +242,44 @@ function HomeBody() {
         return recommendedProblems;
     }
 
-    function getFilteredProblems(topic, topicProblems, minDifficulty, maxDifficulty, minAccRate) {
+
+    function getFilteredProblems(topic, topicProblems, priorityScore) {
         const problems = topicProblems[topic.name];
 
-        return problems.filter(
-            (problem) =>
-                !user.technicalData.topics[topic.name].topicProblemsSolved.includes(problem.frontendQuestionId) &&
-                (problem.difficulty === minDifficulty || problem.difficulty === maxDifficulty) &&
-                problem.acRate >= minAccRate
-        );
+        // Define the filter function based on the priority score
+        const filterProblem = (problem) => {
+            if (priorityScore >= 0.8) {
+                return (
+                    !user.technicalData.topics[topic.name].topicProblemsSolved.includes(problem.frontendQuestionId) &&
+                    problem.difficulty === "Easy" &&
+                    problem.acRate >= 55
+                );
+            } else if (priorityScore >= 0.40) {
+                return (
+                    !user.technicalData.topics[topic.name].topicProblemsSolved.includes(problem.frontendQuestionId) &&
+                    (problem.difficulty === "Medium" || problem.difficulty === "Easy") &&
+                    problem.acRate >= 40
+                );
+            } else {
+                return (
+                    !user.technicalData.topics[topic.name].topicProblemsSolved.includes(problem.frontendQuestionId) &&
+                    (problem.difficulty === "Medium" || problem.difficulty === "Hard") &&
+                    problem.acRate >= 40
+                );
+            }
+        };
+
+        return problems.filter(filterProblem);
     }
+
+
 
     function calculatePriorityScore(averageDifficulty, averageTime, solvedRatio) {
         // Apply min-max normalization to the inputs
         const normalizedAvgDifficulty = (averageDifficulty / 5);
         const normalizedAvgTime = (averageTime - 0) / (7200 - 0);
-        const normalizedSolvedRatio = (solvedRatio - 0) / (1 - 0);
+        const normalizedSolvedRatio = 1 - (solvedRatio - 0) / (1 - 0); // Reversed
+        if (normalizedSolvedRatio == 'NaN' || !normalizedSolvedRatio) normalizedSolvedRatio = 0.5;
 
         // Scaling factor for average time (you can adjust this value)
         const timeScalingFactor = 1;
@@ -264,7 +287,7 @@ function HomeBody() {
         // Scale the normalized average time
         const scaledAvgTime = normalizedAvgTime * timeScalingFactor;
 
-        const priorityScore = normalizedAvgDifficulty * 0.60 + scaledAvgTime * 0.10 + normalizedSolvedRatio * 0.30;
+        const priorityScore = normalizedAvgDifficulty * 0.80 + scaledAvgTime * 0.10 + normalizedSolvedRatio * 0.10;
 
         return priorityScore;
     }
