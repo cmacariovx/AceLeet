@@ -317,7 +317,7 @@ function HomeBody() {
             <div className="homeBodyContainerOverview">
                 <div className="homeBodyContainerOverviewLeft">
                     <p className="homeBodySmallText">OVERVIEW</p>
-                    <p className="homeBodyHeaderText">Dashboard</p>
+                    <p className="homeBodyHeaderText">Home</p>
                 </div>
                 <div className="homeBodyContainerOverviewRight">
                     <button className="homeBodyContainerOverviewRightButton" onClick={() => navigate('/new-problem')}>New Problem</button>

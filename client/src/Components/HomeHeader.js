@@ -46,7 +46,7 @@ function HomeHeader() {
             <div className="homeHeaderContainerMain">
                 <div className="homeHeaderLeft">
                     <div className={selected == '/' ? "homeHeaderLeftOption2 homeHeaderBorderBottom " : "homeHeaderLeftOption2"} onClick={() => navigate('/')}>
-                        <p className="homeHeaderLeftOptionText">Dashboard</p>
+                        <p className="homeHeaderLeftOptionText">Home</p>
                     </div>
                     {/* <div className={selected == '/recommended' ? "homeHeaderLeftOption homeHeaderBorderBottom " : "homeHeaderLeftOption"} onClick={() => navigate('/recommended')}>
                         <p className="homeHeaderLeftOptionText">Recommended</p>
@@ -56,7 +56,7 @@ function HomeHeader() {
                     </div>
                 </div>
                 <div className="homeHeaderMiddle">
-                    <img src="#" className="homeHeaderBrand"/>
+                    <p className="homeHeaderBrand">AceLeet</p>
                 </div>
                 <div className="homeHeaderRight">
                     <p className="homeHeaderRightUsername" onClick={() => setDropdownActive(!dropdownActive)}>{isLoggedIn ? username : 'Log in'}</p>

@@ -412,6 +412,7 @@ function ProblemsBody() {
                         <p className="problemsBodyProblemsOptionText4">{timeSince(problem.solvedAt)}</p>
                     </div>
                 ))}
+                {user && filteredProblems.length == 0 && <p style={{color: 'var(--lightGray)', marginTop: '40px', marginBottom: '20px', fontWeight: 'normal', fontSize: '16px'}}>Nothing to see here...</p>}
                 {!user &&
                     <div className='problemsBodySpinner'>
                         <PuffLoader color="#2c7be5"/>

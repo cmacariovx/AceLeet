@@ -125,3 +125,9 @@
             color: var(--lightGray);
             position: relative;
         }
+
+        .homeHeaderBrand {
+            font-size: 18px;
+            color: var(--lightGray);
+            user-select: none;
+        }
