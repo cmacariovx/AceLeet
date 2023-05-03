@@ -217,7 +217,7 @@ function HomeBody() {
 
     function recommendProblems(user, recommendedTopics, topicProblems) {
         const recommendedProblems = [];
-        const problemIds = new Set();
+        const problemIds = new Set([...user.technicalData.problemIds]);
 
         recommendedTopics.forEach((topic, index) => {
             if (topicProblems[topic.name]) {
@@ -421,7 +421,7 @@ function HomeBody() {
                                     }
                                 >
                                     <div className="homeBodyDailyRecommendedLowerOptionText1 blueText2">
-                                    <StatusCircle color={"yellow"} />
+                                    <StatusCircle color={"blue"} />
                                     </div>
                                     <p className="homeBodyDailyRecommendedLowerOptionText2 blueText">
                                     {problem.frontendQuestionId + ". " + problem.title}
