@@ -48,9 +48,9 @@ function HomeHeader() {
                     <div className={selected == '/' ? "homeHeaderLeftOption2 homeHeaderBorderBottom " : "homeHeaderLeftOption2"} onClick={() => navigate('/')}>
                         <p className="homeHeaderLeftOptionText">Dashboard</p>
                     </div>
-                    <div className={selected == '/recommended' ? "homeHeaderLeftOption homeHeaderBorderBottom " : "homeHeaderLeftOption"} onClick={() => navigate('/recommended')}>
+                    {/* <div className={selected == '/recommended' ? "homeHeaderLeftOption homeHeaderBorderBottom " : "homeHeaderLeftOption"} onClick={() => navigate('/recommended')}>
                         <p className="homeHeaderLeftOptionText">Recommended</p>
-                    </div>
+                    </div> */}
                     <div className={selected == '/history' ? "homeHeaderLeftOption homeHeaderBorderBottom " : "homeHeaderLeftOption"} onClick={() => navigate('/history')}>
                         <p className="homeHeaderLeftOptionText">History</p>
                     </div>

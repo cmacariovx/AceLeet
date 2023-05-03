@@ -213,6 +213,7 @@ function Auth({ onClose }) {
                             className='authInput'
                             type="text"
                             id="username"
+                            name="username"
                             value={username}
                             onChange={handleUsernameChange}
                             style={usernameValid === false ? { borderColor: 'red' } : {}}
@@ -225,6 +226,7 @@ function Auth({ onClose }) {
                         className='authInput'
                         type="email"
                         id="email"
+                        name="email"
                         value={email}
                         onChange={handleEmailChange}
                         style={emailValid === false ? { borderColor: 'red' } : {}}
@@ -235,11 +237,12 @@ function Auth({ onClose }) {
                 )}
                 {!signup &&
                     <>
-                        <label className="authLabel" htmlFor="text">Username or Email</label>
+                        <label className="authLabel" htmlFor="username">Username</label>
                         <input
                             className='authInput'
-                            type="text"
-                            id="text"
+                            type="username"
+                            id="username"
+                            name="username"
                             value={text}
                             onChange={(e) => setText(e.target.value)}
                             onMouseDown={handleMouseDownOnInput}
@@ -252,6 +255,7 @@ function Auth({ onClose }) {
                     className='authInput'
                     type="password"
                     id="password"
+                    name="password"
                     value={password}
                     onChange={handlePasswordChange}
                     style={(signup && passwordValid === false) ? { borderColor: 'red' } : {}}

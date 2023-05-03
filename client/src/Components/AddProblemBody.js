@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 
 import questionFunctions from "../leetcodeSort";
@@ -25,11 +26,13 @@ function AddProblemBody() {
     const [showQuestions, setShowQuestions] = useState(false);
     const [difficulty, setDifficulty] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedId, setSelectedId] = useState(null);
 
     const inputRef = useRef(null);
     const dropdownRef = useRef(null);
 
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const [addMode, setAddMode] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
@@ -62,24 +65,6 @@ function AddProblemBody() {
         }
 
         setKey((prevKey) => prevKey + 1);
-    }
-
-    async function handleSubmit() {
-        const solvedProblem = {
-            title: selectedQuestion,
-            difficultyLevel: selectedDifficulty,
-            difficultyNum: difficulty,
-            topics: selectedTopics,
-            totalTime: {
-                fancy: totalTimeTakenFancy,
-                nonFancy: totalTimeTaken,
-            },
-            solved: completed,
-            solvedAt: Date.now(),
-            solvedWithoutSolution: completedWo,
-        }
-
-        calculateOverallAverageDifficulty(user, solvedProblem);
     }
 
     const handlePause = () => {
@@ -116,6 +101,7 @@ function AddProblemBody() {
 
         setSearchTerm(inputValue);
         setSelectedQuestion("");
+        setSelectedId(null);
         setSelectedTopics([]);
         setSelectedDifficulty('');
         setShowTimer(false);
@@ -149,17 +135,40 @@ function AddProblemBody() {
         ) {
             setIsDropdownVisible(false);
             setSelectedQuestion("");
+            setSelectedId(null);
             setSelectedTopics([]);
             setSelectedDifficulty('');
         }
     };
 
-    const handleOptionClick = (question) => {
-        setSelectedQuestion( question[0]);
-        let searchQuestionSplit = question[0].split(' ');
-        searchQuestionSplit.shift();
+    function handleConfirm() {
+        if (selectedQuestion == "" || selectedId == null || !user) {
+            setShowTimer(false);
+            setTextError('Please select a question from the list.');
+        }
+        else {
+            const problemIds = user.technicalData.problemIds;
+            if (problemIds.includes(selectedId)) {
+                setTextError("You've already completed this problem.");
+                return;
+            }
+            setShowTimer(true);
+            setTextError('');
+        }
+    }
 
+    const handleOptionClick = (question) => {
+        setSelectedQuestion(question[0]);
+
+        let searchQuestionSplit = question[0].split(' ');
+        let id = searchQuestionSplit.shift();
         setSearchTerm(searchQuestionSplit.join(' '));
+
+        let newIdArr = id.split('');
+        newIdArr.pop();
+        const newId = newIdArr.join('')
+
+        setSelectedId(newId);
         setSelectedTopics(question[1]);
         setSelectedDifficulty(question[2]);
         setIsDropdownVisible(false);
@@ -167,120 +176,58 @@ function AddProblemBody() {
     };
 
 
+    async function handleSubmit() {
+        if (completed) {
+            if (!selectedQuestion || !difficulty) return;
+        }
+        else {
+            if (!selectedQuestion) return;
+        }
+
+        let id = selectedQuestion.split(' ').slice(0, 1).join().split('');
+        id.pop();
+        const newId = id.join('');
+
+        const solvedProblem = {
+            id: newId,
+            title: selectedQuestion,
+            difficultyLevel: selectedDifficulty,
+            difficultyNum: difficulty,
+            topics: selectedTopics,
+            totalTime: {
+                fancy: totalTimeTakenFancy,
+                nonFancy: totalTimeTaken,
+            },
+            solved: completed,
+            solvedAt: Date.now(),
+            solvedWithoutSolution: completedWo,
+        }
+
+        const copyUser = JSON.parse(JSON.stringify(user));
+        calculateOverallAverageDifficulty(copyUser, solvedProblem, token, (updatedUser) => {
+            dispatch(setUser(updatedUser));
+        });
+    }
 
 
-    // schedule idx is today, increment idx in db
-
-
-
-
-    async function calculateOverallAverageDifficulty(user, solvedProblem) {
+    async function calculateOverallAverageDifficulty(user, solvedProblem, token, updateStateCallback) {
         let totalDifficulty = 0;
         let topicCount = 0;
 
         user.technicalData.problems.totalProblemsAttempted += 1;
         user.technicalData.totalPracticeTime += solvedProblem.totalTime.nonFancy;
-
-        user.technicalData.averageProblemTime = user.technicalData.totalPracticeTime / (solvedProblem.solved ? user.technicalData.problems.totalProblemsSolved + 1 : user.technicalData.problems.totalProblemsSolved)
+        user.technicalData.averageProblemTime = user.technicalData.totalPracticeTime / (solvedProblem.solved ? user.technicalData.problems.totalProblemsSolved + 1 : user.technicalData.problems.totalProblemsSolved);
 
         if (!solvedProblem.solved) {
-            const updatedTopics = {};
-
-            for (const [topicName, topic] of Object.entries(user.technicalData.topics)) {
-                if (solvedProblem.topics.includes(topicName)) {
-                    topic.totalTopicProblemsAttempted += 1;
-                    topic.topicProblemsAttempted.push(solvedProblem);
-
-                    const newTimeSum = topic.topicTimeSum + solvedProblem.totalTime.nonFancy;
-                    const newAvgTime = newTimeSum / topic.totalTopicProblemsSolved;
-
-                    updatedTopics[topicName] = {
-                        ...topic,
-                        topicTimeSum: newTimeSum,
-                        averageTopicTime: newAvgTime,
-                    };
-                } else {
-                    updatedTopics[topicName] = topic;
-                }
-            }
-
-            user.technicalData.topics = updatedTopics;
+            user.technicalData.topics = incrementTopicProblemsAttempted(user, solvedProblem);
         }
         else {
             user.technicalData.problems.totalProblemsSolved += 1;
-            const updatedTopics = {};
+            updateProblemSolvedCount(user, solvedProblem);
+            user.technicalData.problemIds.push(solvedProblem.id);
 
-            if (solvedProblem.solvedWithoutSolution) {
-                user.technicalData.problems.totalProblemsSolvedWithoutSolution += 1;
-            }
-            else if (!solvedProblem.solvedWithoutSolution) {
-                user.technicalData.problems.totalProblemsSolvedWithSolution += 1;
-            };
+            const { updatedTopics, overallAverageDifficulty } = updateSolvedTopicData(user, solvedProblem, totalDifficulty, topicCount);
 
-            if (solvedProblem.difficultyLevel == 'Easy') {
-                user.technicalData.problems.totalEasySolved += 1;
-            }
-            else if (solvedProblem.difficultyLevel == 'Medium') {
-                user.technicalData.problems.totalMediumSolved += 1;
-            }
-            else if (solvedProblem.difficultyLevel == 'Hard') {
-                user.technicalData.problems.totalHardSolved += 1;
-            }
-
-            for (const [topicName, topic] of Object.entries(user.technicalData.topics)) {
-                if (solvedProblem.topics.includes(topicName)) {
-                    if (solvedProblem.solvedWithoutSolution) {
-                        topic.totalTopicProblemsSolvedWithoutSolution += 1;
-                    }
-                    else if (!solvedProblem.solvedWithoutSolution) {
-                        topic.totalTopicProblemsSolvedWithSolution += 1;
-                    };
-
-                    if (solvedProblem.difficultyLevel == 'Easy') {
-                        topic.totalTopicEasySolved += 1;
-                    }
-                    else if (solvedProblem.difficultyLevel == 'Medium') {
-                        topic.totalTopicMediumSolved += 1;
-                    }
-                    else if (solvedProblem.difficultyLevel == 'Hard') {
-                        topic.totalTopicHardSolved += 1;
-                    };
-
-                    const newDifficultySum = topic.topicDifficultySum + solvedProblem.difficultyNum;
-                    const newProblemCount = topic.totalTopicProblemsSolved + 1;
-                    topic.totalTopicProblemsAttempted += 1;
-                    const newAvgDifficulty = newDifficultySum / newProblemCount;
-
-                    const newTimeSum = topic.topicTimeSum + solvedProblem.totalTime.nonFancy;
-                    const newAvgTime = newTimeSum / newProblemCount;
-
-                    totalDifficulty += newAvgDifficulty;
-                    topicCount += 1;
-
-                    topic.topicProblemsSolved.push(solvedProblem);
-                    topic.scheduleIdx += 1;
-
-                    updatedTopics[topicName] = {
-                        ...topic,
-                        schedule: [0, 1, 4, 7, 14, 28],
-                        topicTimeSum: newTimeSum,
-                        averageTopicTime: newAvgTime,
-                        lastPracticed: solvedProblem.solvedAt,
-                        topicDifficultySum: newDifficultySum,
-                        totalTopicProblemsSolved: newProblemCount,
-                        averageTopicDifficulty: newAvgDifficulty,
-                    };
-                }
-                else {
-                    if (topic.averageTopicDifficulty !== null) {
-                        totalDifficulty += topic.averageTopicDifficulty;
-                        topicCount += 1;
-                    }
-                    updatedTopics[topicName] = topic;
-                }
-            }
-
-            const overallAverageDifficulty = totalDifficulty / topicCount;
             user.technicalData.topics = updatedTopics;
             user.technicalData.averageDifficultyIntervals.push({
                 overallAverageDifficulty: overallAverageDifficulty,
@@ -288,28 +235,174 @@ function AddProblemBody() {
             });
         }
 
-        async function userTechnicalDataUpdate() {
-            setIsLoading(true);
-            const response = await fetch('http://localhost:5000' + '/user/updateUserTech', {
-                method: 'POST',
-                body: JSON.stringify({
-                    userId: user._id,
-                    userTechnicalData: user.technicalData,
-                }),
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token,
-                }
-            })
+        await updateUserTechnicalData(user, token);
+        updateStateCallback(user);
+    }
 
-            const data = await response.json();
-            setIsLoading(false);
-            navigate('/');
-            return data;
+
+    function incrementTopicProblemsAttempted(user, solvedProblem) {
+        const updatedTopics = {};
+
+        for (const [topicName, topic] of Object.entries(user.technicalData.topics)) {
+            if (solvedProblem.topics.includes(topicName)) {
+                topic.totalTopicProblemsAttempted += 1;
+                topic.topicProblemsAttempted.push(solvedProblem);
+
+                const newTimeSum = topic.topicTimeSum + solvedProblem.totalTime.nonFancy;
+                const newAvgTime = newTimeSum / topic.totalTopicProblemsSolved;
+
+                updatedTopics[topicName] = {
+                    ...topic,
+                    topicTimeSum: newTimeSum,
+                    averageTopicTime: newAvgTime,
+                };
+            } else {
+                updatedTopics[topicName] = topic;
+            }
         }
 
-        await userTechnicalDataUpdate();
+        return updatedTopics;
     }
+
+
+    function updateProblemSolvedCount(user, solvedProblem) {
+        if (solvedProblem.solvedWithoutSolution) {
+            user.technicalData.problems.totalProblemsSolvedWithoutSolution += 1;
+        } else {
+            user.technicalData.problems.totalProblemsSolvedWithSolution += 1;
+        };
+
+        if (solvedProblem.difficultyLevel === 'Easy') {
+            user.technicalData.problems.totalEasySolved += 1;
+        } else if (solvedProblem.difficultyLevel === 'Medium') {
+            user.technicalData.problems.totalMediumSolved += 1;
+        } else if (solvedProblem.difficultyLevel === 'Hard') {
+            user.technicalData.problems.totalHardSolved += 1;
+        }
+    }
+
+
+    function updateSolvedTopicData(user, solvedProblem, totalDifficulty, topicCount) {
+        const updatedTopics = {};
+
+        for (const [topicName, topic] of Object.entries(user.technicalData.topics)) {
+            if (solvedProblem.topics.includes(topicName)) {
+                const { updatedTopic, newAvgDifficulty } = updateTopicSolvedData(topic, solvedProblem);
+                totalDifficulty += newAvgDifficulty;
+                topicCount += 1;
+                updatedTopics[topicName] = updatedTopic;
+            }
+            else {
+                if (topic.averageTopicDifficulty !== null) {
+                    totalDifficulty += topic.averageTopicDifficulty;
+                    topicCount += 1;
+                }
+                updatedTopics[topicName] = topic;
+            }
+        }
+
+        const overallAverageDifficulty = totalDifficulty / topicCount;
+
+        return { updatedTopics, overallAverageDifficulty };
+    }
+
+
+    function updateTopicSolvedData(topic, solvedProblem) {
+        updateTopicProblemsCount(topic, solvedProblem);
+        const newDifficultySum = topic.topicDifficultySum + solvedProblem.difficultyNum;
+        const newProblemCount = topic.totalTopicProblemsSolved + 1;
+        topic.totalTopicProblemsAttempted += 1;
+        const newAvgDifficulty = newDifficultySum / newProblemCount;
+
+        const newTimeSum = topic.topicTimeSum + solvedProblem.totalTime.nonFancy;
+        const newAvgTime = newTimeSum / newProblemCount;
+
+        const problemIndex = topic.topicProblemsAttempted.findIndex(
+            (problem) => problem.id === solvedProblem.id
+        );
+
+        if (problemIndex !== -1) {
+            topic.topicProblemsAttempted.splice(problemIndex, 1);
+        }
+
+        topic.topicProblemsSolved.push(solvedProblem);
+
+        const currentDate = Date.now();
+        const lastPracticed = topic.lastPracticed || currentDate;
+        const daysSinceLastPractice = daysBetween(currentDate, lastPracticed);
+
+        if (lastPracticed === currentDate || daysSinceLastPractice >= topic.schedule[topic.scheduleIdx]) {
+            topic.problemsDone += 1;
+
+            if (topic.problemsDone >= 3) {
+                topic.scheduleIdx += 1;
+                topic.problemsDone = 0;
+            }
+        }
+
+        return {
+            updatedTopic: {
+                ...topic,
+                topicTimeSum: newTimeSum,
+                averageTopicTime: newAvgTime,
+                lastPracticed: solvedProblem.solvedAt,
+                topicDifficultySum: newDifficultySum,
+                totalTopicProblemsSolved: newProblemCount,
+                averageTopicDifficulty: newAvgDifficulty,
+            },
+            newAvgDifficulty,
+        };
+    }
+
+
+    function updateTopicProblemsCount(topic, solvedProblem) {
+        if (solvedProblem.solvedWithoutSolution) {
+            topic.totalTopicProblemsSolvedWithoutSolution += 1;
+        }
+        else if (!solvedProblem.solvedWithoutSolution) {
+            topic.totalTopicProblemsSolvedWithSolution += 1;
+        };
+
+        if (solvedProblem.difficultyLevel === 'Easy') {
+            topic.totalTopicEasySolved += 1;
+        }
+        else if (solvedProblem.difficultyLevel === 'Medium') {
+            topic.totalTopicMediumSolved += 1;
+        }
+        else if (solvedProblem.difficultyLevel === 'Hard') {
+            topic.totalTopicHardSolved += 1;
+        };
+    }
+
+
+    async function updateUserTechnicalData(user, token) {
+        setIsLoading(true);
+        const response = await fetch('http://localhost:5000' + '/user/updateUserTech', {
+            method: 'POST',
+            body: JSON.stringify({
+                userId: user._id,
+                userTechnicalData: user.technicalData,
+            }),
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token,
+            }
+        });
+
+        const data = await response.json();
+        setIsLoading(false);
+        navigate('/');
+        return data;
+    }
+
+
+    function daysBetween(timestamp1, timestamp2) {
+        const oneDay = 1000 * 60 * 60 * 24;
+        const differenceInTime = timestamp1 - timestamp2;
+        const differenceInDays = Math.floor(differenceInTime / oneDay);
+        return differenceInDays;
+    }
+
 
     useEffect(() => {
         getQuestions();
@@ -344,16 +437,7 @@ function AddProblemBody() {
                 ></input>
                 {textError != '' && <p className="addProblemTextError">{textError}</p>}
                 <div className="addProblemBodyAddButtonContainer">
-                    <button className="addProblemBodyAddButton" onClick={() => {
-                        if (selectedQuestion != "") {
-                            setShowTimer(true);
-                            setTextError('');
-                        }
-                        else {
-                            setShowTimer(false);
-                            setTextError('Please select a question from the list.');
-                        }
-                    }}>Confirm</button>
+                    <button className="addProblemBodyAddButton" onClick={handleConfirm}>Confirm</button>
                 </div>
                 {isDropdownVisible && (
                     <div ref={dropdownRef} className="addProblemBodyDropdown">

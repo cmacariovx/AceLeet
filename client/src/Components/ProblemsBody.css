@@ -419,7 +419,7 @@
                 justify-content: flex-start;
                 align-items: center;
                 flex-wrap: wrap;
-                max-width: 300px;
+                width: 300px;
                 padding-right: 40px;
             }
 

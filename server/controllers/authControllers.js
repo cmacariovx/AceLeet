@@ -24,8 +24,9 @@ function initializeTopics() {
             totalTopicEasySolved: 0,
             totalTopicMediumSolved: 0,
             totalTopicHardSolved: 0,
-            schedule: [],
+            schedule: [0, 1, 4, 7, 14, 28],
             scheduleIdx: 0,
+            problemsDone: 0,
         };
     });
 
@@ -69,6 +70,7 @@ async function userSignup (req, res, next) {
                 totalMediumSolved: 0,
                 totalHardSolved: 0,
             },
+            problemIds: [],
             totalPracticeTime: 0,
             averageProblemTime: 0,
             averageDifficultyIntervals: [],
@@ -80,7 +82,7 @@ async function userSignup (req, res, next) {
 
     if (signupResult.status == 200 && !signupResult.error) {
         const loginUser = {
-            email: email,
+            username: username,
             password: plainPassword,
         }
         await userLogin(req, res, next, loginUser);
@@ -92,9 +94,9 @@ async function userSignup (req, res, next) {
 
 async function userLogin (req, res, next, loginUser = null) {
     if (loginUser != null) {
-        const { email, password } = loginUser;
+        const { username, password } = loginUser;
         let loginResult = await mongo.userLogin(req, res, next, {
-            email: email,
+            username: username,
             password: password,
         });
     }

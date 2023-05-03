@@ -327,11 +327,42 @@
                 }
 
                 .homeBodyDailyRecommendedLowerText23 {
+                    width: 500px;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                }
+
+                .homeBodyDailyRecommendedLowerText23Button {
+                    padding: 8px 14px;
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: flex-start;
+                    align-items: center;
+                    border-radius: 5px;
+                    background-color: var(--darkGray);
+                    cursor: pointer;
+                }
+
+
+                .homeBodyDailyRecommendedLowerText23Button > p {
                     font-size: 10px;
                     letter-spacing: 1px;
-                    width: 500px;
                     color: var(--newGray);
                     font-weight: bold;
+                    margin-right: 10px;
+                    user-select: none;
+                }
+
+                .fa-eye {
+                    font-size: 14px;
+                    color: var(--lightGray);
+                }
+
+                .fa-eye-slash {
+                    font-size: 14px;
+                    color: var(--lightGray);
                 }
 
                 .homeBodyDailyRecommendedLowerText24 {

@@ -65,7 +65,7 @@ function App() {
         <Route path='/' exact element={<Home />} />
         <Route path='/history' exact element={<Problems />} />
         <Route path='/new-problem' exact element={<AddProblem />} />
-        <Route path='/recommended' exact element={<Recommended />} />
+        {/* <Route path='/recommended' exact element={<Recommended />} /> */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>}
       {!isLoading && !token && <Routes>

@@ -56,11 +56,10 @@ async function userLogin(req, res, next, user) {
         let result;
 
         if (user == null) {
-            result = await db.collection('users').findOne({ email: req.body.text });
-            if (!result) result = await db.collection('users').findOne({ username: req.body.text });
+            result = await db.collection('users').findOne({ username: req.body.text });
         }
         else {
-            result = await db.collection('users').findOne({ email: user.email });
+            result = await db.collection('users').findOne({ username: user.username });
         }
 
         if (!result) {
