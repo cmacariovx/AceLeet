@@ -5,6 +5,7 @@ import LineChart from "./LineChart";
 import { useSelector, useDispatch } from "react-redux";
 import { updateRecommendations } from "../redux/slices/recommendationsSlice";
 import readJsonFile from "../readJsonFile";
+import { PuffLoader } from 'react-spinners'
 
 import { useNavigate } from "react-router-dom";
 
@@ -480,15 +481,17 @@ function HomeBody() {
                             <p className="homeBodyChartsContainerUpperLeftUpperText">Average Difficulty Per Topic</p>
                         </div>
                         <div className="homeBodyChartsContainerUpperLeftLower">
-                            <BarChart />
+                            {!user && <PuffLoader color="#2c7be5"/>}
                         </div>
+                            {user && <BarChart />}
                     </div>
                     <div className="homeBodyChartsContainerUpperRight">
                         <div className="homeBodyChartsContainerUpperRightUpper">
                             <p className="homeBodyChartsContainerUpperRightUpperText">Difficulty</p>
                         </div>
                         <div className="homeBodyChartsContainerUpperRightLower">
-                            <DoughnutChart1 />
+                            {!user && <PuffLoader color="#2c7be5"/>}
+                            {user && <DoughnutChart1 />}
                         </div>
                     </div>
                 </div>
@@ -498,16 +501,19 @@ function HomeBody() {
                             <p className="homeBodyChartsContainerLowerLeftUpperText">Topics</p>
                         </div>
                         <div className="homeBodyChartsContainerLowerLeftLower">
-                            <DoughnutChart2 />
+                            {!user && <PuffLoader color="#2c7be5"/>}
+                            {user && <DoughnutChart2 />}
                         </div>
                     </div>
                     <div className="homeBodyChartsContainerLowerRight">
                         <div className="homeBodyChartsContainerLowerRightUpper">
                             <p className="homeBodyChartsContainerLowerRightUpperText">Average Difficulty - Past 6 Weeks</p>
-                            {/* <p className="homeBodyChartsContainerLowerRightUpperText2">36% Improvement</p> */}
                         </div>
                         <div className="homeBodyChartsContainerLowerRightLower">
-                            <LineChart dataSet={sixWeekAvgDiff}/>
+                            {!user &&
+                                <PuffLoader color="#2c7be5"/>
+                            }
+                            {user && <LineChart dataSet={sixWeekAvgDiff}/>}
                         </div>
                     </div>
                 </div>
