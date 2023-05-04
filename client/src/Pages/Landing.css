@@ -21,6 +21,8 @@
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 99;
+    background-color: var(--gray);
 }
 
     .landingHeaderLeft {
@@ -70,12 +72,13 @@
     }
 
     .landingIntro {
-        width: 60%;
+        width: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         margin-top: 120px;
+        padding: 0 200px;
     }
 
     .landingIntroUpper {
@@ -120,6 +123,7 @@
         align-items: center;
         padding: 0 160px;
         margin-bottom: 100px;
+        max-width: 1400px;
     }
 
     .landingSectionTitle {
@@ -206,3 +210,54 @@
         transition: 0.2s linear;
         background-color: rgb(191, 209, 238);
     }
+
+@media screen and (max-width: 1100px) {
+    .landingSectionCharts {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .landingSectionDonut {
+        width: 100%;
+    }
+
+    .landingSectionBar {
+        width: 100%;
+    }
+
+    .landingSection {
+        padding: 0 80px;
+    }
+
+    .landingIntro {
+        padding: 0 100px;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .landingSection {
+        padding: 0 40px;
+    }
+
+    .landingIntro {
+        padding: 0 60px;
+    }
+
+    .landingHeader {
+        padding: 0 40px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .landingSection {
+        padding: 0 20px;
+    }
+
+    .landingIntro {
+        padding: 0 30px;
+    }
+
+    .landingHeader {
+        padding: 0 20px;
+    }
+}
