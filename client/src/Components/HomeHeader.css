@@ -130,6 +130,30 @@
             font-size: 18px;
             color: var(--lightGray);
             user-select: none;
+            font-weight: bold;
+            margin-top: 1px;
+        }
+
+        .homeHeaderBrand2 {
+            font-size: 12px;
+            color: var(--blue);
+            margin-left: 8px;
+            font-weight: bold;
+            margin-top: 4px;
+            user-select: none;
+        }
+
+        .homeHeaderLeftImg {
+            height: 30px;
+            width: 30px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5px;
+            user-select: none;
+            -webkit-user-drag: none;
+            margin-right: 12px;
         }
 
         @media screen and (max-width: 800px) {

@@ -11,6 +11,7 @@ import ErrorModal from './Components/ErrorModal'
 
 import { login } from './redux/slices/authSlice'
 import { setUser } from './redux/slices/userSlice'
+import Landing from './Pages/Landing'
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,7 +24,7 @@ function App() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('userData'));
+    const storedData = JSON.parse(localStorage.getItem('userDatax'));
 
     if (storedData && storedData.token) {
       dispatch(login(storedData));
@@ -69,8 +70,8 @@ function App() {
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>}
       {!isLoading && !token && <Routes>
-        <Route path='/' exact element={<Home />} />
-        <Route path="*" element={<Navigate to="/" />} />
+        <Route path='/landing' exact element={<Landing />} />
+        <Route path="*" element={<Navigate to="/landing" />} />
       </Routes>}
     </div>
   )

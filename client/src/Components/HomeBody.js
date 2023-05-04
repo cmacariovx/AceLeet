@@ -13,8 +13,8 @@ import DoughnutChart1 from "./DoughnutChart1";
 import DoughnutChart2 from "./DoughnutChart2";
 
 function HomeBody() {
-    const [isOpen1, setIsOpen1] = useState(true);
-    const [isOpen2, setIsOpen2] = useState(true);
+    const [isOpen1, setIsOpen1] = useState(false);
+    const [isOpen2, setIsOpen2] = useState(false);
     const [topicWeights, setTopicWeights] = useState(null);
     const [topicProblems, setTopicProblems] = useState(null);
     const [topicsToRecommend, setTopicsToRecommend] = useState(["Array", "String", "Dynamic Programming", "Depth-First Search", "Binary Search", "Breadth-First Search", "Tree", "Matrix", "Two Pointers", "Binary Tree", "Stack", "Prefix Sum", "Graph", "Sliding Window", "Union Find", "Linked List", "Monotonic Stack", "Recursion","Binary Search Tree", "Topological Sort"]);

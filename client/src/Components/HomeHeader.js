@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router"
 import { useSelector, useDispatch } from "react-redux";
+import x from '../assets/x.png'
 
 import Auth from "./Auth";
 
@@ -56,7 +57,9 @@ function HomeHeader() {
                     </div>
                 </div>
                 <div className="homeHeaderMiddle">
+                <img src={x} className="homeHeaderLeftImg"/>
                     <p className="homeHeaderBrand">AceLeet</p>
+                    <p className="homeHeaderBrand2">BETA</p>
                 </div>
                 <div className="homeHeaderRight">
                     <p className="homeHeaderRightUsername" onClick={() => setDropdownActive(!dropdownActive)}>{isLoggedIn ? username : 'Log in'}</p>
