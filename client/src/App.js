@@ -1,6 +1,6 @@
 import './App.css'
 import React, { useState, useEffect } from 'react'
-import { Route, Routes, Navigate } from 'react-router-dom'
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Home from './Pages/Home'
@@ -22,6 +22,16 @@ function App() {
   const email = useSelector(state => state.auth.email);
 
   const dispatch = useDispatch();
+
+  const location = useLocation();
+
+  useEffect(() => {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: 'pageview',
+      page_path: location.pathname + location.search,
+    });
+  }, [location]);
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('userDatax'));
