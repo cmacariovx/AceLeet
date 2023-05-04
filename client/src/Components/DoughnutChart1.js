@@ -97,7 +97,7 @@ const DoughnutChart1 = (props) => {
     };
 
     return (
-        <div>
+        <div className='barContainer' style={{height: '300px', width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
             <Doughnut data={data} options={options} />
         </div>
     )

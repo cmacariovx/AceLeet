@@ -131,3 +131,99 @@
             color: var(--lightGray);
             user-select: none;
         }
+
+        @media screen and (max-width: 800px) {
+            .homeHeaderContainer {
+                height: 66px;
+                width: 100%;
+                padding: 0 40px;
+            }
+        }
+
+        @media screen and (max-width: 650px) {
+            .homeHeaderContainer {
+                height: 66px;
+                width: 100%;
+                padding: 0 20px;
+            }
+
+            .homeHeaderLeftOptionText {
+                font-size: 13px;
+            }
+
+            .homeHeaderRightDropdownOption {
+                width: 150px;
+                height: 50px;
+                padding: 12px 24px;
+            }
+
+            .homeHeaderRightUsername {
+                font-size: 13px;
+                color: var(--blue);
+                padding: 8px 12px;
+                background-color: var(--darkGray);
+                border-radius: 5px;
+                cursor: pointer;
+                user-select: none;
+            }
+
+            .homeHeaderLeft {
+                height: 100%;
+                width: 30%;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-start;
+                align-items: center;
+            }
+
+            .homeHeaderMiddle {
+                height: 100%;
+                width: 30%;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .homeHeaderRight {
+                height: 100%;
+                width: 30%;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                align-items: center;
+            }
+        }
+
+        @media screen and (max-width: 450px) {
+            .homeHeaderBrand {
+                font-size: 16px;
+                color: var(--lightGray);
+                user-select: none;
+            }
+
+            .homeHeaderLeftOption {
+                height: 100%;
+                margin: 0 12px;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+            }
+
+            .homeHeaderLeftOption2 {
+                height: 100%;
+                margin: 0 12px;
+                margin-left: 0;
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+            }
+                .homeHeaderLeftOptionText {
+                    font-size: 12px;
+                }
+
+        }

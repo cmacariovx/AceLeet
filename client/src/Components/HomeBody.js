@@ -252,7 +252,7 @@ function HomeBody() {
                 return (
                     !user.technicalData.topics[topic.name].topicProblemsSolved.includes(problem.frontendQuestionId) &&
                     problem.difficulty === "Easy" &&
-                    problem.acRate >= 55
+                    problem.acRate >= 40
                 );
             } else if (priorityScore >= 0.40) {
                 return (
@@ -273,12 +273,11 @@ function HomeBody() {
     }
 
 
-
     function calculatePriorityScore(averageDifficulty, averageTime, solvedRatio) {
         // Apply min-max normalization to the inputs
         const normalizedAvgDifficulty = (averageDifficulty / 5);
         const normalizedAvgTime = (averageTime - 0) / (7200 - 0);
-        const normalizedSolvedRatio = 1 - (solvedRatio - 0) / (1 - 0); // Reversed
+        let normalizedSolvedRatio = 1 - (solvedRatio - 0) / (1 - 0); // Reversed
         if (normalizedSolvedRatio == 'NaN' || !normalizedSolvedRatio) normalizedSolvedRatio = 0.5;
 
         // Scaling factor for average time (you can adjust this value)

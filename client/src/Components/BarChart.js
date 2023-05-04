@@ -95,9 +95,9 @@ const BarChart = (props) => {
     }
 
     return (
-        <>
+        <div className='barContainer' style={{height: '300px', width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
             <Bar data={data} options={options} />
-        </>
+        </div>
     )
 }
 

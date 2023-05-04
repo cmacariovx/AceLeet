@@ -69,9 +69,9 @@ const LineChart = (props) => {
     }
 
     return (
-        <>
+        <div className='barContainer' style={{height: '300px', width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
             <Line data={data} options={options}/>
-        </>
+        </div>
     )
 }
 
