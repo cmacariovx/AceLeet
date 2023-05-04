@@ -30,7 +30,7 @@ function App() {
     window.dataLayer.push({
       event: 'pageview',
       page_path: location.pathname + location.search,
-    });
+    }); 
   }, [location]);
 
   useEffect(() => {
