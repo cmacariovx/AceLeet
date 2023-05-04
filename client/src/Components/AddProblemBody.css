@@ -467,3 +467,47 @@
                 background-color: var(--gray);
                 border-radius: 10px;
             }
+
+@media screen and (max-width: 1300px) {
+    .addProblemBody {
+        min-height: 100vh;
+        height: auto;
+        width: 80%;
+        padding: 0 60px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .addProblemBody {
+        min-height: 100vh;
+        height: auto;
+        width: 100%;
+        padding: 0 20px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .addProblemBody {
+        min-height: 100vh;
+        height: auto;
+        width: 100%;
+        padding: 0 20px;
+    }
+
+    .addProblemBodyAddInput {
+        height: 66px;
+        width: 100%;
+        padding: 20px;
+        font-size: 16px;
+    }
+
+
+    .timerLeftArrowIcon {
+        position: absolute;
+        top: 0;
+        left: 0px;
+        font-size: 36px;
+        color: var(--lightGray);
+        cursor: pointer;
+    }
+}

@@ -489,3 +489,215 @@
                     margin-top: 100px;
                     margin-bottom: 100px;
                 }
+
+@media screen and (max-width: 1200px) {
+    .problemsBody {
+        padding: 0 30px;
+    }
+
+    .problemsBodyProblemsOption {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .problemsBodyProblemsOptionText1 {
+        font-size: 14px;
+        user-select: none;
+        min-width: 0;
+        width: 5%
+    }
+
+    .problemsBodyProblemsOptionText2 {
+        font-size: 14px;
+        padding-right: 40px;
+        min-width: 0;
+        width: 30%;
+    }
+
+    .problemsBodyProblemsOptionText3 {
+        font-size: 14px;
+        min-width: 0;
+        width: 15%;
+    }
+
+    .problemsBodyProblemsOptionText4 {
+        font-size: 14px;
+        min-width: 0;
+        width: 15%;
+    }
+
+    .problemsBodyProblemsTopics {
+        font-size: 13px;
+        padding-right: 40px;
+        width: 35%;
+    }
+
+        .problemsBodyProblemsTopic {
+            padding: 4px 10px;
+            border-radius: 30px;
+            background-color: var(--darkGray);
+            margin-right: 10px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+
+        .problemsBodyCategory1 {
+            min-width: 0;
+            width: 10%
+        }
+
+        .problemsBodyCategory2 {
+            min-width: 0;
+            width: 30%
+        }
+
+        .problemsBodyCategory3 {
+            min-width: 0;
+            width: 25%
+        }
+
+        .problemsBodyCategory4 {
+            min-width: 0;
+            width: 15%
+        }
+
+        .problemsBodyCategory5 {
+            min-width: 0;
+            width: 20%
+        }
+
+        .problemsBodyCategoryText {
+            font-size: 13px;
+            color: var(--lightGray);
+            user-select: none;
+            width: auto;
+        }
+
+        .problemsBodyCategoryArrows {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            width: auto;
+        }
+}
+
+@media screen and (max-width: 1000px) {
+    .problemsBodyProblemsOptionText1 {
+        font-size: 14px;
+        user-select: none;
+        min-width: 0;
+        width: 10%
+    }
+
+    .problemsBodyProblemsOptionText2 {
+        font-size: 14px;
+        padding-right: 40px;
+        min-width: 0;
+        width: 50%;
+    }
+
+    .problemsBodyProblemsOptionText3 {
+        font-size: 14px;
+        min-width: 0;
+        width: 20%;
+    }
+
+    .problemsBodyProblemsOptionText4 {
+        font-size: 14px;
+        min-width: 0;
+        width: 20%;
+    }
+
+    .problemsBodyProblemsTopics {
+        display: none;
+    }
+
+        .problemsBodyProblemsTopic {
+            display: none;
+        }
+
+        .problemsBodyCategory1 {
+            min-width: 0;
+            width: 17%
+        }
+
+        .problemsBodyCategory2 {
+            min-width: 0;
+            width: 38%
+        }
+
+        .problemsBodyCategory3 {
+            display: none;
+        }
+
+        .problemsBodyCategory4 {
+            min-width: 0;
+            width: 23%
+        }
+
+        .problemsBodyCategory5 {
+            min-width: 0;
+            width: 25%
+        }
+}
+
+@media screen and (max-width: 850px) {
+    .problemsBodyOptionsContainer {
+        display: none;
+    }
+
+    .problemsBodyProblemsOption {
+        padding: 14px 18px
+    }
+
+    .problemsBodyNav {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 750px) {
+    .problemsBodyCategoryContainer {
+        display: none;
+    }
+
+    .problemsBodyProblemsOptionText4 {
+        display: none;
+    }
+
+    .problemsBodyProblemsOption {
+        height: auto;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 14px 18px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .problemsBodyProblemsOptionText1 {
+        font-size: 14px;
+        user-select: none;
+        min-width: 0;
+        width: 20%
+    }
+
+    .problemsBodyProblemsOptionText2 {
+        font-size: 14px;
+        padding-right: 40px;
+        min-width: 0;
+        width: 60%;
+    }
+
+    .problemsBodyProblemsOptionText3 {
+        font-size: 14px;
+        min-width: 0;
+        width: 20%;
+    }
+
+    .problemsBody {
+        padding: 0 20px;
+    }
+}
