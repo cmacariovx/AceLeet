@@ -1,0 +1,24 @@
+.homeFooter {
+    height: 66px;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-bottom: 1px solid rgba(220, 220, 220, 0.6);
+}
+
+.homeFooterText1 {
+    font-size: 14px;
+    color: var(--lightGray);
+    user-select: none;
+}
+
+.homeFooterText2 {
+    font-size: 14px;
+    color: var(--blue);
+    user-select: none;
+    margin-right: 40px;
+    cursor: pointer;
+}

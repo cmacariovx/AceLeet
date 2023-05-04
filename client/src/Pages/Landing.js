@@ -233,7 +233,7 @@ function Landing() {
                 <p className="landingJoinButton" onClick={() => setShowAuth(true)}>Join Now</p>
             </div>
             <div className="landingFooter">
-                <p className="landingFooterText">AceLeet ©2023</p>
+                <p className="landingFooterText">© 2023 AceLeet</p>
             </div>
         </div>
     )

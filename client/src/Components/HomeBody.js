@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { updateRecommendations } from "../redux/slices/recommendationsSlice";
 import readJsonFile from "../readJsonFile";
 import { PuffLoader } from 'react-spinners'
+import HomeFooter from "./HomeFooter";
 
 import { useNavigate } from "react-router-dom";
 
@@ -482,8 +483,8 @@ function HomeBody() {
                         </div>
                         <div className="homeBodyChartsContainerUpperLeftLower">
                             {!user && <PuffLoader color="#2c7be5"/>}
-                        </div>
                             {user && <BarChart />}
+                        </div>
                     </div>
                     <div className="homeBodyChartsContainerUpperRight">
                         <div className="homeBodyChartsContainerUpperRightUpper">

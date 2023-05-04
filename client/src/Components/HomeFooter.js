@@ -1,11 +1,15 @@
-import React from "react";
-
-import './HomeFooter.css'
+import React, { useState } from "react";
+import './HomeFooter.css';
+import EmailModal from "./EmailModal";
 
 function HomeFooter() {
+    const [showEmail, setShowEmail] = useState(false);
+
     return (
-        <div className="homeFooterContainer">
-            
+        <div className="homeFooter">
+            {showEmail && <EmailModal closeModal={() => setShowEmail(false)} />}
+            <button className="homeFooterText2" onClick={() => setShowEmail(true)}>Give Feedback</button>
+            <p className="homeFooterText1">© 2023 AceLeet</p>
         </div>
     )
 }
