@@ -109,7 +109,7 @@ function Auth({ onClose }) {
             async function submitSignup(event) {
                 event.preventDefault()
                 setIsLoading(true);
-                const response = await fetch('http://localhost:5000' + '/auth/signup', {
+                const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/auth/signup', {
                     method: 'POST',
                     body: JSON.stringify({
                         username: username.toLowerCase(),
@@ -159,7 +159,7 @@ function Auth({ onClose }) {
             async function submitLogin(event) {
                 event.preventDefault()
                 setIsLoading(true);
-                const response = await fetch('http://localhost:5000' + '/auth/login', {
+                const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/auth/login', {
                     method: 'POST',
                     body: JSON.stringify({
                         text: text.toLowerCase(),

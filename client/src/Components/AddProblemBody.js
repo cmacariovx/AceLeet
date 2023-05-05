@@ -377,7 +377,7 @@ function AddProblemBody() {
 
     async function updateUserTechnicalData(user, token) {
         setIsLoading(true);
-        const response = await fetch('http://localhost:5000' + '/user/updateUserTech', {
+        const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/user/updateUserTech', {
             method: 'POST',
             body: JSON.stringify({
                 userId: user._id,

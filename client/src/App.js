@@ -30,7 +30,7 @@ function App() {
     window.dataLayer.push({
       event: 'pageview',
       page_path: location.pathname + location.search,
-    }); 
+    });
   }, [location]);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ function App() {
   }, [userId, email])
 
   async function fetchUser(userId, email) {
-    const response = await fetch('http://localhost:5000' + '/user/all', {
+    const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/user/all', {
       method: 'POST',
       body: JSON.stringify({
         userId: userId,
