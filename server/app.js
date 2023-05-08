@@ -2,6 +2,8 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
+const fs = require('fs');
+const https = require('https');
 
 const authRouter = require("./routes/authRoutes")
 const userRouter = require("./routes/userRoutes")
@@ -67,4 +69,15 @@ app.use((error, req, res, next) => {
     });
 });
 
-app.listen(process.env.PORT || 5000)
+
+const privateKey = fs.readFileSync('/app/certs/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/app/certs/fullchain.pem', 'utf8');
+
+const credentials = {
+    key: privateKey,
+    cert: certificate,
+};
+
+const httpsServer = https.createServer(credentials, app);
+
+httpsServer.listen(process.env.PORT || 5000);

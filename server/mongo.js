@@ -2,6 +2,7 @@ const MongoClient = require("mongodb").MongoClient
 const ObjectId = require("mongodb").ObjectId
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const escapeStringRegexp = require('escape-string-regexp')
 
 require("dotenv").config()
 
@@ -18,8 +19,8 @@ async function userSignup(req, res, next, newUser) {
         await client.connect();
         const db = client.db("sr");
 
-        existingUserByEmail = await db.collection("users").findOne({ email: newUser.email });
-        existingUserByUsername = await db.collection("users").findOne({ username: newUser.username });
+        existingUserByEmail = await db.collection("users").findOne({ email: escapeStringRegexp(newUser.email) });
+        existingUserByUsername = await db.collection("users").findOne({ username: escapeStringRegexp(newUser.username) });
 
         if (existingUserByEmail && existingUserByUsername) {
             client.close();
@@ -56,10 +57,10 @@ async function userLogin(req, res, next, user) {
         let result;
 
         if (user == null) {
-            result = await db.collection('users').findOne({ username: req.body.text });
+            result = await db.collection('users').findOne({ username: escapeStringRegexp(req.body.text) });
         }
         else {
-            result = await db.collection('users').findOne({ username: user.username });
+            result = await db.collection('users').findOne({ username: escapeStringRegexp(user.username) });
         }
 
         if (!result) {
@@ -103,6 +104,7 @@ async function userLogin(req, res, next, user) {
 
 async function fetchUser(req, res, next) {
     const { userId, email } = req.body;
+    email = escapeStringRegexp(email)
 
     const client = new MongoClient(mongoUrl);
 
