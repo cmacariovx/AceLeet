@@ -1,6 +1,7 @@
 const mongo = require('../mongo')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { check, validationResult } = require('express-validator');
 require("dotenv").config()
 
 let topics = ["Array", "String", "Hash Table", "Math", "Dynamic Programming", "Sorting", "Greedy", "Depth-First Search", "Binary Search", "Database", "Breadth-First Search", "Tree", "Matrix", "Two Pointers", "Binary Tree", "Bit Manipulation", "Heap (Priority Queue)", "Stack", "Prefix Sum", "Graph", "Design", "Simulation", "Counting", "Backtracking", "Sliding Window", "Union Find", "Linked List", "Ordered Set", "Monotonic Stack", "Enumeration", "Recursion", "Trie", "Divide and Conquer", "Binary Search Tree", "Bitmask", "Queue", "Number Theory", "Memoization", "Segment Tree", "Geometry", "Topological Sort", "Binary Indexed Tree", "Hash Function", "Game Theory", "Shortest Path", "Combinatorics", "Data Stream", "Interactive", "String Matching", "Rolling Hash", "Brainteaser", "Randomized", "Monotonic Queue", "Merge Sort", "Iterator", "Concurrency", "Doubly-Linked List", "Probability and Statistics", "Quickselect", "Bucket Sort", "Suffix Array", "Minimum Spanning Tree", "Counting Sort", "Shell", "Line Sweep", "Reservoir Sampling", "Eulerian Circuit", "Radix Sort", "Strongly Connected Component", "Rejection Sampling", "Biconnected Component"];
@@ -33,23 +34,46 @@ function initializeTopics() {
     return topicsObj;
 }
 
+const validateSignup = [
+    check('username')
+      .trim()
+      .notEmpty().withMessage('Username is required')
+      .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long')
+      .isAlphanumeric().withMessage('Username must contain only letters and numbers'),
+    check('email')
+      .trim()
+      .notEmpty().withMessage('Email is required')
+      .isEmail().withMessage('Please enter a valid email address'),
+    check('password')
+      .trim()
+      .notEmpty().withMessage('Password is required')
+      .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
+      .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Password must contain at least one uppercase letter, one lowercase letter, and one number'),
+];
+
+const validateLogin = [
+    check('username')
+        .trim()
+        .notEmpty().withMessage('Username is required')
+        .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long')
+        .isAlphanumeric().withMessage('Username must contain only letters and numbers'),
+    check('password')
+        .trim()
+        .notEmpty().withMessage('Password is required')
+        .isLength({ min: 8 }).withMessage('Password must be at least 8 characters long')
+        .matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/).withMessage('Password must contain at least one uppercase letter, one lowercase letter, and one number'),
+];
+
+async function handleValidationErrors(req, res, next) {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array() });
+    }
+    next();
+}
+
 async function userSignup (req, res, next) {
     const { username, email, password } = req.body;
-
-    const usernameRegex = /^[a-zA-Z0-9]{3,}$/;
-    if (!usernameRegex.test(username)) {
-        return res.status(400).json({ message: 'Username must be at least 3 characters and contain only letters and numbers.' });
-    }
-
-    const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
-    if (!emailRegex.test(email)) {
-        return res.status(400).json({ message: 'Please enter a valid email address.' });
-    }
-
-    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/
-    if (!passwordRegex.test(password)) {
-        return res.status(400).json({ message: 'Password must be at least 8 characters and contain at least one uppercase letter, one lowercase letter, and one number.' });
-    }
 
     let plainPassword = password;
     let hashedPassword = await bcrypt.hash(password, 12);
@@ -105,5 +129,8 @@ async function userLogin (req, res, next, loginUser = null) {
     }
 }
 
+exports.validateSignup = validateSignup;
+exports.validateLogin = validateLogin;
+exports.handleValidationErrors = handleValidationErrors;
 exports.userSignup = userSignup
 exports.userLogin = userLogin
