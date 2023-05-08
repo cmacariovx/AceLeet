@@ -21,6 +21,8 @@ function App() {
   const userId = useSelector(state => state.auth.userId);
   const email = useSelector(state => state.auth.email);
 
+  const isProduction = process.env.REACT_APP_ENV == 'production';
+
   const dispatch = useDispatch();
 
   const location = useLocation();
@@ -47,8 +49,30 @@ function App() {
     if (token && userId && email) fetchUser(userId, email);
   }, [userId, email])
 
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop().split(";").shift();
+    }
+    return null;
+  }
+
+  async function fetchCsrfToken() {
+    const response = await fetch(process.env.REACT_APP_BACKEND_URL + "/user/csrf-token", {
+      credentials: 'include',
+    });
+    const data = await response.json();
+    return data.csrfToken;
+  }
+
   async function fetchUser(userId, email) {
-    const csrfToken = document.cookie.split('; ').find(row => row.startsWith('_csrf')).split('=')[1];
+    let csrfToken = getCookie("XSRF-TOKEN");
+
+    if (!csrfToken) {
+      csrfToken = await fetchCsrfToken();
+      document.cookie = `XSRF-TOKEN=${csrfToken}; path=/; samesite=lax${isProduction ? '; secure' : ''}`;
+    }
 
     const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/user/all', {
       method: 'POST',
@@ -60,14 +84,15 @@ function App() {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token,
         "CSRF-Token": csrfToken,
-      }
-    })
+      },
+      credentials: 'include',
+    });
 
     const data = await response.json();
+
     if (data.error) {
       setError(data.error);
-    }
-    else {
+    } else {
       dispatch(setUser(data.result));
     }
   }

@@ -28,6 +28,8 @@ function AddProblemBody() {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
 
+    const isProduction = process.env.REACT_APP_ENV == 'production';
+
     const inputRef = useRef(null);
     const dropdownRef = useRef(null);
 
@@ -374,10 +376,31 @@ function AddProblemBody() {
         };
     }
 
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+          return parts.pop().split(";").shift();
+        }
+        return null;
+    }
+
+    async function fetchCsrfToken() {
+        const response = await fetch(process.env.REACT_APP_BACKEND_URL + "/user/csrf-token", {
+          credentials: 'include',
+        });
+        const data = await response.json();
+        return data.csrfToken;
+    }
 
     async function updateUserTechnicalData(user, token) {
         setIsLoading(true);
-        const csrfToken = document.cookie.split('; ').find(row => row.startsWith('_csrf')).split('=')[1];
+        let csrfToken = getCookie("XSRF-TOKEN");
+
+        if (!csrfToken) {
+          csrfToken = await fetchCsrfToken();
+          document.cookie = `XSRF-TOKEN=${csrfToken}; path=/; samesite=lax${isProduction ? '; secure' : ''}`;
+        }
 
         const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/user/updateUserTech', {
             method: 'POST',
