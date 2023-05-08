@@ -6,7 +6,6 @@ const fs = require('fs');
 const http = require('http');
 const https = require('https');
 const cookieParser = require('cookie-parser');
-const csrf = require('csurf');
 
 const authRouter = require("./routes/authRoutes")
 const userRouter = require("./routes/userRoutes")
@@ -19,13 +18,6 @@ const app = express()
 
 app.use(helmet());
 app.use(cookieParser());
-
-const csrfProtection = csrf({
-    cookie: {
-        secure: isProduction,
-        sameSite: isProduction ? 'strict' : 'lax',
-    },
-});
 
 app.use(
     helmet.contentSecurityPolicy({
@@ -102,5 +94,3 @@ if (isProduction) {
     const httpServer = http.createServer(app);
     httpServer.listen(process.env.PORT || 5000);
 }
-
-exports.csrfProtection = csrfProtection;
