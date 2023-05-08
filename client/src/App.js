@@ -48,6 +48,8 @@ function App() {
   }, [userId, email])
 
   async function fetchUser(userId, email) {
+    const csrfToken = document.cookie.split('; ').find(row => row.startsWith('_csrf')).split('=')[1];
+
     const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/user/all', {
       method: 'POST',
       body: JSON.stringify({
@@ -57,6 +59,7 @@ function App() {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + token,
+        "CSRF-Token": csrfToken,
       }
     })
 
