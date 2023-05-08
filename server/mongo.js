@@ -109,8 +109,6 @@ async function userLogin(req, res, next, user) {
 
 async function fetchUser(req, res, next) {
     const { userId, email } = req.body;
-    const escapeStringRegexp = await import('escape-string-regexp');
-    const escapedEmail = escapeStringRegexp.default(email);
 
     const client = new MongoClient(mongoUrl);
 
@@ -122,7 +120,7 @@ async function fetchUser(req, res, next) {
 
         const user = await db.collection('users').findOne({
             _id: userIdObjectId,
-            email: escapedEmail,
+            email: email,
         });
 
         client.close();

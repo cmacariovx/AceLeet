@@ -52,7 +52,7 @@ const validateSignup = [
 ];
 
 const validateLogin = [
-    check('username')
+    check('text')
         .trim()
         .notEmpty().withMessage('Username is required')
         .isLength({ min: 3 }).withMessage('Username must be at least 3 characters long')

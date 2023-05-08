@@ -47,11 +47,12 @@ app.use((req, res, next) => {
             res.setHeader('Access-Control-Allow-Origin', origin);
         }
     } else {
-        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     }
 
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, CSRF-Token');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Credentials', 'true')
 
     if (req.method === 'OPTIONS') {
         return res.sendStatus(200);
