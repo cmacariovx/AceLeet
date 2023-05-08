@@ -17,6 +17,13 @@ const app = express()
 
 app.use(helmet());
 
+const csrfProtection = csrf({
+    cookie: {
+        secure: isProduction,
+        sameSite: isProduction ? 'strict' : 'lax',
+    },
+});
+
 app.use(
     helmet.contentSecurityPolicy({
         directives: {
@@ -48,7 +55,7 @@ app.use((req, res, next) => {
         res.setHeader('Access-Control-Allow-Origin', '*');
     }
 
-    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, CSRF-Token');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
 
     if (req.method === 'OPTIONS') {
@@ -92,3 +99,5 @@ if (isProduction) {
     const httpServer = http.createServer(app);
     httpServer.listen(process.env.PORT || 5000);
 }
+
+exports.csrfProtection = csrfProtection;
