@@ -5,6 +5,8 @@ const rateLimit = require("express-rate-limit");
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
+const cookieParser = require('cookie-parser');
+const csrf = require('csurf');
 
 const authRouter = require("./routes/authRoutes")
 const userRouter = require("./routes/userRoutes")
@@ -16,6 +18,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const app = express()
 
 app.use(helmet());
+app.use(cookieParser());
 
 const csrfProtection = csrf({
     cookie: {
