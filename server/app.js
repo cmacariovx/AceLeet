@@ -5,6 +5,7 @@ const rateLimit = require("express-rate-limit");
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
+const cookieParser = require('cookie-parser');
 
 const authRouter = require("./routes/authRoutes")
 const userRouter = require("./routes/userRoutes")
@@ -16,13 +17,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 const app = express()
 
 app.use(helmet());
-
-const csrfProtection = csrf({
-    cookie: {
-        secure: isProduction,
-        sameSite: isProduction ? 'strict' : 'lax',
-    },
-});
+app.use(cookieParser());
 
 app.use(
     helmet.contentSecurityPolicy({
@@ -99,5 +94,3 @@ if (isProduction) {
     const httpServer = http.createServer(app);
     httpServer.listen(process.env.PORT || 5000);
 }
-
-exports.csrfProtection = csrfProtection;
