@@ -6,6 +6,8 @@ const rateLimit = require("express-rate-limit");
 const authRouter = require("./routes/authRoutes")
 const userRouter = require("./routes/userRoutes")
 
+require("dotenv").config()
+
 const app = express()
 
 app.use(helmet());
@@ -56,10 +58,13 @@ app.use((req, res, next) => {
 })
 
 app.use((error, req, res, next) => {
-    if (res.headerSent) return next(error)
+    if (res.headerSent) return next(error);
 
     res.status(error.status || 500)
-    res.json({"message": error.message || "Unknown error occured."})
-})
+    res.json({
+        "message": error.message || "Unknown error occured.",
+        "stack": process.env.NODE_ENV === 'production' ? null : error.stack,
+    });
+});
 
 app.listen(process.env.PORT || 5000)
