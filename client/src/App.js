@@ -21,7 +21,7 @@ function App() {
   const userId = useSelector(state => state.auth.userId);
   const email = useSelector(state => state.auth.email);
 
-  const isProduction = process.env.REACT_APP_ENV == 'production';
+  const isProduction = process.env.REACT_APP_ENV === 'production';
 
   const dispatch = useDispatch();
 
@@ -55,7 +55,7 @@ function App() {
     if (parts.length === 2) {
       return parts.pop().split(";").shift();
     }
-    return null;
+    return '';
   }
 
   async function fetchCsrfToken() {
@@ -67,11 +67,11 @@ function App() {
   }
 
   async function fetchUser(userId, email) {
-    let csrfToken = getCookie("XSRF-TOKEN");
+    let csrfToken = getCookie("xsrf-token");
 
     if (!csrfToken) {
       csrfToken = await fetchCsrfToken();
-      document.cookie = `XSRF-TOKEN=${csrfToken}; path=/; samesite=lax${isProduction ? '; secure' : ''}`;
+      document.cookie = `xsrf-token=${csrfToken}; path=/; samesite=${isProduction ? 'strict' : 'lax'}${isProduction ? '; secure' : ''}`;
     }
 
     const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/user/all', {
@@ -104,7 +104,6 @@ function App() {
         <Route path='/' exact element={<Home />} />
         <Route path='/history' exact element={<Problems />} />
         <Route path='/new-problem' exact element={<AddProblem />} />
-        {/* <Route path='/recommended' exact element={<Recommended />} /> */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>}
       {!isLoading && !token && <Routes>

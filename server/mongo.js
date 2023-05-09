@@ -49,6 +49,7 @@ async function userSignup(req, res, next, newUser) {
         return { status: 200, message: "User created successfully.", error: null, result: null };
     }
     catch (error) {
+        console.error("Error connecting to MongoDB:", error);
         return { status: 500, message: null, error: "Sorry! Could not add user, please try again.", result: null };
     }
 }
@@ -102,6 +103,7 @@ async function userLogin(req, res, next, user) {
         })
     }
     catch (error) {
+        console.error("Error connecting to MongoDB:", error);
         client.close();
         return res.status(500).json({ error: 'Something went wrong. Please try again.' });
     }
@@ -128,6 +130,7 @@ async function fetchUser(req, res, next) {
         return { status: 200, message: 'User found.', error: null, result: user };
     }
     catch (error) {
+        console.error("Error connecting to MongoDB:", error);
         client.close();
         return { status: 500, message: null, error: "Could not find user.", result: null };
     }
@@ -158,6 +161,7 @@ async function updateUserTech(req, res, next) {
         }
     }
     catch (error) {
+        console.error("Error connecting to MongoDB:", error);
         client.close();
         return { status: 500, message: null, error: "Could not update user's technical data.", result: null };
     }

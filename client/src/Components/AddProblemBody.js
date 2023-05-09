@@ -382,7 +382,7 @@ function AddProblemBody() {
         if (parts.length === 2) {
           return parts.pop().split(";").shift();
         }
-        return null;
+        return '';
     }
 
     async function fetchCsrfToken() {
@@ -395,11 +395,11 @@ function AddProblemBody() {
 
     async function updateUserTechnicalData(user, token) {
         setIsLoading(true);
-        let csrfToken = getCookie("XSRF-TOKEN");
+        let csrfToken = getCookie("xsrf-token");
 
         if (!csrfToken) {
           csrfToken = await fetchCsrfToken();
-          document.cookie = `XSRF-TOKEN=${csrfToken}; path=/; samesite=lax${isProduction ? '; secure' : ''}`;
+          document.cookie = `xsrf-token=${csrfToken}; path=/; samesite=${isProduction ? 'strict' : 'lax'}${isProduction ? '; secure' : ''}`;
         }
 
         const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/user/updateUserTech', {
@@ -412,7 +412,8 @@ function AddProblemBody() {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token,
                 "CSRF-Token": csrfToken,
-            }
+            },
+            credentials: 'include',
         });
 
         const data = await response.json();
