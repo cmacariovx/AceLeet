@@ -27,6 +27,8 @@ function ProblemsBody() {
     const problemsPerPage = showNum || 25;
     const [currentPage, setCurrentPage] = useState(1);
 
+    console.log(problems)
+
     const statusDropdownRef = useRef<HTMLDivElement | null>(null);
     const difficultyDropdownRef = useRef<HTMLDivElement | null>(null);
     const showDropdownRef = useRef<HTMLDivElement | null>(null);

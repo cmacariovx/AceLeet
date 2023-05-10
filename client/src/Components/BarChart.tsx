@@ -1,9 +1,10 @@
 import React from 'react';
 import { Bar, Doughnut } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+import {Chart, registerables} from 'chart.js/auto';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 
+Chart.register(...registerables);
 function BarChart() {
     const user = useSelector((state: RootState) => state.user);
 

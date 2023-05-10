@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+import {Chart, registerables} from 'chart.js/auto';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
 
 import { Topic } from '../interfaces';
 
+Chart.register(...registerables);
 function DoughnutChart2() {
     interface Counts {
         'Array': number;

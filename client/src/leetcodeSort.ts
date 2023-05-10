@@ -55,6 +55,7 @@ export interface TrieNodeI {
     isEndOfWord: boolean;
     word: string | null;
     topics: string[];
+    difficulty: string | null;
 }
 
 class TrieNode implements TrieNodeI {
@@ -62,12 +63,14 @@ class TrieNode implements TrieNodeI {
     isEndOfWord: boolean;
     word: string | null;
     topics: string[];
+    difficulty: string | null;
 
     constructor() {
         this.children = {};
         this.isEndOfWord = false;
         this.word = null;
         this.topics = [];
+        this.difficulty = null;
     }
 }
 
@@ -78,7 +81,7 @@ export class Trie {
         this.root = new TrieNode();
     }
 
-    insert(id: number, word: string, topicsArr: string[]) {
+    insert(id: number, word: string, topicsArr: string[], difficulty: string) {
         let currentNode = this.root;
         const originalWord = word;
         word = word.toLowerCase();
@@ -91,6 +94,7 @@ export class Trie {
         currentNode.isEndOfWord = true;
         currentNode.word = `${id}. ${originalWord}`;
         currentNode.topics = topicsArr;
+        currentNode.difficulty = difficulty;
     }
 
     search(word: string) {
@@ -133,7 +137,7 @@ export class Trie {
 
     dfs(node: TrieNode, prefix: string, result: any[]) {
         if (node.isEndOfWord) {
-            result.push([node.word, node.topics]);
+            result.push([node.word, node.topics, node.difficulty]);
         }
         for (const char in node.children) {
             this.dfs(node.children[char], prefix + char, result);
