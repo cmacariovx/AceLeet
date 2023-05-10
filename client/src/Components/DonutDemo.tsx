@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+import {Chart, registerables} from 'chart.js/auto';
+Chart.register(...registerables);
 
-const DonutDemo = (props) => {
+function DonutDemo() {
     const data = {
         labels: ['Array', 'Binary Tree', 'Graph', 'Linked List', 'Dynamic Programming'],
         datasets: [
@@ -30,8 +31,8 @@ const DonutDemo = (props) => {
         ],
     };
 
-    const options = {
-        plugins: { 
+    const options: any = {
+        plugins: {
             legend: {
                 display: true,
                 position: 'bottom',
@@ -50,11 +51,11 @@ const DonutDemo = (props) => {
             tooltip: {
                 enabled: true,
                 callbacks: {
-                    title: function (context) {
+                    title: function (context: any) {
                         const index = context[0].dataIndex;
                         return data.labels[index];
                     },
-                    label: function (context) {
+                    label: function (context: any) {
                         return context.parsed + ' Questions';
                     },
                 },

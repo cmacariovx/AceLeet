@@ -1,4 +1,4 @@
-const readJsonFile = async (filename) => {
+const readJsonFile = async (filename: string) => {
     try {
       const response = await fetch(filename);
       const jsonObject = await response.json();

@@ -7,7 +7,7 @@ import ErrorModal from './ErrorModal';
 
 import { PuffLoader } from 'react-spinners'
 
-function Auth({ onClose }) {
+function Auth({ onClose }: { onClose: () => void}) {
     const isExistingUser = localStorage.getItem('existingUser')
     const [signup, setSignup] = useState(isExistingUser ? false : true);
     const [username, setUsername] = useState('');
@@ -24,10 +24,10 @@ function Auth({ onClose }) {
     const [passwordMatchError, setPasswordMatchError] = useState('');
     const [textError, setTextError] = useState('');
 
-    const [usernameValid, setUsernameValid] = useState(null);
-    const [emailValid, setEmailValid] = useState(null);
-    const [passwordValid, setPasswordValid] = useState(null);
-    const [confirmPasswordValid, setConfirmPasswordValid] = useState(null);
+    const [usernameValid, setUsernameValid] = useState(false);
+    const [emailValid, setEmailValid] = useState(false);
+    const [passwordValid, setPasswordValid] = useState(false);
+    const [confirmPasswordValid, setConfirmPasswordValid] = useState(false);
 
     const [mouseDownOnInput, setMouseDownOnInput] = useState(false);
     const backdropRef = useRef(null);
@@ -36,40 +36,39 @@ function Auth({ onClose }) {
         setMouseDownOnInput(true);
     }
 
-    const handleMouseUpOnBackdrop = (e) => {
+    const handleMouseUpOnBackdrop = (e: React.MouseEvent) => {
         if (e.target === backdropRef.current && !mouseDownOnInput) onClose();
         setMouseDownOnInput(false);
     }
 
     const dispatch = useDispatch()
 
-    const handleUsernameChange = (e) => {
+    const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(e.target.value);
         const usernameRegex = /^[a-zA-Z0-9]{3,}$/;
         setUsernameValid(usernameRegex.test(e.target.value));
     };
 
-    const handleEmailChange = (e) => {
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setEmail(e.target.value);
         const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
         setEmailValid(emailRegex.test(e.target.value));
     };
 
-    const handlePasswordChange = (e) => {
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(e.target.value);
         const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
         setPasswordValid(passwordRegex.test(e.target.value));
     };
 
-    const handleConfirmPasswordChange = (e) => {
+    const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setConfirmPassword(e.target.value);
         setConfirmPasswordValid(password === e.target.value);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // Reset the error
         setError('');
         setUsernameError('');
         setEmailError('');
@@ -106,39 +105,6 @@ function Auth({ onClose }) {
 
             if (isValid == false) return;
 
-            async function submitSignup(event) {
-                event.preventDefault()
-                setIsLoading(true);
-                const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/auth/signup', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        username: username.toLowerCase(),
-                        email: email.toLowerCase(),
-                        password: password,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-
-                const data = await response.json();
-                setIsLoading(false);
-                if (data.error) setError(data.error);
-                else {
-                    dispatch(
-                        login({
-                            userId: data.userId,
-                            token: data.token,
-                            email: data.email,
-                            username: data.username,
-                            joinedDate: data.joinedDate,
-                        })
-                    );
-                    onClose();
-                }
-                return data;
-            }
-
             submitSignup(e);
         }
         else {
@@ -156,39 +122,72 @@ function Auth({ onClose }) {
 
             if (isValid == false) return;
 
-            async function submitLogin(event) {
-                event.preventDefault()
-                setIsLoading(true);
-                const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/auth/login', {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        text: text.toLowerCase(),
-                        password: password,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-
-                const data = await response.json();
-                setIsLoading(false);
-                if (data.error) setError(data.error);
-                else {
-                    dispatch(
-                        login({
-                            userId: data.userId,
-                            token: data.token,
-                            email: data.email,
-                            username: data.username,
-                            joinedDate: data.joinedDate,
-                        })
-                    );
-                    onClose();
-                }
-                return data;
-            }
-
             submitLogin(e);
+        }
+
+        async function submitSignup(event: React.FormEvent<HTMLFormElement>) {
+            event.preventDefault()
+            setIsLoading(true);
+            const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/auth/signup', {
+                method: 'POST',
+                body: JSON.stringify({
+                    username: username.toLowerCase(),
+                    email: email.toLowerCase(),
+                    password: password,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            const data = await response.json();
+            setIsLoading(false);
+            if (data.error) setError(data.error);
+            else {
+                dispatch(
+                    login({
+                        userId: data.userId,
+                        token: data.token,
+                        email: data.email,
+                        username: data.username,
+                        joinedDate: data.joinedDate,
+                    })
+                );
+                onClose();
+            }
+            return data;
+        }
+
+        async function submitLogin(event: React.FormEvent<HTMLFormElement>) {
+            event.preventDefault()
+            setIsLoading(true);
+            const response = await fetch(process.env.REACT_APP_BACKEND_URL + '/auth/login', {
+                method: 'POST',
+                body: JSON.stringify({
+                    text: text.toLowerCase(),
+                    password: password,
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            const data = await response.json();
+            setIsLoading(false);
+            if (data.error) setError(data.error);
+            else {
+                dispatch(
+                    login({
+                        userId: data.userId,
+                        token: data.token,
+                        email: data.email,
+                        username: data.username,
+                        joinedDate: data.joinedDate,
+                    })
+                );
+                onClose();
+            }
+            return data;
         }
     };
 

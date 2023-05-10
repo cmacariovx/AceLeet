@@ -1,31 +1,30 @@
 import React from 'react';
-import { Bar, Doughnut } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+import { Line } from 'react-chartjs-2';
+import {Chart, registerables} from 'chart.js/auto';
+Chart.register(...registerables);
 
-const BarDemo = (props) => {
+function LineChart(props: {dataSet: (number | null)[] | null}) {
     const data = {
-        labels: ['Array', 'Binary Tree', 'Graph', 'Linked List', 'Dynamic Programming'],
+        labels: ['5 wks ago', '4 wks ago', '3 wks ago', '2 wks ago', 'Last week', 'Current'],
         datasets: [
             {
                 label: 'Average Difficulty',
-                data: [2.7, 3.7, 4.1, 3.4, 4.7],
-            }
+                data: props.dataSet,
+                borderColor: 'rgba(44, 123, 229, 0.7)',
+                backgroundColor: 'rgba(0, 0, 0, 0)',
+                tension: 0.4,
+                borderWidth: 2,
+                pointRadius: 4,
+                pointBackgroundColor: 'rgba(44, 123, 229, 0.7)',
+                pointHoverBackgroundColor: 'rgba(44, 123, 229, 1)',
+            },
         ]
-    }
+    };
 
     const options = {
-        barThickness: 12,
-        borderWidth: 0,
-        borderColor: 'rgba(0, 0, 0, 0)',
-        backgroundColor: '#2c7be5',
-        borderRadius: 10,
-        base: 0,
+        maintainAspectRatio: true,
         scales: {
             y: {
-                border: {
-                    display: false,
-                    dash: [3, 4]
-                },
                 beginAtZero: true,
                 min: 0,
                 max: 5,
@@ -43,11 +42,12 @@ const BarDemo = (props) => {
                         size: 12
                     },
                 },
-            },
-            x: {
                 border: {
                     display: false,
+                    dash: [3, 4]
                 },
+            },
+            x: {
                 grid: {
                     display: false,
                     drawBorder: false,
@@ -72,9 +72,9 @@ const BarDemo = (props) => {
 
     return (
         <div className='barContainer' style={{height: '300px', width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
-            <Bar data={data} options={options} />
+            <Line data={data} options={options}/>
         </div>
     )
 }
 
-export default BarDemo;
+export default LineChart;

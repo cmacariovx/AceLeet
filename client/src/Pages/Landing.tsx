@@ -160,7 +160,7 @@ function Landing() {
                 <p className="landingSectionDesc">Experience the benefits of our beautiful charts for visualizing and tracking your progress, providing a clear overview of your achievements and areas for improvement. Stay organized and motivated as you gain actionable insights, enabling you to optimize your learning and excel in your LeetCode journey.</p>
                 <div className="homeBodyDailyRecommendedLower" style={isOpen2 ? {overflow: 'hidden'} : {overflow: 'visible'}}>
                     <div className="homeBodyDailyRecommendedLower1">
-                        <div className="homeBodyDailyRecommendedLowerText1" style={!isOpen2 ? {borderRadius: 10} : null} onClick={() => setIsOpen2(!isOpen2)}>
+                        <div className="homeBodyDailyRecommendedLowerText1" style={!isOpen2 ? {borderRadius: 10} : undefined} onClick={() => setIsOpen2(!isOpen2)}>
                             <p className="homeBodyDailyRecommendedLowerText11">Recommended Problems</p>
                             {isOpen2 ? <i className="fa-solid fa-chevron-up"></i> :
                             <i className="fa-solid fa-chevron-down"></i>}

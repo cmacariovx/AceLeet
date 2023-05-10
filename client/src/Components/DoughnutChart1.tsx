@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+import {Chart, registerables} from 'chart.js/auto';
 import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
-const DoughnutChart1 = (props) => {
-    const user = useSelector(state => state.user)
+Chart.register(...registerables);
+function DoughnutChart1() {
+    const user = useSelector((state: RootState) => state.user)
 
     const [totalEasy, setTotalEasy] = useState(null);
     const [totalMedium, setTotalMedium] = useState(null);
@@ -56,7 +58,7 @@ const DoughnutChart1 = (props) => {
         ],
     };
 
-    const options = {
+    const options: any = {
         plugins: {
             legend: {
                 display: true,
@@ -76,11 +78,11 @@ const DoughnutChart1 = (props) => {
             tooltip: {
                 enabled: true,
                 callbacks: {
-                    title: function (context) {
+                    title: function (context: any) {
                         const index = context[0].dataIndex;
                         return data.labels[index];
                     },
-                    label: function (context) {
+                    label: function (context: any) {
                         return context.parsed == 0.1 ? '0 Questions' : context.parsed + ' Questions' ;
                     },
                 },

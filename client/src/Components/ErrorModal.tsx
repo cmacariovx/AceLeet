@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import './ErrorModal.css'
 
-function ErrorModal(props) {
+function ErrorModal(props: {onClose: () => void; error: string;}) {
     return (
         <div className='errorModalBackdrop' onClick={props.onClose}>
             <div className="errorModal">

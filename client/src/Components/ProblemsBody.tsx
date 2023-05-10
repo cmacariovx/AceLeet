@@ -3,6 +3,8 @@ import StatusCircle from "./StatusCircle";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { PuffLoader } from 'react-spinners';
+import { RootState } from "../redux/store";
+import { SolvedProblem, User } from "../interfaces";
 
 import './ProblemsBody.css';
 
@@ -16,20 +18,20 @@ function ProblemsBody() {
     const [difficultySort, setDifficultySort] = useState(0);
     const [lastPracticedSort, setLastPracticedSort] = useState(1);
 
-    const [status, setStatus] = useState(null);
-    const [difficulty, setDifficulty] = useState(null);
-    const [showNum, setShowNum] = useState(null);
+    const [status, setStatus] = useState<string | null>(null);
+    const [difficulty, setDifficulty] = useState<string | null>(null);
+    const [showNum, setShowNum] = useState<number | null>(null);
 
-    const [problems, setProblems] = useState([]);
+    const [problems, setProblems] = useState<SolvedProblem[]>([]);
 
     const problemsPerPage = showNum || 25;
     const [currentPage, setCurrentPage] = useState(1);
 
-    const statusDropdownRef = useRef(null);
-    const difficultyDropdownRef = useRef(null);
-    const showDropdownRef = useRef(null);
+    const statusDropdownRef = useRef<HTMLDivElement | null>(null);
+    const difficultyDropdownRef = useRef<HTMLDivElement | null>(null);
+    const showDropdownRef = useRef<HTMLDivElement | null>(null);
 
-    const user = useSelector(state => state.user);
+    const user: User = useSelector((state: RootState) => state.user);
 
     const navigate = useNavigate();
 
@@ -39,8 +41,8 @@ function ProblemsBody() {
         }
     }, [user])
 
-    function getUserProblems(user) {
-        const result = [];
+    function getUserProblems(user: User) {
+        const result: SolvedProblem[] = [];
         const uniqueIds = new Set();
         const topics = user.technicalData.topics;
 
@@ -48,7 +50,7 @@ function ProblemsBody() {
             const attempted = topics[topic].topicProblemsAttempted;
             const solved = topics[topic].topicProblemsSolved;
 
-            const addUniqueProblem = (problem) => {
+            const addUniqueProblem = (problem: SolvedProblem) => {
                 const problemId = problem.title.split(' ')[0].toString();
 
                 if (!uniqueIds.has(problemId)) {
@@ -66,7 +68,7 @@ function ProblemsBody() {
 
     let arr1 = [() => setStatusOpen(false), () => setDifficultyOpen(false), () => setShowOpen(false)];
 
-    function clearDropdowns(current) {
+    function clearDropdowns(current: number) {
         for (let i = 0; i < arr1.length; i++) {
             if (i != current) arr1[i]();
         }
@@ -74,7 +76,7 @@ function ProblemsBody() {
 
     let arr2 = [() => setStatusSort(0), () => setProblemSort(0), () => setDifficultySort(0), () => setLastPracticedSort(0)];
 
-    function clearSorts(current) {
+    function clearSorts(current: number) {
         for (let i = 0; i < arr2.length; i++) {
             if (i != current) arr2[i]();
         }
@@ -86,7 +88,7 @@ function ProblemsBody() {
         setShowNum(null);
     }
 
-    function timeSince(solvedAt) {
+    function timeSince(solvedAt: number) {
         const now = Date.now();
         const msPerMinute = 60 * 1000;
         const msPerHour = msPerMinute * 60;
@@ -112,12 +114,12 @@ function ProblemsBody() {
         }
     }
 
-    function sortProblems(problems) {
+    function sortProblems(problems: SolvedProblem[]) {
         return problems.slice().sort((a, b) => {
             if (statusSort === 1) {
-                return a.solved - b.solved;
+                return Number(a.solved) - Number(b.solved);
             } else if (statusSort === 2) {
-                return b.solved - a.solved;
+                return Number(b.solved) - Number(a.solved);
             } else if (problemSort === 1) {
                 const aId = parseInt(a.title.split(" ")[0].replace(".", ""));
                 const bId = parseInt(b.title.split(" ")[0].replace(".", ""));
@@ -148,7 +150,7 @@ function ProblemsBody() {
         });
     }
 
-    const [sortedProblems, setSortedProblems] = useState([]);
+    const [sortedProblems, setSortedProblems] = useState<SolvedProblem[]>([]);
 
     const filteredProblems = sortedProblems
     .filter((problem) => {
@@ -168,22 +170,22 @@ function ProblemsBody() {
 
 
     useEffect(() => {
-        function handleClickOutside(event) {
+        function handleClickOutside(event: MouseEvent) {
             if (
                 statusDropdownRef.current &&
-                !statusDropdownRef.current.contains(event.target)
+                !statusDropdownRef.current.contains(event.target as Node)
             ) {
                 setStatusOpen(false);
             }
             if (
                 difficultyDropdownRef.current &&
-                !difficultyDropdownRef.current.contains(event.target)
+                !difficultyDropdownRef.current.contains(event.target as Node)
             ) {
                 setDifficultyOpen(false);
             }
             if (
                 showDropdownRef.current &&
-                !showDropdownRef.current.contains(event.target)
+                !showDropdownRef.current.contains(event.target as Node)
             ) {
                 setShowOpen(false);
             }

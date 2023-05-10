@@ -1,10 +1,12 @@
 import React from 'react';
 import { Bar, Doughnut } from 'react-chartjs-2';
-import Chart from 'chart.js/auto';
+import {Chart, registerables} from 'chart.js/auto';
 import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
-const BarChart = (props) => {
-    const user = useSelector(state => state.user);
+Chart.register(...registerables);
+function BarChart() {
+    const user = useSelector((state: RootState) => state.user);
 
     const mainTopics = ['Array', 'Binary Tree', 'Graph', 'Linked List', 'Dynamic Programming'];
 
@@ -12,8 +14,8 @@ const BarChart = (props) => {
         if (!user) return { filteredLabels: [], filteredValues: [] };
 
         const topics = user.technicalData.topics;
-        const filteredLabels = [];
-        const filteredValues = [];
+        const filteredLabels: string[] = [];
+        const filteredValues: number[] = [];
 
         mainTopics.forEach((topic) => {
             if (topics[topic] && topics[topic].averageTopicDifficulty !== null) {

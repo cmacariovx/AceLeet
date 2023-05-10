@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 
 import './EmailModal.css';
 
-const EmailModal = ({ closeModal }) => {
+const EmailModal = ({ closeModal }: { closeModal: () => void }) => {
     const [emailSent, setEmailSent] = useState(false);
 
     const gmailLink = 'https://mail.google.com/mail/u/0/?view=cm&fs=1&to=aceleetx@gmail.com&su=Feedback&body=Your%20feedback%20here';
     const outlookLink = 'https://outlook.live.com/owa/?path=/mail/action/compose&to=aceleetx%40gmail.com&subject=Feedback&body=Your%20feedback%20here';
 
-    const handleEmailButtonClick = (url) => {
+    const handleEmailButtonClick = (url: string) => {
         window.open(url, '_blank');
         setEmailSent(true);
     }

@@ -1,10 +1,14 @@
-import { combineReducers } from '@reduxjs/toolkit';
+import { AnyAction, Reducer, combineReducers } from '@reduxjs/toolkit';
 
-const resetMiddleware = (slices) => {
+interface Slices {
+    [key: string]: Reducer;
+}
+
+const resetMiddleware = (slices: Slices) => {
     const rootReducer = combineReducers(slices);
     const initialState = rootReducer(undefined, { type: 'INIT' });
 
-    return (state, action) => {
+    return (state: ReturnType<typeof rootReducer> | undefined, action: AnyAction) => {
         if (action.type === 'auth/logout') {
             state = initialState;
         }

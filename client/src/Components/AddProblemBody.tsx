@@ -1,17 +1,21 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, ChangeEvent } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setUser } from "../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { RootState } from "../redux/store";
 
 import questionFunctions from "../leetcodeSort";
+import { Trie } from "../leetcodeSort";
 import CountdownTimer from './CountdownTimer';
 import CustomSlider from "./CustomSlider";
 import { PuffLoader } from 'react-spinners';
 
+import { SolvedProblem, Topic, User } from "../interfaces";
+
 import './AddProblemBody.css';
 
 function AddProblemBody() {
-    const [questionsTrie, setQuestionsTrie] = useState(null);
+    const [questionsTrie, setQuestionsTrie] = useState<Trie | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [filteredQuestions, setFilteredQuestions] = useState([]);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
@@ -24,14 +28,14 @@ function AddProblemBody() {
     const [completed, setCompleted] = useState(true);
     const [completedWo, setCompletedWo] = useState(true);
     const [showQuestions, setShowQuestions] = useState(false);
-    const [difficulty, setDifficulty] = useState(null);
+    const [difficulty, setDifficulty] = useState<number | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedId, setSelectedId] = useState(null);
+    const [selectedId, setSelectedId] = useState<string | null>(null);
 
     const isProduction = process.env.REACT_APP_ENV == 'production';
 
-    const inputRef = useRef(null);
-    const dropdownRef = useRef(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const dropdownRef = useRef<HTMLInputElement>(null);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -42,15 +46,15 @@ function AddProblemBody() {
 
     const [key, setKey] = useState(0);
     const [duration, setDuration] = useState(45 * 60);
-    const [sliderValue, setSliderValue] = useState(45);
+    const [sliderValue, setSliderValue] = useState('0');
     const [remainingTime, setRemainingTime] = useState(0);
-    const [totalTimeTakenFancy, setTotalTimeTakenFancy] = useState(0);
+    const [totalTimeTakenFancy, setTotalTimeTakenFancy] = useState('0');
     const [totalTimeTaken, setTotalTimeTaken] = useState(0);
 
-    const user = useSelector(state => state.user);
-    const token = useSelector(state => state.auth.token);
+    const user: User | null = useSelector((state: RootState) => state.user);
+    const token: string | null = useSelector((state: RootState) => state.auth.token);
 
-    const formatTime = (time) => {
+    const formatTime = (time: number) => {
         const minutes = Math.floor(time / 60);
         const seconds = time % 60;
         return `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
@@ -90,13 +94,15 @@ function AddProblemBody() {
         else setIsPlaying(true);
     }
 
-    const handleSliderChange = (event) => {
+    const handleSliderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (isPlaying || isPaused) return;
         setSliderValue(event.target.value);
-        setDuration(event.target.value * 60);
+
+        const num = +event.target.value;
+        setDuration(num * 60);
     };
 
-    const handleInputChange = (event) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const inputValue = event.target.value;
 
         if (inputValue.length === 1 && inputValue === " ") return;
@@ -121,19 +127,19 @@ function AddProblemBody() {
         setQuestionsTrie(trie);
     }
 
-    const searchQuestions = (trie, term) => {
+    const searchQuestions = (trie: Trie | null, term: string) => {
         if (!term || !trie) {
             return [];
         }
         return trie.autoComplete(term.toLowerCase());
     }
 
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: MouseEvent) => {
         if (
             inputRef.current &&
-            !inputRef.current.contains(event.target) &&
+            !inputRef.current.contains(event.target as Node) &&
             dropdownRef.current &&
-            !dropdownRef.current.contains(event.target)
+            !dropdownRef.current.contains(event.target as Node)
         ) {
             setIsDropdownVisible(false);
             setSelectedQuestion("");
@@ -159,7 +165,7 @@ function AddProblemBody() {
         }
     }
 
-    const handleOptionClick = (question) => {
+    const handleOptionClick = (question: any[]) => {
         setSelectedQuestion(question[0]);
 
         let searchQuestionSplit = question[0].split(' ');
@@ -190,7 +196,7 @@ function AddProblemBody() {
         id.pop();
         const newId = id.join('');
 
-        const solvedProblem = {
+        const solvedProblem: SolvedProblem = {
             id: newId,
             title: selectedQuestion,
             difficultyLevel: selectedDifficulty,
@@ -206,13 +212,12 @@ function AddProblemBody() {
         }
 
         const copyUser = JSON.parse(JSON.stringify(user));
-        calculateOverallAverageDifficulty(copyUser, solvedProblem, token, (updatedUser) => {
+        calculateOverallAverageDifficulty(copyUser, solvedProblem, token, (updatedUser: User) => {
             dispatch(setUser(updatedUser));
         });
     }
 
-
-    async function calculateOverallAverageDifficulty(user, solvedProblem, token, updateStateCallback) {
+    async function calculateOverallAverageDifficulty(user: User, solvedProblem: SolvedProblem, token: string | null, updateStateCallback: (updatedUser: User) => void) {
         let totalDifficulty = 0;
         let topicCount = 0;
 
@@ -242,8 +247,8 @@ function AddProblemBody() {
     }
 
 
-    function incrementTopicProblemsAttempted(user, solvedProblem) {
-        const updatedTopics = {};
+    function incrementTopicProblemsAttempted(user: User, solvedProblem: SolvedProblem) {
+        const updatedTopics: { [key: string]: Topic } = {};
 
         for (const [topicName, topic] of Object.entries(user.technicalData.topics)) {
             if (solvedProblem.topics.includes(topicName)) {
@@ -267,7 +272,7 @@ function AddProblemBody() {
     }
 
 
-    function updateProblemSolvedCount(user, solvedProblem) {
+    function updateProblemSolvedCount(user: User, solvedProblem: SolvedProblem) {
         if (solvedProblem.solvedWithoutSolution) {
             user.technicalData.problems.totalProblemsSolvedWithoutSolution += 1;
         } else {
@@ -284,8 +289,8 @@ function AddProblemBody() {
     }
 
 
-    function updateSolvedTopicData(user, solvedProblem, totalDifficulty, topicCount) {
-        const updatedTopics = {};
+    function updateSolvedTopicData(user: User, solvedProblem: SolvedProblem, totalDifficulty: number, topicCount: number) {
+        const updatedTopics: {[key: string]: Topic} = {};
 
         for (const [topicName, topic] of Object.entries(user.technicalData.topics)) {
             if (solvedProblem.topics.includes(topicName)) {
@@ -309,9 +314,13 @@ function AddProblemBody() {
     }
 
 
-    function updateTopicSolvedData(topic, solvedProblem) {
+    function updateTopicSolvedData(topic: Topic, solvedProblem: SolvedProblem) {
         updateTopicProblemsCount(topic, solvedProblem);
-        const newDifficultySum = topic.topicDifficultySum + solvedProblem.difficultyNum;
+        const diffNum = solvedProblem.difficultyNum;
+        let newDifficultySum = 0;
+        if (diffNum) {
+            newDifficultySum = topic.topicDifficultySum + diffNum;
+        }
         const newProblemCount = topic.totalTopicProblemsSolved + 1;
         topic.totalTopicProblemsAttempted += 1;
         const newAvgDifficulty = newDifficultySum / newProblemCount;
@@ -357,7 +366,7 @@ function AddProblemBody() {
     }
 
 
-    function updateTopicProblemsCount(topic, solvedProblem) {
+    function updateTopicProblemsCount(topic: Topic, solvedProblem: SolvedProblem) {
         if (solvedProblem.solvedWithoutSolution) {
             topic.totalTopicProblemsSolvedWithoutSolution += 1;
         }
@@ -376,11 +385,14 @@ function AddProblemBody() {
         };
     }
 
-    function getCookie(name) {
+    function getCookie(name: string) {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
         if (parts.length === 2) {
-          return parts.pop().split(";").shift();
+            const value = parts.pop();
+            if (value) {
+                return value.split(";").shift();
+            }
         }
         return '';
     }
@@ -393,9 +405,9 @@ function AddProblemBody() {
         return data.csrfToken;
     }
 
-    async function updateUserTechnicalData(user, token) {
+    async function updateUserTechnicalData(user: User, token: string | null) {
         setIsLoading(true);
-        let csrfToken = getCookie("xsrf-token");
+        let csrfToken = getCookie("xsrf-token") || '';
 
         if (!csrfToken) {
           csrfToken = await fetchCsrfToken();
@@ -423,7 +435,7 @@ function AddProblemBody() {
     }
 
 
-    function daysBetween(timestamp1, timestamp2) {
+    function daysBetween(timestamp1: number, timestamp2: number) {
         const oneDay = 1000 * 60 * 60 * 24;
         const differenceInTime = timestamp1 - timestamp2;
         const differenceInDays = Math.floor(differenceInTime / oneDay);
@@ -492,7 +504,7 @@ function AddProblemBody() {
                         className="addProblemBodyProblemTopic">{topic}</p>
                     ))}
                 </div>
-                <p className={selectedDifficulty == 'Hard' ? "addProblemBodyProblemDifficulty redText" : selectedDifficulty == 'Easy' ? "addProblemBodyProblemDifficulty greenText" : selectedDifficulty == 'Medium' ? "addProblemBodyProblemDifficulty yellowText" : null}>{selectedDifficulty}</p>
+                <p className={selectedDifficulty == 'Hard' ? "addProblemBodyProblemDifficulty redText" : selectedDifficulty == 'Easy' ? "addProblemBodyProblemDifficulty greenText" : selectedDifficulty == 'Medium' ? "addProblemBodyProblemDifficulty yellowText" : undefined}>{selectedDifficulty}</p>
             </div>
             {!showQuestions && <div className="addProblemBodyTimer">
                 <i className="fa-solid fa-circle-chevron-left timerLeftArrowIcon" onClick={() => setShowTimer(false)}></i>

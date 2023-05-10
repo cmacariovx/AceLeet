@@ -1,13 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface Recommendations {
+    recommendedTopics: {}[],
+    recommendedProblems: {}[],
+}
+
+const initialState: Recommendations = {
+    recommendedTopics: [],
+    recommendedProblems: [],
+}
 
 const recommendationsSlice = createSlice({
     name: 'recommendations',
-    initialState: {
-        recommendedTopics: [],
-        recommendedProblems: [],
-    },
+    initialState,
     reducers: {
-        updateRecommendations: (state, action) => {
+        updateRecommendations: (state, action: PayloadAction<Recommendations>) => {
             state.recommendedTopics = action.payload.recommendedTopics;
             state.recommendedProblems = action.payload.recommendedProblems;
         },

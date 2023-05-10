@@ -1,12 +1,23 @@
 import readJsonFile from "./readJsonFile";
 
+interface Question {
+    acRate: number,
+    difficulty: 'Easy' | 'Medium' | 'Hard',
+    frontendQuestionId: number,
+    title: string,
+    topicTags: {
+        name: string;
+        id: string;
+    }[],
+}
+
 async function processJsonData() {
     let data = await readJsonFile('leetcodeAllQuestions.json');
     data = data['data'];
 
     if (data) {
-        const countDifficultiesAndTopics = (questions) => {
-            const names = {}
+        const countDifficultiesAndTopics = (questions: Question[]) => {
+            const names: Record<number, string> = {};
 
             const difficultyCounts = {
                 Easy: 0,
@@ -14,9 +25,9 @@ async function processJsonData() {
                 Hard: 0,
             }
 
-            const topicCounts = {};
+            const topicCounts: Record<string, number> = {};
 
-            questions.forEach((question) => {
+            questions.forEach((question: Question) => {
                 // Count difficulties
                 difficultyCounts[question.difficulty]++;
 
@@ -39,21 +50,38 @@ async function processJsonData() {
     }
 };
 
-class TrieNode {
+export interface TrieNodeI {
+    children: {[key: string]: TrieNode};
+    isEndOfWord: boolean;
+    word: string | null;
+    topics: string[];
+    difficulty: string | null;
+}
+
+class TrieNode implements TrieNodeI {
+    children: {[key: string]: TrieNode};
+    isEndOfWord: boolean;
+    word: string | null;
+    topics: string[];
+    difficulty: string | null;
+
     constructor() {
         this.children = {};
         this.isEndOfWord = false;
         this.word = null;
         this.topics = [];
+        this.difficulty = null;
     }
 }
 
-class Trie {
+export class Trie {
+    root: TrieNode;
+
     constructor() {
         this.root = new TrieNode();
     }
 
-    insert(id, word, topicsArr) {
+    insert(id: number, word: string, topicsArr: string[], difficulty: string) {
         let currentNode = this.root;
         const originalWord = word;
         word = word.toLowerCase();
@@ -66,9 +94,10 @@ class Trie {
         currentNode.isEndOfWord = true;
         currentNode.word = `${id}. ${originalWord}`;
         currentNode.topics = topicsArr;
+        currentNode.difficulty = difficulty;
     }
 
-    search(word) {
+    search(word: string) {
         let currentNode = this.root;
         word = word.toLowerCase();
         for (const char of word) {
@@ -80,7 +109,7 @@ class Trie {
         return currentNode.isEndOfWord;
     }
 
-    startsWith(prefix) {
+    startsWith(prefix: string) {
         let currentNode = this.root;
         prefix = prefix.toLowerCase();
         for (const char of prefix) {
@@ -92,8 +121,8 @@ class Trie {
         return true;
     }
 
-    autoComplete(prefix) {
-        const result = [];
+    autoComplete(prefix: string) {
+        const result: any = [];
         let currentNode = this.root;
         prefix = prefix.toLowerCase();
         for (const char of prefix) {
@@ -106,7 +135,7 @@ class Trie {
         return result;
     }
 
-    dfs(node, prefix, result) {
+    dfs(node: TrieNode, prefix: string, result: any[]) {
         if (node.isEndOfWord) {
             result.push([node.word, node.topics, node.difficulty]);
         }
@@ -119,7 +148,7 @@ class Trie {
         return JSON.stringify(this.root);
     }
 
-    deserialize(data) {
+    deserialize(data: string) {
         this.root = JSON.parse(data);
     }
 }
@@ -143,6 +172,4 @@ async function problemTitles() {
 export default {
     processJsonData,
     problemTitles,
-    Trie,
-    TrieNode,
 };
