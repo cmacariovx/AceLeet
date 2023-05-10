@@ -3,10 +3,17 @@ import { CountdownCircleTimer } from 'react-countdown-circle-timer';
 
 import chime from '../assets/chime.mp3'
 
-const CountdownTimer = ({ duration, onComplete, isPlaying, onRemainingTimeUpdate }) => {
+interface Props {
+  duration: number,
+  onComplete: () => void,
+  isPlaying: boolean,
+  onRemainingTimeUpdate: React.Dispatch<React.SetStateAction<number>>
+}
+
+function CountdownTimer({duration, onComplete, isPlaying, onRemainingTimeUpdate}: Props) {
   const alarmAudio = new Audio(chime);
 
-  const renderTime = ({ remainingTime }) => {
+  function renderTime({ remainingTime }: { remainingTime: number }) {
     onRemainingTimeUpdate(remainingTime);
 
     const minutes = Math.floor(remainingTime / 60);
@@ -17,15 +24,16 @@ const CountdownTimer = ({ duration, onComplete, isPlaying, onRemainingTimeUpdate
     );
   };
 
+  const colors: any = ['#95aac9']
+
   return (
     <CountdownCircleTimer
       isPlaying={isPlaying}
       duration={duration}
-      colors={['#95aac9']}
-      onComplete={() => {
+      colors={colors}
+      onComplete={(totalElapsedTime: number) => {
         alarmAudio.play();
         onComplete();
-        return [false, 0];
       }}
       size={250}
     >

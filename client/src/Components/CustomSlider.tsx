@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import './CustomSlider.css';
 
-const CustomSlider = ({ value, onChange, isInvalid }) => {
+interface Props {
+    value: string,
+    onChange: (event: ChangeEvent<HTMLInputElement>) => void,
+    isInvalid: boolean,
+}
+
+function CustomSlider({value, onChange, isInvalid}: Props) {
     return (
         <input
             className={!isInvalid ? "custom-slider" : "custom-slider-invalid"}

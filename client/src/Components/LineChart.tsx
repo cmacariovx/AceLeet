@@ -1,7 +1,8 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
+import Chart from 'chart.js/auto';
 
-const LineChart = (props) => {
+function LineChart(props: {dataSet: (number | null)[] | null}) {
     const data = {
         labels: ['5 wks ago', '4 wks ago', '3 wks ago', '2 wks ago', 'Last week', 'Current'],
         datasets: [

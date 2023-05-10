@@ -2,6 +2,7 @@ import './App.css'
 import React, { useState, useEffect } from 'react'
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from './redux/store'
 
 import Home from './Pages/Home'
 import Problems from './Pages/Problems'
@@ -17,9 +18,9 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  const token = useSelector(state => state.auth.token);
-  const userId = useSelector(state => state.auth.userId);
-  const email = useSelector(state => state.auth.email);
+  const token = useSelector((state: RootState) => state.auth.token);
+  const userId = useSelector((state: RootState) => state.auth.userId);
+  const email = useSelector((state: RootState) => state.auth.email);
 
   const isProduction = process.env.REACT_APP_ENV === 'production';
 
@@ -27,33 +28,43 @@ function App() {
 
   const location = useLocation();
 
+  interface CustomWindow extends Window {
+    dataLayer: any[];
+  }
+
   useEffect(() => {
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
+    (window as unknown as CustomWindow).dataLayer = (window as unknown as CustomWindow).dataLayer || [];
+    (window as unknown as CustomWindow).dataLayer.push({
       event: 'pageview',
       page_path: location.pathname + location.search,
     });
   }, [location]);
 
   useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('userDatax'));
+    const storedDataString = localStorage.getItem('userDatax');
+    if (storedDataString) {
+      const storedData = JSON.parse(storedDataString);
 
-    if (storedData && storedData.token) {
-      dispatch(login(storedData));
+      if (storedData && storedData.token) {
+        dispatch(login(storedData));
+      }
     }
 
-    setIsLoading(false)
+    setIsLoading(false);
   }, [dispatch]);
 
   useEffect(() => {
     if (token && userId && email) fetchUser(userId, email);
   }, [userId, email])
 
-  function getCookie(name) {
+  function getCookie(name: string) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) {
-      return parts.pop().split(";").shift();
+      const value = parts.pop();
+      if (value) {
+        return value.split(";").shift();
+      }
     }
     return '';
   }
@@ -66,8 +77,8 @@ function App() {
     return data.csrfToken;
   }
 
-  async function fetchUser(userId, email) {
-    let csrfToken = getCookie("xsrf-token");
+  async function fetchUser(userId: string, email: string) {
+    let csrfToken = getCookie("xsrf-token") || '';
 
     if (!csrfToken) {
       csrfToken = await fetchCsrfToken();
@@ -78,7 +89,7 @@ function App() {
       method: 'POST',
       body: JSON.stringify({
         userId: userId,
-        email: email,
+        email: email
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -101,13 +112,13 @@ function App() {
     <div className="app">
       {error != '' && <ErrorModal onClose={() => setError('')} error={error} />}
       {!isLoading && token && <Routes>
-        <Route path='/' exact element={<Home />} />
-        <Route path='/history' exact element={<Problems />} />
-        <Route path='/new-problem' exact element={<AddProblem />} />
+        <Route path='/' element={<Home />} />
+        <Route path='/history' element={<Problems />} />
+        <Route path='/new-problem' element={<AddProblem />} />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>}
       {!isLoading && !token && <Routes>
-        <Route path='/landing' exact element={<Landing />} />
+        <Route path='/landing' element={<Landing />} />
         <Route path="*" element={<Navigate to="/landing" />} />
       </Routes>}
     </div>

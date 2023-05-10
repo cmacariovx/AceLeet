@@ -2,18 +2,38 @@ import React, { useState, useEffect } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
-const DoughnutChart2 = (props) => {
-    const user = useSelector(state => state.user);
-    const [topicCounts, setTopicCounts] = useState({});
+import { Topic } from '../interfaces';
+
+function DoughnutChart2() {
+    interface Counts {
+        'Array': number;
+        'Binary Tree': number;
+        'Graph': number;
+        'Linked List': number;
+        'Dynamic Programming': number,
+        'Others': number
+    }
+
+    const user = useSelector((state: RootState) => state.user);
+    const [topicCounts, setTopicCounts] = useState<Counts>({
+        'Array': 0,
+        'Binary Tree': 0,
+        'Graph': 0,
+        'Linked List': 0,
+        'Dynamic Programming': 0,
+        'Others': 0
+    });
 
     useEffect(() => {
         if (user) setTopicCounts(countTopicProblems(user.technicalData.topics))
     }, [user])
 
-    const countTopicProblems = (topics) => {
+    const countTopicProblems = (topics: {[key: string]: Topic}) => {
         const mainTopics = ['Array', 'Binary Tree', 'Graph', 'Linked List', 'Dynamic Programming'];
-        const counts = {
+
+        const counts: Counts = {
             'Array': 0,
             'Binary Tree': 0,
             'Graph': 0,
@@ -22,12 +42,16 @@ const DoughnutChart2 = (props) => {
             'Others': 0
         };
 
+        function isMainTopic(topic: string): topic is keyof Counts {
+            return mainTopics.includes(topic);
+        }
+
         let initial = user.technicalData.problems.totalProblemsSolved
 
         for (const topic in topics) {
-            if (mainTopics.includes(topic)) {
+            if (isMainTopic(topic)) {
                 counts[topic] = topics[topic].totalTopicProblemsSolved;
-                initial--
+                initial--;
             }
         }
 
@@ -36,9 +60,21 @@ const DoughnutChart2 = (props) => {
         return counts;
     }
 
+    const isKeyOfCounts = (key: string): key is keyof Counts => {
+        return key in topicCounts;
+    };
+
     const getFilteredData = () => {
-        const filteredLabels = Object.keys(topicCounts).filter((key) => topicCounts[key] > 0);
-        const filteredValues = filteredLabels.map((label) => topicCounts[label]);
+        const filteredLabels = Object.keys(topicCounts).filter((key) => {
+            if (isKeyOfCounts(key)) {
+                return topicCounts[key] > 0
+            }
+        });
+        const filteredValues = filteredLabels.map((label) => {
+            if (isKeyOfCounts(label)) {
+                return topicCounts[label]
+            }
+        });
 
         if (filteredValues.every((value) => value === 0)) {
             filteredLabels.push('Others');
@@ -77,7 +113,7 @@ const DoughnutChart2 = (props) => {
         ],
     };
 
-    const options = {
+    const options: any = {
         plugins: {
             legend: {
                 display: true,
@@ -97,11 +133,11 @@ const DoughnutChart2 = (props) => {
             tooltip: {
                 enabled: true,
                 callbacks: {
-                    title: function (context) {
+                    title: function (context: any) {
                         const index = context[0].dataIndex;
                         return data.labels[index];
                     },
-                    label: function (context) {
+                    label: function (context: any) {
                         return context.parsed == 0.1 ? '0 Questions' : context.parsed + ' Questions';
                     },
                 },

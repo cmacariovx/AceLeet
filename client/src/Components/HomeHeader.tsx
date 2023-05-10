@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router"
 import { useSelector, useDispatch } from "react-redux";
 import x from '../assets/x.png'
+import { RootState } from "../redux/store";
 
 import Auth from "./Auth";
 
@@ -13,14 +14,14 @@ function HomeHeader() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const isLoggedIn = useSelector(state => state.auth.isLoggedIn)
-    const username = useSelector(state => state.auth.username)
+    const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn)
+    const username = useSelector((state: RootState) => state.auth.username)
 
-    const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState<string | null>(null);
     const [dropdownActive, setDropdownActive] = useState(false);
     const [showAuth, setShowAuth] = useState(false);
 
-    const dropdownRef = useRef(null);
+    const dropdownRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (selected == null) {
@@ -29,8 +30,8 @@ function HomeHeader() {
     }, [window.location.pathname, selected])
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setDropdownActive(false);
             }
         };

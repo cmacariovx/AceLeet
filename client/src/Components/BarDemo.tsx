@@ -2,7 +2,7 @@ import React from 'react';
 import { Bar, Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 
-const BarDemo = (props) => {
+function BarDemo() {
     const data = {
         labels: ['Array', 'Binary Tree', 'Graph', 'Linked List', 'Dynamic Programming'],
         datasets: [

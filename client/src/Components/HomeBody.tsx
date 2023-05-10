@@ -7,6 +7,8 @@ import { updateRecommendations } from "../redux/slices/recommendationsSlice";
 import readJsonFile from "../readJsonFile";
 import { PuffLoader } from 'react-spinners'
 import HomeFooter from "./HomeFooter";
+import { RootState } from "../redux/store";
+import { AverageDifficultyInterval, TopicWeight, User, TopicProblems, Topic, TopicProblem } from "../interfaces";
 
 import { useNavigate } from "react-router-dom";
 
@@ -15,40 +17,39 @@ import DoughnutChart1 from "./DoughnutChart1";
 import DoughnutChart2 from "./DoughnutChart2";
 
 function HomeBody() {
-    const [isOpen1, setIsOpen1] = useState(false);
-    const [isOpen2, setIsOpen2] = useState(false);
-    const [topicWeights, setTopicWeights] = useState(null);
-    const [topicProblems, setTopicProblems] = useState(null);
+    const [isOpen1, setIsOpen1] = useState(true);
+    const [isOpen2, setIsOpen2] = useState(true);
+    const [topicWeights, setTopicWeights] = useState<TopicWeight | null>(null);
+    const [topicProblems, setTopicProblems] = useState<TopicProblems | null>(null);
     const [topicsToRecommend, setTopicsToRecommend] = useState(["Array", "String", "Dynamic Programming", "Depth-First Search", "Binary Search", "Breadth-First Search", "Tree", "Matrix", "Two Pointers", "Binary Tree", "Stack", "Prefix Sum", "Graph", "Sliding Window", "Union Find", "Linked List", "Monotonic Stack", "Recursion","Binary Search Tree", "Topological Sort"]);
 
-    const recommendedProblems = useSelector(state => state.recommendations.recommendedProblems);
-    const recommendedTopics = useSelector(state => state.recommendations.recommendedTopics);
+    const recommendedProblems = useSelector((state: RootState) => state.recommendations.recommendedProblems);
+    const recommendedTopics = useSelector((state: RootState) => state.recommendations.recommendedTopics);
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const user = useSelector(state => state.user);
-    const token = useSelector(state => state.auth.token);
+    const user: User | null = useSelector((state: RootState) => state.user);
 
-    const [totalProblems, setTotalProblems] = useState(null);
-    const [solvedRatio, setSolvedRatio] = useState(null);
-    const [totalHours, setTotalHours] = useState(null);
-    const [sixWeekAvgDiff, setSixWeekAvgDiff] = useState(null);
+    const [totalProblems, setTotalProblems] = useState<number | null>(null);
+    const [solvedRatio, setSolvedRatio] = useState<number | null>(null);
+    const [totalHours, setTotalHours] = useState<number | null>(null);
+    const [sixWeekAvgDiff, setSixWeekAvgDiff] = useState<(number | null)[] | null>(null);
     const [showTopics, setShowTopics] = useState(false);
 
-    function avgDifficultyHistory() {
+    function avgDifficultyHistory(user: User) {
         const sixWeeksAgo = Date.now() - 6 * 7 * 24 * 60 * 60 * 1000;
         const pastSixWeeksData = user.technicalData.averageDifficultyIntervals.filter(
-            interval => interval.timestamp >= sixWeeksAgo
+            (interval: AverageDifficultyInterval) => interval.timestamp >= sixWeeksAgo
         );
 
         const weeklyAverageDifficulty = calculateWeeklyAverageDifficulty(pastSixWeeksData, user.joinedDate);
         return weeklyAverageDifficulty;
     }
 
-    function calculateWeeklyAverageDifficulty(data, userJoinDate) {
+    function calculateWeeklyAverageDifficulty(data: AverageDifficultyInterval[], userJoinDate: number) {
         const weeks = groupDataByWeek(data, userJoinDate);
-        const lastSixWeeks = weeks.slice(-6); // Get the last 6 weeks
+        const lastSixWeeks = weeks.slice(-6);
         return lastSixWeeks.map(weekData => {
             if (weekData.length === 0) {
                 return null;
@@ -58,13 +59,13 @@ function HomeBody() {
         });
     }
 
-    function groupDataByWeek(data, userJoinDate) {
-        const weeks = [];
+    function groupDataByWeek(data: AverageDifficultyInterval[], userJoinDate: number) {
+        const weeks: AverageDifficultyInterval[][] = [];
         const weekInMilliseconds = 7 * 24 * 60 * 60 * 1000;
 
         data.sort((a, b) => a.timestamp - b.timestamp);
         let weekStart = new Date(userJoinDate).getTime();
-        let weekData = [];
+        let weekData: AverageDifficultyInterval[] = [];
 
         data.forEach(item => {
             if (item.timestamp >= weekStart && item.timestamp < weekStart + weekInMilliseconds) {
@@ -106,14 +107,14 @@ function HomeBody() {
     // ------------------------------------------------------
 
 
-    function recommendTopicsAndProblems(user, topicWeights, topicProblems, topicsToRecommend) {
+    function recommendTopicsAndProblems(user: User, topicWeights: TopicWeight, topicProblems: TopicProblems, topicsToRecommend: string[]) {
         const practicedTopics = getPracticedTopics(user, topicsToRecommend);
         const scheduledTopics = getScheduledTopics(user, practicedTopics);
 
         let recommendedTopics = scheduledTopics.slice(0, 3);
 
         if (recommendedTopics.length < 3) {
-            const additionalTopics = getAdditionalTopics(user, practicedTopics, topicWeights, 3 - recommendedTopics.length, recommendedTopics);
+            const additionalTopics = getAdditionalTopics(user, practicedTopics, topicWeights, recommendedTopics);
             recommendedTopics = [...recommendedTopics, ...additionalTopics];
         }
 
@@ -125,9 +126,9 @@ function HomeBody() {
         };
     }
 
-    function filterTopics(topicsToRecommend, topicWeights, topicProblems) {
-        const filteredTopicWeights = {};
-        const filteredTopicProblems = {};
+    function filterTopics(topicsToRecommend: string[], topicWeights: TopicWeight, topicProblems: TopicProblems) {
+        const filteredTopicWeights: TopicWeight = {};
+        const filteredTopicProblems: TopicProblems = {};
 
         topicsToRecommend.forEach(topic => {
             if (topicWeights[topic]) {
@@ -141,8 +142,8 @@ function HomeBody() {
         return { filteredTopicWeights, filteredTopicProblems };
     }
 
-    function getPracticedTopics(user, topicsToRecommend) {
-        const practicedTopics = new Set();
+    function getPracticedTopics(user: User, topicsToRecommend: string[]) {
+        const practicedTopics = new Set<string>();
 
         for (const topic in user.technicalData.topics) {
             const topicData = user.technicalData.topics[topic];
@@ -155,7 +156,7 @@ function HomeBody() {
     }
 
 
-    function getScheduledTopics(user, practicedTopics) {
+    function getScheduledTopics(user: User, practicedTopics: Set<string>) {
         const scheduledTopics = [];
 
         for (const topic of practicedTopics) {
@@ -175,7 +176,7 @@ function HomeBody() {
                 new Intl.DateTimeFormat().format(lastPracticedDate)
             );
 
-            const differenceInTime = nowLocalDate - lastPracticedLocalDate;
+            const differenceInTime = nowLocalDate.getTime() - lastPracticedLocalDate.getTime();
             const elapsedTime = differenceInTime / (1000 * 60 * 60 * 24);
 
             const scheduleIdx = topicData.scheduleIdx;
@@ -186,7 +187,7 @@ function HomeBody() {
                 const averageTime = topicData.averageTopicTime;
                 const solvedRatio = (topicData.totalTopicProblemsSolved / topicData.totalTopicProblemsAttempted) || 0.01;
 
-                const priorityScore = calculatePriorityScore(averageDifficulty, averageTime, solvedRatio);
+                const priorityScore = calculatePriorityScore(averageDifficulty!, averageTime!, solvedRatio);
                 topicData.priorityScore = priorityScore;
 
                 scheduledTopics.push(topicData);
@@ -194,10 +195,10 @@ function HomeBody() {
         }
 
         // Sort scheduledTopics by priorityScore in descending order and return the top 3 topics
-        return scheduledTopics.sort((a, b) => b.priorityScore - a.priorityScore).slice(0, 3);
+        return scheduledTopics.sort((a, b) => b.priorityScore! - a.priorityScore!).slice(0, 3);
     }
 
-    function getAdditionalTopics(user, practicedTopics, topicWeights, numAdditionalTopics, scheduledTopics) {
+    function getAdditionalTopics(user: User, practicedTopics: Set<string>, topicWeights: TopicWeight, scheduledTopics: Topic[]) {
         const additionalTopics = [];
 
         const sortedTopicWeights = Object.entries(topicWeights)
@@ -218,14 +219,14 @@ function HomeBody() {
     }
 
 
-    function recommendProblems(user, recommendedTopics, topicProblems) {
-        const recommendedProblems = [];
+    function recommendProblems(user: User, recommendedTopics: Topic[], topicProblems: TopicProblems) {
+        const recommendedProblems: TopicProblem[] = [];
         const problemIds = new Set([...user.technicalData.problemIds]);
 
         recommendedTopics.forEach((topic, index) => {
-            if (topicProblems[topic.name]) {
+            if (topicProblems[topic.name!]) {
                 const priorityScore = topic.priorityScore || 0.60;
-                const problems = getFilteredProblems(topic, topicProblems, priorityScore);
+                const problems = getFilteredProblems(user, topic, topicProblems, priorityScore);
 
                 const numProblemsToRecommend = 3;
                 let addedProblems = 0;
@@ -245,26 +246,32 @@ function HomeBody() {
     }
 
 
-    function getFilteredProblems(topic, topicProblems, priorityScore) {
-        const problems = topicProblems[topic.name];
+    function getFilteredProblems(user: User, topic: Topic, topicProblems: TopicProblems, priorityScore: number) {
+        const problems = topicProblems[topic.name!];
 
         // Define the filter function based on the priority score
-        const filterProblem = (problem) => {
+        const filterProblem = (problem: TopicProblem) => {
             if (priorityScore >= 0.8) {
                 return (
-                    !user.technicalData.topics[topic.name].topicProblemsSolved.includes(problem.frontendQuestionId) &&
+                    !user.technicalData.topics[topic.name!].topicProblemsSolved.some(
+                        (solvedProblem) => solvedProblem.id === problem.frontendQuestionId
+                    ) &&
                     problem.difficulty === "Easy" &&
                     problem.acRate >= 40
                 );
             } else if (priorityScore >= 0.40) {
                 return (
-                    !user.technicalData.topics[topic.name].topicProblemsSolved.includes(problem.frontendQuestionId) &&
+                    !user.technicalData.topics[topic.name!].topicProblemsSolved.some(
+                        (solvedProblem) => solvedProblem.id === problem.frontendQuestionId
+                    ) &&
                     (problem.difficulty === "Medium" || problem.difficulty === "Easy") &&
                     problem.acRate >= 40
                 );
             } else {
                 return (
-                    !user.technicalData.topics[topic.name].topicProblemsSolved.includes(problem.frontendQuestionId) &&
+                    !user.technicalData.topics[topic.name!].topicProblemsSolved.some(
+                        (solvedProblem) => solvedProblem.id === problem.frontendQuestionId
+                    ) &&
                     (problem.difficulty === "Medium" || problem.difficulty === "Hard") &&
                     problem.acRate >= 40
                 );
@@ -275,17 +282,14 @@ function HomeBody() {
     }
 
 
-    function calculatePriorityScore(averageDifficulty, averageTime, solvedRatio) {
+    function calculatePriorityScore(averageDifficulty: number, averageTime: number, solvedRatio: number) {
         // Apply min-max normalization to the inputs
         const normalizedAvgDifficulty = (averageDifficulty / 5);
         const normalizedAvgTime = (averageTime - 0) / (7200 - 0);
-        let normalizedSolvedRatio = 1 - (solvedRatio - 0) / (1 - 0); // Reversed
-        if (normalizedSolvedRatio == 'NaN' || !normalizedSolvedRatio) normalizedSolvedRatio = 0.5;
+        const normalizedSolvedRatio = 1 - (solvedRatio - 0) / (1 - 0);
 
-        // Scaling factor for average time (you can adjust this value)
         const timeScalingFactor = 1;
 
-        // Scale the normalized average time
         const scaledAvgTime = normalizedAvgTime * timeScalingFactor;
 
         const priorityScore = normalizedAvgDifficulty * 0.80 + scaledAvgTime * 0.10 + normalizedSolvedRatio * 0.10;
@@ -293,7 +297,7 @@ function HomeBody() {
         return priorityScore;
     }
 
-    function daysAgo(timestamp) {
+    function daysAgo(timestamp: number) {
         const now = new Date();
         const lastPracticedDate = new Date(timestamp);
 
@@ -305,7 +309,7 @@ function HomeBody() {
             new Intl.DateTimeFormat().format(lastPracticedDate)
         );
 
-        const differenceInTime = nowLocalDate - lastPracticedLocalDate;
+        const differenceInTime = nowLocalDate.getTime() - lastPracticedLocalDate.getTime();
         const differenceInDays = differenceInTime / (1000 * 60 * 60 * 24);
 
         return (
@@ -316,7 +320,7 @@ function HomeBody() {
         );
     }
 
-    function getPriorityLabel(priorityScore) {
+    function getPriorityLabel(priorityScore: number) {
         if (priorityScore < 0.4) return "Low";
         else if (priorityScore < 0.55) return "Medium";
         else return "High";
@@ -324,11 +328,13 @@ function HomeBody() {
 
     useEffect(() => {
         if (user) {
+            const solvedRatio = (user.technicalData.problems.totalProblemsSolvedWithoutSolution /
+            user.technicalData.problems.totalProblemsSolved);
+
             setTotalProblems(user.technicalData.problems.totalProblemsSolved);
-            setSolvedRatio(((user.technicalData.problems.totalProblemsSolvedWithoutSolution /
-            user.technicalData.problems.totalProblemsSolved) * 100).toFixed(0));
-            setTotalHours(((user.technicalData.totalPracticeTime) / 60 / 60).toFixed(2));
-            setSixWeekAvgDiff(avgDifficultyHistory);
+            setSolvedRatio(parseInt(Number.isNaN(solvedRatio) ? "0" : (solvedRatio * 100).toFixed(0)));
+            setTotalHours(parseInt(((user.technicalData.totalPracticeTime) / 60 / 60).toFixed(2)));
+            setSixWeekAvgDiff(avgDifficultyHistory(user));
             if (topicWeights && topicProblems) {
                 const recommended = recommendTopicsAndProblems({ ...user }, topicWeights, topicProblems, topicsToRecommend);
                 dispatch(updateRecommendations(recommended));
@@ -369,7 +375,7 @@ function HomeBody() {
                 <div className="homeBodyContainerKPI">
                     <div className="homeBodyContainerKPILeft">
                         <p className="homeBodyContainerKPILeftUpper">SOLVED W/O SOLUTION</p>
-                        <p className="homeBodyContainerKPILeftLower">{solvedRatio != null && solvedRatio != 'NaN' ? solvedRatio + '%' : 0 + '%'}</p>
+                        <p className="homeBodyContainerKPILeftLower">{solvedRatio != null && solvedRatio + '%'}</p>
                     </div>
                     <div className="homeBodyContainerKPIRight">
                         <i className="fa-regular fa-object-ungroup"></i>
@@ -379,7 +385,7 @@ function HomeBody() {
             <div className="homeBodyDailyRecommendedContainer">
             <div className="homeBodyDailyRecommendedUpper" style={isOpen1 ? {overflow: 'hidden'} : {overflow: 'visible'}}>
                     <div className="homeBodyDailyRecommendedUpper1">
-                        <div className="homeBodyDailyRecommendedUpperText1" style={!isOpen1 ? {borderRadius: 10} : null} onClick={() => setIsOpen1(!isOpen1)}>
+                        <div className="homeBodyDailyRecommendedUpperText1" style={!isOpen1 ? {borderRadius: 10} : undefined} onClick={() => setIsOpen1(!isOpen1)}>
                             <p className="homeBodyDailyRecommendedUpperText11">Recommended Topics to Revisit</p>
                             {isOpen1 ? <i className="fa-solid fa-chevron-up"></i> :
                             <i className="fa-solid fa-chevron-down"></i>}
@@ -392,13 +398,13 @@ function HomeBody() {
                     </div>
                     {isOpen1 && <>
                         {recommendedTopics.length > 0 &&
-                        recommendedTopics.map((topic, index) => (
+                        recommendedTopics.map((topic: Topic, index: number) => (
                             <div key={index} className="homeBodyDailyRecommendedUpperOption">
                                 <p className={`homeBodyDailyRecommendedUpperOptionText1 ${
-                                    getPriorityLabel(topic.priorityScore) === 'High' ? 'blueText1' :
-                                    getPriorityLabel(topic.priorityScore) === 'Medium' ? 'blueText2' : 'blueText3'
+                                    getPriorityLabel(topic.priorityScore!) === 'High' ? 'blueText1' :
+                                    getPriorityLabel(topic.priorityScore!) === 'Medium' ? 'blueText2' : 'blueText3'
                                 }`}>
-                                    {getPriorityLabel(topic.priorityScore)}
+                                    {getPriorityLabel(topic.priorityScore!)}
                                 </p>
                                 <p className="homeBodyDailyRecommendedUpperOptionText2 blueText">{topic.name}</p>
                                 <p className="homeBodyDailyRecommendedUpperOptionText3">{topic.lastPracticed ? daysAgo(topic.lastPracticed) : 'New'}</p>
@@ -408,7 +414,7 @@ function HomeBody() {
                 </div>
                 <div className="homeBodyDailyRecommendedLower" style={isOpen2 ? {overflow: 'hidden'} : {overflow: 'visible'}}>
                     <div className="homeBodyDailyRecommendedLower1">
-                        <div className="homeBodyDailyRecommendedLowerText1" style={!isOpen2 ? {borderRadius: 10} : null} onClick={() => setIsOpen2(!isOpen2)}>
+                        <div className="homeBodyDailyRecommendedLowerText1" style={!isOpen2 ? {borderRadius: 10} : undefined} onClick={() => setIsOpen2(!isOpen2)}>
                             <p className="homeBodyDailyRecommendedLowerText11">Recommended Problems</p>
                             {isOpen2 ? <i className="fa-solid fa-chevron-up"></i> :
                             <i className="fa-solid fa-chevron-down"></i>}
@@ -428,7 +434,7 @@ function HomeBody() {
                     {isOpen2 && (
                         <>
                             {recommendedProblems.length > 0 &&
-                            recommendedProblems.map((problem, index) => (
+                            recommendedProblems.map((problem: TopicProblem, index: number) => (
                                 <div className='homeBodyDailyRecommendedLowerOptionContainer1' key={index}>
                                 {index === 0 || problem.topic !== recommendedProblems[index - 1].topic ? (
                                     <p className="homeBodyDailyRecommendedDivider">{problem.topic}</p>

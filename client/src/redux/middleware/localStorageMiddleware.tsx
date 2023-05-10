@@ -1,5 +1,6 @@
+import { Middleware } from "redux";
 
-const localStorageMiddleware = (store) => (next) => (action) => {
+const localStorageMiddleware: Middleware = (store) => (next) => (action) => {
     if (action.type == "auth/login") {
         const { token, userId, email, username, joinedDate } = action.payload;
         const userDatax = { token, userId, email, username, joinedDate };
