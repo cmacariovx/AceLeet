@@ -14,6 +14,11 @@ async function escapeAndFind(collection, field, value) {
     return collection.findOne({ [field]: escapedValue });
 }
 
+async function escapeAndFindEmail(collection, field, value) {
+    const escapedValue = value.replace(/[-[\]{}()*+?,\\^$|#\s]/g, "\\$&");
+    return collection.findOne({ [field]: escapedValue });
+}
+
 async function userSignup(req, res, next, newUser) {
     const client = new MongoClient(mongoUrl);
     let result;
@@ -24,7 +29,7 @@ async function userSignup(req, res, next, newUser) {
         await client.connect();
         const db = client.db("sr");
 
-        existingUserByEmail = await escapeAndFind(db.collection('users'), 'email', newUser.email);
+        existingUserByEmail = await escapeAndFindEmail(db.collection('users'), 'email', newUser.email);
         existingUserByUsername = await escapeAndFind(db.collection('users'), 'username', newUser.username);
 
         if (existingUserByEmail && existingUserByUsername) {
