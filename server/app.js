@@ -32,7 +32,7 @@ const limiter = rateLimit({
 
 app.use(limiter);
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
 
 app.use((req, res, next) => {
     res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
