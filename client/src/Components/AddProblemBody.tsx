@@ -342,13 +342,12 @@ function AddProblemBody() {
         const lastPracticed = topic.lastPracticed || currentDate;
         const daysSinceLastPractice = daysBetween(currentDate, lastPracticed);
 
-        if (lastPracticed === currentDate || daysSinceLastPractice >= topic.schedule[topic.scheduleIdx]) {
-            topic.problemsDone += 1;
+        topic.problemsDone += 1;
 
-            if (topic.problemsDone >= 3) {
-                topic.scheduleIdx += 1;
-                topic.problemsDone = 0;
-            }
+        if (topic.problemsDone >= 3) {
+            topic.scheduleIdx += 1;
+            topic.scheduleIdx %= 6;
+            topic.problemsDone = 0;
         }
 
         return {

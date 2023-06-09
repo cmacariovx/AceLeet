@@ -103,15 +103,11 @@ function HomeBody() {
         getTopics();
     }, [])
 
-
-    // ------------------------------------------------------
-
-
     function recommendTopicsAndProblems(user: User, topicWeights: TopicWeight, topicProblems: TopicProblems, topicsToRecommend: string[]) {
         const practicedTopics = getPracticedTopics(user, topicsToRecommend);
         const scheduledTopics = getScheduledTopics(user, practicedTopics);
 
-        let recommendedTopics = scheduledTopics.slice(0, 3);
+        let recommendedTopics = scheduledTopics.slice(0, 5);
 
         if (recommendedTopics.length < 3) {
             const additionalTopics = getAdditionalTopics(user, practicedTopics, topicWeights, recommendedTopics);
@@ -122,7 +118,7 @@ function HomeBody() {
 
         return {
             recommendedTopics,
-            recommendedProblems: recommendedProblems.slice(0, 10)
+            recommendedProblems: recommendedProblems.slice(0, 15)
         };
     }
 
@@ -155,7 +151,6 @@ function HomeBody() {
         return practicedTopics;
     }
 
-
     function getScheduledTopics(user: User, practicedTopics: Set<string>) {
         const scheduledTopics = [];
 
@@ -165,37 +160,26 @@ function HomeBody() {
             const lastPracticed = topicData.lastPracticed || 0;
             const schedule = topicData.schedule;
 
-            const now = new Date();
-            const lastPracticedDate = new Date(lastPracticed);
-
-            // Get the local date of now and lastPracticedDate
-            const nowLocalDate = new Date(
-                new Intl.DateTimeFormat().format(now)
-            );
-            const lastPracticedLocalDate = new Date(
-                new Intl.DateTimeFormat().format(lastPracticedDate)
-            );
-
-            const differenceInTime = nowLocalDate.getTime() - lastPracticedLocalDate.getTime();
-            const elapsedTime = differenceInTime / (1000 * 60 * 60 * 24);
+            const now = Date.now();
+            const elapsedTime = (now - lastPracticed) / (1000 * 60 * 60 * 24);
 
             const scheduleIdx = topicData.scheduleIdx;
             topicData.name = topic;
 
-            if (scheduleIdx > -1 && Math.floor(elapsedTime) === schedule[scheduleIdx]) {
+            if (scheduleIdx >= 0 && Math.floor(elapsedTime) >= schedule[scheduleIdx]) {
                 const averageDifficulty = topicData.averageTopicDifficulty;
                 const averageTime = topicData.averageTopicTime;
-                const solvedRatio = (topicData.totalTopicProblemsSolved / topicData.totalTopicProblemsAttempted) || 0.01;
+                const solvedRatio = (topicData.totalTopicProblemsSolved / (topicData.totalTopicProblemsAttempted || 0.01));
+                const soloRatio = (topicData.totalTopicProblemsSolvedWithSolution / (topicData.totalTopicProblemsSolved || 0.01));
 
-                const priorityScore = calculatePriorityScore(averageDifficulty!, averageTime!, solvedRatio);
+                const priorityScore = calculatePriorityScore(averageDifficulty!, averageTime!, solvedRatio, soloRatio);
                 topicData.priorityScore = priorityScore;
 
                 scheduledTopics.push(topicData);
             }
         }
 
-        // Sort scheduledTopics by priorityScore in descending order and return the top 3 topics
-        return scheduledTopics.sort((a, b) => b.priorityScore! - a.priorityScore!).slice(0, 3);
+        return scheduledTopics.sort((a, b) => b.priorityScore! - a.priorityScore!).slice(0, 5);
     }
 
     function getAdditionalTopics(user: User, practicedTopics: Set<string>, topicWeights: TopicWeight, scheduledTopics: Topic[]) {
@@ -245,11 +229,9 @@ function HomeBody() {
         return recommendedProblems;
     }
 
-
     function getFilteredProblems(user: User, topic: Topic, topicProblems: TopicProblems, priorityScore: number) {
         const problems = topicProblems[topic.name!];
 
-        // Define the filter function based on the priority score
         const filterProblem = (problem: TopicProblem) => {
             if (priorityScore >= 0.8) {
                 return (
@@ -259,12 +241,12 @@ function HomeBody() {
                     problem.difficulty === "Easy" &&
                     problem.acRate >= 40
                 );
-            } else if (priorityScore >= 0.40) {
+            } else if (priorityScore >= 0.35) {
                 return (
                     !user.technicalData.topics[topic.name!].topicProblemsSolved.some(
                         (solvedProblem) => solvedProblem.id === problem.frontendQuestionId
                     ) &&
-                    (problem.difficulty === "Medium" || problem.difficulty === "Easy") &&
+                    (problem.difficulty === "Medium") &&
                     problem.acRate >= 40
                 );
             } else {
@@ -272,7 +254,7 @@ function HomeBody() {
                     !user.technicalData.topics[topic.name!].topicProblemsSolved.some(
                         (solvedProblem) => solvedProblem.id === problem.frontendQuestionId
                     ) &&
-                    (problem.difficulty === "Medium" || problem.difficulty === "Hard") &&
+                    (problem.difficulty === "Hard") &&
                     problem.acRate >= 40
                 );
             }
@@ -282,17 +264,17 @@ function HomeBody() {
     }
 
 
-    function calculatePriorityScore(averageDifficulty: number, averageTime: number, solvedRatio: number) {
-        // Apply min-max normalization to the inputs
+    function calculatePriorityScore(averageDifficulty: number, averageTime: number, solvedRatio: number, soloRatio: number) {
         const normalizedAvgDifficulty = (averageDifficulty / 5);
         const normalizedAvgTime = (averageTime - 0) / (7200 - 0);
         const normalizedSolvedRatio = 1 - (solvedRatio - 0) / (1 - 0);
+        const normalizedSoloRatio = 1 - (soloRatio - 0) / (1 - 0);
 
         const timeScalingFactor = 1;
 
         const scaledAvgTime = normalizedAvgTime * timeScalingFactor;
 
-        const priorityScore = normalizedAvgDifficulty * 0.80 + scaledAvgTime * 0.10 + normalizedSolvedRatio * 0.10;
+        const priorityScore = (normalizedAvgDifficulty * 0.55) + (scaledAvgTime * 0.05) + (normalizedSolvedRatio * 0.10) + (normalizedSoloRatio * 0.30);
 
         return priorityScore;
     }
@@ -301,7 +283,6 @@ function HomeBody() {
         const now = new Date();
         const lastPracticedDate = new Date(timestamp);
 
-        // Get the local date of now and lastPracticedDate
         const nowLocalDate = new Date(
             new Intl.DateTimeFormat().format(now)
         );
@@ -321,8 +302,8 @@ function HomeBody() {
     }
 
     function getPriorityLabel(priorityScore: number) {
-        if (priorityScore < 0.4) return "Low";
-        else if (priorityScore < 0.55) return "Medium";
+        if (priorityScore < 0.35) return "Low";
+        else if (priorityScore < 0.60) return "Medium";
         else return "High";
     }
 
